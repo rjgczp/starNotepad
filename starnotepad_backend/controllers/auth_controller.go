@@ -28,11 +28,20 @@ type emailVerifyRequest struct {
 	Email string `json:"email" binding:"required,email"`
 }
 
+type VerifyEmailCodeRequest struct {
+	Email string `json:"email" binding:"required,email"`
+	Code  string `json:"code" binding:"required"`
+}
+
 type AuthResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
 	UserID  uint   `json:"user_id,omitempty"`
 	Token   string `json:"token,omitempty"`
+}
+
+type ChangePasswordRequest struct {
+	Password string `json:"password" binding:"required,min=6"`
 }
 
 // 用户注册
@@ -71,6 +80,14 @@ func Register(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, AuthResponse{
 				Success: false,
 				Message: "验证码错误",
+			})
+			return
+		}
+		//判断验证码是否过期
+		if emailVerify.ExpiredTime < time.Now().Unix() {
+			c.JSON(http.StatusBadRequest, AuthResponse{
+				Success: false,
+				Message: "验证码已过期",
 			})
 			return
 		}
@@ -229,19 +246,19 @@ func SendEmailCode(c *gin.Context) {
 	emailVerify := models.VerificationCode{
 		Code:        string(b),
 		Email:       req.Email,
-		ExpiredTime: time.Now().Add(time.Minute * 10).Unix(), //5分钟过期
+		ExpiredTime: time.Now().Add(time.Minute * 2).Unix(), //2分钟过期
 	}
 	//判断是否已存在
 	if err := database.DB.Where("email = ?", req.Email).First(&emailVerify).Error; err == nil {
 		//是否过期
 		if emailVerify.ExpiredTime < time.Now().Unix() {
 			//更新验证码
-			emailVerify.Code = string(b)
-			emailVerify.ExpiredTime = time.Now().Add(time.Minute * 10).Unix()
-			database.DB.Save(&emailVerify)
+			database.DB.Model(&emailVerify).Where("email = ?", req.Email).Update("code", string(b))
+			database.DB.Model(&emailVerify).Where("email = ?", req.Email).Update("expired_time", time.Now().Add(time.Minute*2).Unix())
 		} else {
-			//删除验证码
-			database.DB.Delete(&emailVerify)
+			//提示用户验证码已存在
+			c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "验证码已发送，请稍后再试"})
+			return
 		}
 	} else {
 		//创建验证码
@@ -250,6 +267,29 @@ func SendEmailCode(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"Success": true, "message": "验证码已发送至您的邮箱"})
 
+}
+
+// 验证用户输入的邮箱验证码是否正确
+func VerifyEmailCode(c *gin.Context) {
+	var req VerifyEmailCodeRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "参数错误"})
+		return
+	}
+	//查询验证码表查看验证码是否正确
+	var emailVerify models.VerificationCode
+	if err := database.DB.Where("email = ?", req.Email).First(&emailVerify).Error; err == nil {
+		if emailVerify.Code != req.Code {
+			c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "验证码错误"})
+			return
+		}
+	}
+	//判断验证码是否过期
+	if emailVerify.ExpiredTime < time.Now().Unix() {
+		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "验证码已过期"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"Success": true, "message": "验证码正确"})
 }
 
 // 获取用户信息
@@ -280,4 +320,32 @@ func GetUserInfo(c *gin.Context) {
 			"email":    user.Email,
 		},
 	})
+}
+
+// 修改密码
+func ChangePassword(c *gin.Context) {
+	var req ChangePasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "参数错误"})
+		return
+	}
+	//查询用户
+	//从token中获取用户id
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"Success": false, "message": "无法获取用户信息"})
+		return
+	}
+	var user models.User
+	if err := database.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "用户不存在"})
+		return
+	}
+	//修改密码
+	if err := user.HashPassword(req.Password); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"Success": false, "message": "密码加密失败"})
+		return
+	}
+	database.DB.Save(&user)
+	c.JSON(http.StatusOK, gin.H{"Success": true, "message": "密码修改成功"})
 }
