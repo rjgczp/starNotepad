@@ -9,15 +9,17 @@ import (
 
 type User struct {
 	gorm.Model
-	Username          string     `gorm:"uniqueIndex;size:50" json:"username"`
-	Email             string     `gorm:"uniqueIndex;size:100" json:"email"`
-	PasswordHash      string     `gorm:"size:255" json:"-"`
-	Avatar            string     `json:"avatar" gorm:"type:varchar(255);not null"`
-	Nickname          string     `json:"nickname" gorm:"type:varchar(255);not null"`
-	Signature         string     `json:"signature" gorm:"type:varchar(255);not null"`
-	IsAdmin           bool       `json:"is_admin" gorm:"type:bool;not null"`
-	IsPlus            bool       `json:"is_plus" gorm:"type:bool;not null"`
-	IsPlusExpiredTime *time.Time `json:"is_plus_expired_time" gorm:"type:datetime;default:NULL"`
+	Username          string     `gorm:"uniqueIndex;size:50" json:"username"`                    //用户名
+	Email             string     `gorm:"uniqueIndex;size:100" json:"email"`                      //邮箱
+	Phone             string     `gorm:"uniqueIndex;size:11" json:"phone"`                       //手机号
+	PasswordHash      string     `gorm:"size:255" json:"-"`                                      //密码
+	Avatar            string     `json:"avatar" gorm:"type:varchar(255);not null"`               //头像
+	Nickname          string     `json:"nickname" gorm:"type:varchar(255);not null"`             //昵称
+	Birthday          *time.Time `json:"birthday" gorm:"type:datetime;default:NULL"`             //生日
+	Signature         string     `json:"signature" gorm:"type:varchar(255);not null"`            //签名
+	IsAdmin           bool       `json:"is_admin" gorm:"type:bool;not null"`                     //是否为管理员
+	IsPlus            bool       `json:"is_plus" gorm:"type:bool;not null"`                      //是否为Plus会员
+	IsPlusExpiredTime *time.Time `json:"is_plus_expired_time" gorm:"type:datetime;default:NULL"` //Plus会员过期时间
 }
 
 // 加密密码
