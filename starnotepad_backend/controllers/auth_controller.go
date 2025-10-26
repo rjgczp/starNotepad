@@ -6,6 +6,7 @@ import (
 	"starnotepad-backend/database"
 	"starnotepad-backend/models"
 	"starnotepad-backend/utils"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -42,15 +43,25 @@ type AuthResponse struct {
 
 type ChangePasswordRequest struct {
 	Password string `json:"password" binding:"required,min=6"`
+	Code     string `json:"code" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+}
+
+type UpdateUserInfoRequest struct {
+	Nickname  string     `json:"nickname" binding:"required"`
+	Signature string     `json:"signature" binding:"required"`
+	Avatar    string     `json:"avatar" binding:"required"`
+	Birthday  *time.Time `json:"birthday" binding:"required"`
 }
 
 // 用户注册
 func Register(c *gin.Context) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, AuthResponse{
-			Success: false,
-			Message: "请求参数错误: " + err.Error(),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "请求参数错误: ",
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -58,18 +69,18 @@ func Register(c *gin.Context) {
 	// 检查用户名是否已存在
 	var existingUser models.User
 	if err := database.DB.Where("username = ?", req.Username).First(&existingUser).Error; err == nil {
-		c.JSON(http.StatusBadRequest, AuthResponse{
-			Success: false,
-			Message: "用户名已存在",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "用户名已存在",
 		})
 		return
 	}
 
 	// 检查邮箱是否已存在
 	if err := database.DB.Where("email = ?", req.Email).First(&existingUser).Error; err == nil {
-		c.JSON(http.StatusBadRequest, AuthResponse{
-			Success: false,
-			Message: "邮箱已存在",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "邮箱已存在",
 		})
 		return
 	}
@@ -77,48 +88,61 @@ func Register(c *gin.Context) {
 	var emailVerify models.VerificationCode
 	if err := database.DB.Where("email = ?", req.Email).First(&emailVerify).Error; err == nil {
 		if emailVerify.Code != req.Code {
-			c.JSON(http.StatusBadRequest, AuthResponse{
-				Success: false,
-				Message: "验证码错误",
+			c.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"message": "验证码错误",
 			})
 			return
 		}
 		//判断验证码是否过期
 		if emailVerify.ExpiredTime < time.Now().Unix() {
-			c.JSON(http.StatusBadRequest, AuthResponse{
-				Success: false,
-				Message: "验证码已过期",
+			c.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"message": "验证码已过期",
 			})
 			return
 		}
 	}
-
+	//创建默认头像列表并随机获取一个
+	defaultAvatarList := []string{
+		"def01.avif",
+		"def02.avif",
+		"def03.avif",
+		"def04.avif",
+		"def05.avif",
+	}
+	randomIndex := rand.Intn(len(defaultAvatarList))
+	randomAvatar := defaultAvatarList[randomIndex]
 	// 创建新用户
 	user := models.User{
-		Username: req.Username,
-		Email:    req.Email,
+		Username:  req.Username,
+		Email:     req.Email,
+		Avatar:    randomAvatar,
+		Nickname:  "用户_" + strconv.Itoa(rand.Intn(1000000)),
+		Signature: "这个人很懒，什么都没有留下",
+		Birthday:  nil,
 	}
 
 	if err := user.HashPassword(req.Password); err != nil {
-		c.JSON(http.StatusInternalServerError, AuthResponse{
-			Success: false,
-			Message: "密码加密失败",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": "密码加密失败",
 		})
 		return
 	}
 
 	if err := database.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, AuthResponse{
-			Success: false,
-			Message: "用户创建失败",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": "用户创建失败",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, AuthResponse{
-		Success: true,
-		Message: "注册成功",
-		UserID:  user.ID,
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "注册成功",
+		"user_id": user.ID,
 	})
 }
 
@@ -126,9 +150,10 @@ func Register(c *gin.Context) {
 func Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, AuthResponse{
-			Success: false,
-			Message: "请求参数错误: " + err.Error(),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "请求参数错误",
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -136,18 +161,18 @@ func Login(c *gin.Context) {
 	// 查找用户
 	var user models.User
 	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, AuthResponse{
-			Success: false,
-			Message: "用户名或密码错误",
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "用户名或密码错误",
 		})
 		return
 	}
 
 	// 验证密码
 	if err := user.CheckPassword(req.Password); err != nil {
-		c.JSON(http.StatusUnauthorized, AuthResponse{
-			Success: false,
-			Message: "用户名或密码错误",
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "用户名或密码错误",
 		})
 		return
 	}
@@ -155,18 +180,18 @@ func Login(c *gin.Context) {
 	// 生成JWT Token
 	token, err := utils.GenerateToken(&user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, AuthResponse{
-			Success: false,
-			Message: "Token生成失败",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": "Token生成失败",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, AuthResponse{
-		Success: true,
-		Message: "登录成功",
-		UserID:  user.ID,
-		Token:   token,
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "登录成功",
+		"user_id": user.ID,
+		"token":   token,
 	})
 }
 
@@ -174,9 +199,10 @@ func Login(c *gin.Context) {
 func VerifyToken(c *gin.Context) {
 	tokenString := c.GetHeader("Authorization")
 	if tokenString == "" {
-		c.JSON(http.StatusUnauthorized, AuthResponse{
-			Success: false,
-			Message: "缺少Token",
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "缺少Token",
+			"error":   "缺少Token",
 		})
 		return
 	}
@@ -188,9 +214,10 @@ func VerifyToken(c *gin.Context) {
 
 	claims, err := utils.ValidateToken(tokenString)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, AuthResponse{
-			Success: false,
-			Message: "Token无效",
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "Token无效",
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -210,6 +237,7 @@ func SendEmailCode(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"message": "参数错误",
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -239,7 +267,7 @@ func SendEmailCode(c *gin.Context) {
 	d := gomail.NewDialer(host, port, username, password)
 
 	if err := d.DialAndSend(m); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Success": false, "error": "邮件发送失败"})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "邮件发送失败", "error": err.Error()})
 		return
 	}
 	//将验证码添加到数据库中
@@ -257,7 +285,7 @@ func SendEmailCode(c *gin.Context) {
 			database.DB.Model(&emailVerify).Where("email = ?", req.Email).Update("expired_time", time.Now().Add(time.Minute*2).Unix())
 		} else {
 			//提示用户验证码已存在
-			c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "验证码已发送，请稍后再试"})
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "验证码已发送，请稍后再试", "error": "验证码已发送，请稍后再试"})
 			return
 		}
 	} else {
@@ -265,7 +293,7 @@ func SendEmailCode(c *gin.Context) {
 		database.DB.Create(&emailVerify)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Success": true, "message": "验证码已发送至您的邮箱"})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "验证码已发送至您的邮箱"})
 
 }
 
@@ -273,23 +301,23 @@ func SendEmailCode(c *gin.Context) {
 func VerifyEmailCode(c *gin.Context) {
 	var req VerifyEmailCodeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "参数错误"})
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "参数错误", "error": err.Error()})
 		return
 	}
 	//查询验证码表查看验证码是否正确
 	var emailVerify models.VerificationCode
 	if err := database.DB.Where("email = ?", req.Email).First(&emailVerify).Error; err == nil {
 		if emailVerify.Code != req.Code {
-			c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "验证码错误"})
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "验证码错误", "error": "验证码错误"})
 			return
 		}
 	}
 	//判断验证码是否过期
 	if emailVerify.ExpiredTime < time.Now().Unix() {
-		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "验证码已过期"})
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "验证码已过期", "error": "验证码已过期"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"Success": true, "message": "验证码正确"})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "验证码正确"})
 }
 
 // 获取用户信息
@@ -326,26 +354,67 @@ func GetUserInfo(c *gin.Context) {
 func ChangePassword(c *gin.Context) {
 	var req ChangePasswordRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "参数错误"})
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "参数错误", "error": err.Error()})
+		return
+	}
+	//查询验证码表查看验证码是否正确
+	var emailVerify models.VerificationCode
+	if err := database.DB.Where("email = ?", req.Email).First(&emailVerify).Error; err == nil {
+		if emailVerify.Code != req.Code {
+			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "验证码错误", "error": "验证码错误"})
+			return
+		}
+	}
+	//判断验证码是否过期
+	if emailVerify.ExpiredTime < time.Now().Unix() {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "验证码已过期", "error": "验证码已过期"})
 		return
 	}
 	//查询用户
 	//从token中获取用户id
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"Success": false, "message": "无法获取用户信息"})
+		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "无法获取用户信息", "error": "无法获取用户信息"})
 		return
 	}
 	var user models.User
 	if err := database.DB.Where("id = ?", userID).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Success": false, "message": "用户不存在"})
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "用户不存在", "error": "用户不存在"})
 		return
 	}
 	//修改密码
 	if err := user.HashPassword(req.Password); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Success": false, "message": "密码加密失败"})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "密码加密失败", "error": "密码加密失败"})
 		return
 	}
 	database.DB.Save(&user)
-	c.JSON(http.StatusOK, gin.H{"Success": true, "message": "密码修改成功"})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "密码修改成功"})
+}
+
+// 更新用户信息
+func UpdateUserInfo(c *gin.Context) {
+	var req UpdateUserInfoRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "参数错误", "error": err.Error()})
+		return
+	}
+	//查询用户
+	//从token中获取用户id
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "无法获取用户信息", "error": "无法获取用户信息"})
+		return
+	}
+	var user models.User
+	if err := database.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "用户不存在", "error": "用户不存在"})
+		return
+	}
+	//更新用户信息
+	user.Nickname = req.Nickname
+	user.Signature = req.Signature
+	user.Avatar = req.Avatar
+	user.Birthday = req.Birthday
+	database.DB.Save(&user)
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户信息更新成功"})
 }

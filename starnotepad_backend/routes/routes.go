@@ -20,6 +20,7 @@ func SetupRoutes(r *gin.Engine) {
 	user.Use(middleware.AuthMiddleware())
 	{
 		user.GET("/info", controllers.GetUserInfo)               //获取用户信息
+		user.POST("/updateUserInfo", controllers.UpdateUserInfo) //更新用户信息
 		user.POST("/changePassword", controllers.ChangePassword) //修改密码
 	}
 	//通用相关路由
@@ -35,8 +36,23 @@ func SetupRoutes(r *gin.Engine) {
 	notepad := r.Group("/api/notepad") //记事本相关路由，需要认证中间件
 	notepad.Use(middleware.AuthMiddleware())
 	{
-		notepad.POST("/create", controllers.CreateNotepad) //创建记事本
-		notepad.GET("/list", controllers.GetNotepadList)   //获取记事本列表
+		notepad.POST("/create", controllers.CreateNotepad)                                           //创建记事本
+		notepad.POST("/update", controllers.UpdateNotepad)                                           //更新记事本
+		notepad.POST("/updateDeleteStatus/:id/:deleteStatus", controllers.UpdateNotepadDeleteStatus) //移入回收站或恢复记事本
+		notepad.GET("/deletedList", controllers.GetDeletedNotepadList)                               //获取回收站中的记事本列表
+		notepad.DELETE("/delete/:id", controllers.DeleteNotepad)                                     //删除记事本
+		notepad.GET("/list", controllers.GetNotepadList)                                             //获取记事本列表
+		notepad.GET("/listByCategory/:categoryID", controllers.GetNotepadListByCategoryID)           //获取指定分类的记事本列表
+		notepad.GET("/search/:keyword", controllers.SearchNotepadByKeyword)                          //模糊查询记事本
+	}
+	//记事本分类
+	notepadCategory := r.Group("/api/notepadCategory") //记事本分类相关路由，需要认证中间件
+	notepadCategory.Use(middleware.AuthMiddleware())
+	{
+		notepadCategory.POST("/create", controllers.CreateNotepadCategory)                             //创建记事本分类
+		notepadCategory.GET("/list", controllers.GetNotepadCategoryList)                               //获取记事本分类列表
+		notepadCategory.GET("/defaultList", controllers.GetDefaultNotepadCategoryList)                 //获取默认的记事本分类列表
+		notepadCategory.GET("/defaultList/:userID", controllers.GetDefaultNotepadCategoryListByUserID) //获取指定用户的默认记事本分类列表
 	}
 
 	//网络健康检查
