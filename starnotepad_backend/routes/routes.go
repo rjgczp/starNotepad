@@ -12,6 +12,7 @@ func SetupRoutes(r *gin.Engine) {
 	{
 		auth.POST("/register", controllers.Register)               //用户注册
 		auth.POST("/login", controllers.Login)                     //用户登录
+		auth.POST("/addLoginDevice", controllers.AddLoginDevice)   //添加登录设备
 		auth.POST("/sendEmailCode", controllers.SendEmailCode)     //发送邮箱验证码
 		auth.POST("/verifyEmailCode", controllers.VerifyEmailCode) //验证邮箱验证码
 	}
@@ -22,6 +23,7 @@ func SetupRoutes(r *gin.Engine) {
 		user.GET("/info", controllers.GetUserInfo)               //获取用户信息
 		user.POST("/updateUserInfo", controllers.UpdateUserInfo) //更新用户信息
 		user.POST("/changePassword", controllers.ChangePassword) //修改密码
+		user.POST("/deleteAccount", controllers.DeleteAccount)   //注销用户
 	}
 	//通用相关路由
 	common := r.Group("/api/common") //通用相关路由
@@ -37,7 +39,7 @@ func SetupRoutes(r *gin.Engine) {
 	notepad.Use(middleware.AuthMiddleware())
 	{
 		notepad.POST("/create", controllers.CreateNotepad)                                           //创建记事本
-		notepad.POST("/update", controllers.UpdateNotepad)                                           //更新记事本
+		notepad.POST("/update/:id", controllers.UpdateNotepad)                                       //更新记事本
 		notepad.POST("/updateDeleteStatus/:id/:deleteStatus", controllers.UpdateNotepadDeleteStatus) //移入回收站或恢复记事本
 		notepad.GET("/deletedList", controllers.GetDeletedNotepadList)                               //获取回收站中的记事本列表
 		notepad.DELETE("/delete/:id", controllers.DeleteNotepad)                                     //删除记事本
@@ -53,6 +55,22 @@ func SetupRoutes(r *gin.Engine) {
 		notepadCategory.GET("/list", controllers.GetNotepadCategoryList)                               //获取记事本分类列表
 		notepadCategory.GET("/defaultList", controllers.GetDefaultNotepadCategoryList)                 //获取默认的记事本分类列表
 		notepadCategory.GET("/defaultList/:userID", controllers.GetDefaultNotepadCategoryListByUserID) //获取指定用户的默认记事本分类列表
+	}
+	//会员系统
+	member := r.Group("/api/member") //会员系统相关路由，需要认证中间件
+	member.Use(middleware.AuthMiddleware())
+	{
+		member.POST("/create", controllers.CreateMember) //创建会员
+		member.GET("/list", controllers.GetMemberList)   //获取会员列表
+		member.GET("/isMember", controllers.IsMember)    //查询该用户是否为会员
+		member.POST("/renew", controllers.RenewMember)   //续费会员
+	}
+	//今日历史
+	todayInHistory := r.Group("/api/todayInHistory") //今日历史相关路由，需要认证中间件
+	todayInHistory.Use(middleware.AuthMiddleware())
+	{
+		todayInHistory.GET("/info", controllers.GetTodayInHistoryInfo) //获取今日历史信息
+
 	}
 
 	//网络健康检查

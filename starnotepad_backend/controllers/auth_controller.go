@@ -54,6 +54,12 @@ type UpdateUserInfoRequest struct {
 	Birthday  *time.Time `json:"birthday" binding:"required"`
 }
 
+type AddLoginDeviceRequest struct {
+	DeviceName  string `json:"device_name" binding:"required"`
+	DeviceType  string `json:"device_type" binding:"required"`
+	DeviceToken string `json:"device_token" binding:"required"`
+}
+
 // 用户注册
 func Register(c *gin.Context) {
 	var req RegisterRequest
@@ -417,4 +423,41 @@ func UpdateUserInfo(c *gin.Context) {
 	user.Birthday = req.Birthday
 	database.DB.Save(&user)
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户信息更新成功"})
+}
+
+// 注销用户账号
+func DeleteAccount(c *gin.Context) {
+	//从token中获取用户id
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "无法获取用户信息", "error": "无法获取用户信息"})
+		return
+	}
+	var user models.User
+	if err := database.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "用户不存在", "error": "用户不存在"})
+		return
+	}
+	//删除用户
+	database.DB.Where("id = ?", userID).Unscoped().Delete(&user)
+	//删除用户所有记事本
+	database.DB.Where("user_id = ?", userID).Unscoped().Delete(&models.Notepad{})
+	//删除用户验证信息
+	database.DB.Where("email = ?", user.Email).Unscoped().Delete(&models.VerificationCode{})
+	//删除用户创建的记事本分类
+	database.DB.Where("user_id = ?", userID).Unscoped().Delete(&models.NotepadCategory{})
+	//删除用户会员信息
+	database.DB.Where("user_id = ?", userID).Unscoped().Delete(&models.Member{})
+	//删除用户登录设备信息
+	database.DB.Where("user_id = ?", userID).Unscoped().Delete(&models.LoginDevice{})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户账号注销成功"})
+}
+
+// 添加登录设备
+func AddLoginDevice(c *gin.Context) {
+	var req AddLoginDeviceRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "参数错误", "error": err.Error()})
+		return
+	}
 }

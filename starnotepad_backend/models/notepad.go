@@ -7,7 +7,7 @@ import (
 )
 
 type Notepad struct {
-	gorm.Model
+	ID          uint       `json:"id" gorm:"primaryKey"`                         //ID
 	Title       string     `json:"title" gorm:"type:varchar(255);not null"`      //标题
 	ContentHtml string     `json:"content_html" gorm:"type:text;not null"`       //内容HTML
 	Content     string     `json:"content" gorm:"type:text;not null"`            //内容

@@ -18,7 +18,12 @@ func InitDB() {
 	}
 
 	// 自动迁移数据库表结构
-	err = db.AutoMigrate(&models.User{}, &models.LoginDevice{}, &models.VerificationCode{}, &models.Notepad{}, &models.NotepadCategory{})
+	err = db.AutoMigrate(&models.User{}, &models.LoginDevice{},
+		&models.TodayEvent{}, &models.TodayInHistory{},
+		&models.VerificationCode{}, &models.Notepad{},
+		&models.NotepadCategory{}, &models.Member{},
+		&models.Member{}, &models.TodayEvent{},
+		&models.TodayInHistory{})
 	if err != nil {
 		log.Fatal("数据库迁移失败:", err)
 	}

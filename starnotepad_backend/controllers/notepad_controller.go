@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"starnotepad-backend/database"
 	"starnotepad-backend/models"
@@ -124,6 +125,7 @@ func CreateNotepad(c *gin.Context) {
 }
 
 func UpdateNotepad(c *gin.Context) {
+	notepadID := c.Param("id")
 	var req UpdateNotepadRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "参数错误", "error": err.Error()})
@@ -136,7 +138,7 @@ func UpdateNotepad(c *gin.Context) {
 		return
 	}
 	notepad := models.Notepad{}
-	database.DB.Where("id = ? AND user_id = ?", req.ID, userID.(uint)).First(&notepad)
+	database.DB.Where("id = ? AND user_id = ?", notepadID, userID.(uint)).First(&notepad)
 	notepad.ContentHtml = req.ContentHtml
 	notepad.Content = req.Content
 	notepad.Title = req.Title
@@ -194,7 +196,7 @@ func GetDeletedNotepadList(c *gin.Context) {
 		return
 	}
 	notepadList := []models.Notepad{}
-	database.DB.Where("user_id = ? AND is_deleted = ?", userID.(uint), true).Find(&notepadList)
+	database.DB.Unscoped().Where("user_id = ? AND deleted_at IS NOT NULL", userID.(uint)).Find(&notepadList)
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": notepadList})
 }
 
@@ -208,19 +210,20 @@ func UpdateNotepadDeleteStatus(c *gin.Context) {
 		return
 	}
 	notepad := models.Notepad{}
-	database.DB.Where("id = ? AND user_id = ?", notepadID, userID.(uint)).First(&notepad)
-	notepad.IsDeleted = deleteStatus == "true"
+	database.DB.Unscoped().Where("id = ? AND user_id = ?", notepadID, userID.(uint)).First(&notepad)
+	notepad.IsDeleted = deleteStatus == "1"
 	if notepad.IsDeleted {
-		notepad.DeletedAt = &time.Time{}
+		now := time.Now()
+		notepad.DeletedAt = &now
 	} else {
-		notepad.DeletedAt = &time.Time{}
+		notepad.DeletedAt = nil
 	}
 	database.DB.Save(&notepad)
 	message := ""
 	if notepad.IsDeleted {
-		message = "恢复成功"
+		message = "已移动至回收站"
 	} else {
-		message = "移入回收站成功"
+		message = "恢复成功"
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": message})
 }
@@ -233,8 +236,17 @@ func DeleteNotepad(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "无法获取用户信息", "error": "无法获取用户信息"})
 		return
 	}
-	notepad := models.Notepad{}
-	database.DB.Where("id = ? AND user_id = ?", notepadID, userID.(uint)).First(&notepad)
-	database.DB.Delete(&notepad)
+	//打印出id
+	fmt.Println("notepadID:", notepadID)
+	fmt.Println("userID:", userID.(uint))
+	tx := database.DB.Where("id = ? AND user_id = ?", notepadID, userID.(uint)).Delete(&models.Notepad{})
+	if tx.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "删除失败", "error": tx.Error.Error()})
+		return
+	}
+	if tx.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "记录不存在或无权限", "error": "记录不存在或无权限"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "删除成功"})
 }
