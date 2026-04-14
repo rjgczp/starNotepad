@@ -9,10 +9,7 @@ import 'package:startnotepad_flutter/features/note/presentation/note_list_page.d
 import 'package:startnotepad_flutter/features/note/presentation/category_manage_page.dart';
 import 'package:startnotepad_flutter/tools/localData.dart';
 import '../begin/login.dart';
-import '../features/note/data/category_api.dart';
-import '../features/note/data/category_offline_repository.dart';
-import '../features/note/data/note_api.dart';
-import '../features/note/data/note_offline_repository.dart';
+import '../core/sync/sync_offline_repository.dart';
 import '../core/icons/iconfont_widget.dart';
 import '../core/db/app_database.dart';
 import '../features/note/presentation/diary_page_simple.dart';
@@ -369,12 +366,7 @@ class _CategorySelector extends StatefulWidget {
 }
 
 class _CategorySelectorState extends State<_CategorySelector> {
-  final CategoryOfflineRepository _repo = CategoryOfflineRepository(
-    CategoryApi(ApiClient()),
-  );
-  final NoteOfflineRepository _noteRepo = NoteOfflineRepository(
-    NoteApi(ApiClient()),
-  );
+  final SyncOfflineRepository _repo = SyncOfflineRepository();
   List<Map<String, dynamic>> _categories = [];
   bool _loading = true;
   int _totalNotes = 0;
@@ -383,40 +375,54 @@ class _CategorySelectorState extends State<_CategorySelector> {
   void initState() {
     super.initState();
     _loadCategories();
+    _loadTotalNotes();
   }
 
   Future<void> _loadCategories() async {
     try {
-      final list = await _repo.loadAll();
-      final visibleList =
-          list.where((category) {
-            final id = category['ID'];
-            final isSystem = category['isSystem'] == true;
-            if (id is! int) return true;
-            if (!isSystem) return true;
-            return _repo.isCategoryEnabled(id);
-          }).toList();
-
-      // 同时获取笔记总数
-      try {
-        final pageResult = await _noteRepo.loadPage(
-          page: 1,
-          pageSize: 1, // 只需要获取总数，不需要具体数据
-          categoryId: null,
-        );
-        _totalNotes = pageResult.total;
-      } catch (e) {
-        // 如果获取失败，保持为 0
-        _totalNotes = 0;
-      }
-
+      final list = await _repo.getAllCategories();
       setState(() {
-        _categories = visibleList;
+        _categories =
+            list
+                .where((cat) {
+                  // For system categories (userId=0), check visibility setting
+                  if (cat.userId == 0) {
+                    return LocalData.getBool('category_visible_${cat.localId}');
+                  }
+                  return true; // User categories are always visible
+                })
+                .map(
+                  (cat) => {
+                    'id': cat.localId,
+                    'ID': cat.remoteId,
+                    'name': cat.name,
+                    'color': cat.color,
+                    'icon': cat.icon,
+                    'userId': cat.userId,
+                  },
+                )
+                .toList();
         _loading = false;
       });
     } catch (e) {
+      setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _loadTotalNotes() async {
+    try {
+      final pageResult = await _repo.loadPage(
+        page: 1,
+        pageSize: 1, // 只需要获取总数，不需要具体数据
+        categoryId: null,
+      );
       setState(() {
-        _loading = false;
+        _totalNotes = pageResult.total;
+      });
+    } catch (e) {
+      // 如果获取失败，保持为 0
+      setState(() {
+        _totalNotes = 0;
       });
     }
   }
@@ -735,7 +741,7 @@ class _HomeState extends State<Home> {
   Future<void> _syncDataFromDrawer() async {
     Navigator.of(context).pop();
     try {
-      final noteRepo = NoteOfflineRepository(NoteApi(ApiClient()));
+      final noteRepo = SyncOfflineRepository();
       await noteRepo.syncSilently();
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -802,7 +808,7 @@ class _HomeState extends State<Home> {
       _HomeNavItemData(label: '记事本', icon: Icons.note_alt_outlined),
       _HomeNavItemData(label: '日记', icon: Icons.book_outlined),
       _HomeNavItemData(label: '回响', icon: Icons.hourglass_empty_rounded),
-      _HomeNavItemData(label: 'AI助手', icon: Icons.smart_toy_outlined),
+      _HomeNavItemData(label: '更多', icon: Icons.more_horiz_rounded),
     ];
 
     return Scaffold(

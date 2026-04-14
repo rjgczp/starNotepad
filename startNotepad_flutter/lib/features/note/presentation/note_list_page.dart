@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:startnotepad_flutter/core/icons/iconfont_icons.dart';
-import 'package:startnotepad_flutter/core/network/api_client.dart';
 import 'package:startnotepad_flutter/core/theme/theme_provider.dart';
-import 'package:startnotepad_flutter/features/note/data/note_api.dart';
-import 'package:startnotepad_flutter/features/note/data/note_offline_repository.dart';
+import 'package:startnotepad_flutter/core/sync/sync_offline_repository.dart';
 import 'package:startnotepad_flutter/features/note/presentation/note_create_page.dart';
 import 'package:startnotepad_flutter/features/note/presentation/note_detail_page.dart';
 
@@ -22,9 +20,7 @@ class NoteListPage extends StatefulWidget {
 
 class _NoteListPageState extends State<NoteListPage>
     with SingleTickerProviderStateMixin {
-  late final NoteOfflineRepository _repo = NoteOfflineRepository(
-    NoteApi(ApiClient()),
-  );
+  late final SyncOfflineRepository _repo = SyncOfflineRepository();
   Future<PageResult>? _future;
 
   // 分页相关

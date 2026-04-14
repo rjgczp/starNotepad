@@ -48,6 +48,7 @@ class Categories extends Table {
   TextColumn get name => text()();
   TextColumn get color => text().nullable()();
   TextColumn get icon => text().nullable()();
+  IntColumn get userId => integer().withDefault(const Constant(0))();
   DateTimeColumn get updatedAtLocal =>
       dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAtRemote => dateTime().nullable()();
@@ -68,12 +69,25 @@ class SyncQueue extends Table {
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
-@DriftDatabase(tables: [Notes, Categories, SyncQueue])
+class ColorItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get remoteId => integer().nullable()();
+  TextColumn get colors => text()();
+  TextColumn get color => text()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAtRemote => dateTime().nullable()();
+  DateTimeColumn get deletedAt => dateTime().nullable()();
+  IntColumn get syncState =>
+      integer().withDefault(const Constant(SyncState.synced))();
+}
+
+@DriftDatabase(tables: [Notes, Categories, SyncQueue, ColorItems])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -106,6 +120,31 @@ class AppDatabase extends _$AppDatabase {
       if (from < 3) {
         // Ensure updatedAt is nullable (fix previous non-constant default issue)
         // No-op: schema already nullable; just bump version to trigger rebuild.
+      }
+      if (from < 4) {
+        // Add ColorItems table
+        await m.createTable(colorItems);
+      }
+      if (from < 5) {
+        // Add sync columns to ColorItems table
+        try {
+          await m.addColumn(colorItems, colorItems.remoteId);
+        } catch (_) {}
+        try {
+          await m.addColumn(colorItems, colorItems.updatedAtRemote);
+        } catch (_) {}
+        try {
+          await m.addColumn(colorItems, colorItems.deletedAt);
+        } catch (_) {}
+        try {
+          await m.addColumn(colorItems, colorItems.syncState);
+        } catch (_) {}
+      }
+      if (from < 6) {
+        // Add userId column to Categories table
+        try {
+          await m.addColumn(categories, categories.userId);
+        } catch (_) {}
       }
     },
   );
@@ -151,6 +190,11 @@ class AppDatabase extends _$AppDatabase {
   Future<Note?> findNoteByRemoteId(int remoteId) {
     return (select(notes)
       ..where((t) => t.remoteId.equals(remoteId))).getSingleOrNull();
+  }
+
+  Future<Note?> findNoteByLocalId(int localId) {
+    return (select(notes)
+      ..where((t) => t.localId.equals(localId))).getSingleOrNull();
   }
 
   Future<void> updateNoteByLocalId(int localId, NotesCompanion patch) async {
@@ -312,6 +356,47 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> enqueueSync(SyncQueueCompanion entry) {
     return into(syncQueue).insert(entry);
+  }
+
+  // Color related methods
+  Future<List<ColorItem>> getAllColors() {
+    return (select(colorItems)
+          ..where((t) => t.deletedAt.isNull())
+          ..orderBy([(t) => OrderingTerm.asc(t.colors)]))
+        .get();
+  }
+
+  Future<ColorItem?> findColorById(int id) {
+    return (select(colorItems)
+      ..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
+  Future<ColorItem?> findColorByName(String name) {
+    return (select(colorItems)
+      ..where((t) => t.colors.equals(name))).getSingleOrNull();
+  }
+
+  Future<int> createColor(ColorItemsCompanion color) {
+    return into(colorItems).insert(color);
+  }
+
+  Future<void> updateColor(int id, ColorItemsCompanion color) async {
+    final now = DateTime.now();
+    final updateData = color.copyWith(updatedAt: Value(now));
+    await (update(colorItems)..where((t) => t.id.equals(id))).write(updateData);
+  }
+
+  Future<void> deleteColor(int id) async {
+    await (delete(colorItems)..where((t) => t.id.equals(id))).go();
+  }
+
+  Future<void> replaceColors(List<ColorItemsCompanion> rows) async {
+    await transaction(() async {
+      await delete(colorItems).go();
+      if (rows.isNotEmpty) {
+        await batch((b) => b.insertAll(colorItems, rows));
+      }
+    });
   }
 }
 

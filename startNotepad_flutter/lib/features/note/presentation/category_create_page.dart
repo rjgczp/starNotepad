@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/icons/iconfont_icons.dart';
-import '../../../core/network/api_client.dart';
 import '../../../core/theme/theme_provider.dart';
-import '../data/category_api.dart';
-import '../data/category_offline_repository.dart';
+import '../../../core/sync/sync_offline_repository.dart';
 
 class CategoryCreatePage extends StatefulWidget {
   const CategoryCreatePage({
@@ -27,9 +25,7 @@ class CategoryCreatePage extends StatefulWidget {
 }
 
 class _CategoryCreatePageState extends State<CategoryCreatePage> {
-  late final CategoryOfflineRepository _repo = CategoryOfflineRepository(
-    CategoryApi(ApiClient()),
-  );
+  late final SyncOfflineRepository _repo = SyncOfflineRepository();
 
   final TextEditingController _nameController = TextEditingController();
 
@@ -85,7 +81,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
     try {
       if (widget.isEditMode) {
         await _repo.updateCategory(
-          id: widget.categoryId!,
+          localId: widget.categoryId!,
           name: name,
           color: _selectedColorHex,
           icon: 'iconfont $_selectedIconCss',

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../../tools/localData.dart';
+import '../db/db_instance.dart';
 import '../network/api_client.dart';
 
 class ThemeColorItem {
@@ -50,7 +51,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeProvider._();
 
   /// Load saved color from local storage immediately (sync)
-  void loadFromLocal() {
+  Future<void> loadFromLocal() async {
     // Load selected color
     final savedHex = LocalData.getString(_selectedColorKey);
     if (savedHex.isNotEmpty) {
@@ -58,18 +59,63 @@ class ThemeProvider extends ChangeNotifier {
       if (parsed != null) _primaryColor = parsed;
     }
 
-    // Load cached color list
-    final listJson = LocalData.getString(_colorListKey);
-    if (listJson.isNotEmpty) {
-      try {
-        final decoded = jsonDecode(listJson) as List;
-        _colors =
-            decoded
-                .map(
-                  (e) => ThemeColorItem.fromJson(Map<String, dynamic>.from(e)),
-                )
-                .toList();
-      } catch (_) {}
+    // Load colors from local database
+    await _loadColorsFromDatabase(savedHex);
+  }
+
+  /// Load colors from local database
+  Future<void> _loadColorsFromDatabase(String savedHex) async {
+    try {
+      final db = DbInstance.db;
+      final colorItems = await db.getAllColors();
+
+      _colors =
+          colorItems.map((item) {
+            final color = _parseHexColor(item.color) ?? _defaultColor;
+            return ThemeColorItem(id: item.id, name: item.colors, color: color);
+          }).toList();
+
+      // If no colors in database, try to load from cache
+      if (_colors.isEmpty) {
+        final listJson = LocalData.getString(_colorListKey);
+        if (listJson.isNotEmpty) {
+          try {
+            final decoded = jsonDecode(listJson) as List;
+            _colors =
+                decoded
+                    .map(
+                      (e) =>
+                          ThemeColorItem.fromJson(Map<String, dynamic>.from(e)),
+                    )
+                    .toList();
+          } catch (_) {}
+        }
+      }
+
+      // If no color was previously selected, use the first one
+      if (_colors.isNotEmpty && savedHex.isEmpty) {
+        _primaryColor = _colors.first.color;
+        await _saveSelectedColor(_primaryColor);
+      }
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint('[ThemeProvider] Error loading from database: $e');
+      // Fallback to cached list
+      final listJson = LocalData.getString(_colorListKey);
+      if (listJson.isNotEmpty) {
+        try {
+          final decoded = jsonDecode(listJson) as List;
+          _colors =
+              decoded
+                  .map(
+                    (e) =>
+                        ThemeColorItem.fromJson(Map<String, dynamic>.from(e)),
+                  )
+                  .toList();
+          notifyListeners();
+        } catch (_) {}
+      }
     }
   }
 

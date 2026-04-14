@@ -5,12 +5,15 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter/scheduler.dart';
 import 'begin/lead.dart';
 import 'core/theme/theme_provider.dart';
+import 'core/db/db_instance.dart';
 import 'tools/localData.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalData.init();
-  ThemeProvider().loadFromLocal();
+  // Initialize database to ensure migration completes
+  await DbInstance.db.customSelect('SELECT 1').get();
+  await ThemeProvider().loadFromLocal();
   runApp(const MyApp());
 }
 

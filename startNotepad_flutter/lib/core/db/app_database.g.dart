@@ -1180,6 +1180,16 @@ class $CategoriesTable extends Categories
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _updatedAtLocalMeta = const VerificationMeta(
     'updatedAtLocal',
   );
@@ -1235,6 +1245,7 @@ class $CategoriesTable extends Categories
     name,
     color,
     icon,
+    userId,
     updatedAtLocal,
     updatedAtRemote,
     deletedAt,
@@ -1282,6 +1293,12 @@ class $CategoriesTable extends Categories
       context.handle(
         _iconMeta,
         icon.isAcceptableOrUnknown(data['icon']!, _iconMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
       );
     }
     if (data.containsKey('updated_at_local')) {
@@ -1345,6 +1362,11 @@ class $CategoriesTable extends Categories
         DriftSqlType.string,
         data['${effectivePrefix}icon'],
       ),
+      userId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}user_id'],
+          )!,
       updatedAtLocal:
           attachedDatabase.typeMapping.read(
             DriftSqlType.dateTime,
@@ -1378,6 +1400,7 @@ class Category extends DataClass implements Insertable<Category> {
   final String name;
   final String? color;
   final String? icon;
+  final int userId;
   final DateTime updatedAtLocal;
   final DateTime? updatedAtRemote;
   final DateTime? deletedAt;
@@ -1388,6 +1411,7 @@ class Category extends DataClass implements Insertable<Category> {
     required this.name,
     this.color,
     this.icon,
+    required this.userId,
     required this.updatedAtLocal,
     this.updatedAtRemote,
     this.deletedAt,
@@ -1407,6 +1431,7 @@ class Category extends DataClass implements Insertable<Category> {
     if (!nullToAbsent || icon != null) {
       map['icon'] = Variable<String>(icon);
     }
+    map['user_id'] = Variable<int>(userId);
     map['updated_at_local'] = Variable<DateTime>(updatedAtLocal);
     if (!nullToAbsent || updatedAtRemote != null) {
       map['updated_at_remote'] = Variable<DateTime>(updatedAtRemote);
@@ -1429,6 +1454,7 @@ class Category extends DataClass implements Insertable<Category> {
       color:
           color == null && nullToAbsent ? const Value.absent() : Value(color),
       icon: icon == null && nullToAbsent ? const Value.absent() : Value(icon),
+      userId: Value(userId),
       updatedAtLocal: Value(updatedAtLocal),
       updatedAtRemote:
           updatedAtRemote == null && nullToAbsent
@@ -1453,6 +1479,7 @@ class Category extends DataClass implements Insertable<Category> {
       name: serializer.fromJson<String>(json['name']),
       color: serializer.fromJson<String?>(json['color']),
       icon: serializer.fromJson<String?>(json['icon']),
+      userId: serializer.fromJson<int>(json['userId']),
       updatedAtLocal: serializer.fromJson<DateTime>(json['updatedAtLocal']),
       updatedAtRemote: serializer.fromJson<DateTime?>(json['updatedAtRemote']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
@@ -1468,6 +1495,7 @@ class Category extends DataClass implements Insertable<Category> {
       'name': serializer.toJson<String>(name),
       'color': serializer.toJson<String?>(color),
       'icon': serializer.toJson<String?>(icon),
+      'userId': serializer.toJson<int>(userId),
       'updatedAtLocal': serializer.toJson<DateTime>(updatedAtLocal),
       'updatedAtRemote': serializer.toJson<DateTime?>(updatedAtRemote),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
@@ -1481,6 +1509,7 @@ class Category extends DataClass implements Insertable<Category> {
     String? name,
     Value<String?> color = const Value.absent(),
     Value<String?> icon = const Value.absent(),
+    int? userId,
     DateTime? updatedAtLocal,
     Value<DateTime?> updatedAtRemote = const Value.absent(),
     Value<DateTime?> deletedAt = const Value.absent(),
@@ -1491,6 +1520,7 @@ class Category extends DataClass implements Insertable<Category> {
     name: name ?? this.name,
     color: color.present ? color.value : this.color,
     icon: icon.present ? icon.value : this.icon,
+    userId: userId ?? this.userId,
     updatedAtLocal: updatedAtLocal ?? this.updatedAtLocal,
     updatedAtRemote:
         updatedAtRemote.present ? updatedAtRemote.value : this.updatedAtRemote,
@@ -1504,6 +1534,7 @@ class Category extends DataClass implements Insertable<Category> {
       name: data.name.present ? data.name.value : this.name,
       color: data.color.present ? data.color.value : this.color,
       icon: data.icon.present ? data.icon.value : this.icon,
+      userId: data.userId.present ? data.userId.value : this.userId,
       updatedAtLocal:
           data.updatedAtLocal.present
               ? data.updatedAtLocal.value
@@ -1525,6 +1556,7 @@ class Category extends DataClass implements Insertable<Category> {
           ..write('name: $name, ')
           ..write('color: $color, ')
           ..write('icon: $icon, ')
+          ..write('userId: $userId, ')
           ..write('updatedAtLocal: $updatedAtLocal, ')
           ..write('updatedAtRemote: $updatedAtRemote, ')
           ..write('deletedAt: $deletedAt, ')
@@ -1540,6 +1572,7 @@ class Category extends DataClass implements Insertable<Category> {
     name,
     color,
     icon,
+    userId,
     updatedAtLocal,
     updatedAtRemote,
     deletedAt,
@@ -1554,6 +1587,7 @@ class Category extends DataClass implements Insertable<Category> {
           other.name == this.name &&
           other.color == this.color &&
           other.icon == this.icon &&
+          other.userId == this.userId &&
           other.updatedAtLocal == this.updatedAtLocal &&
           other.updatedAtRemote == this.updatedAtRemote &&
           other.deletedAt == this.deletedAt &&
@@ -1566,6 +1600,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   final Value<String> name;
   final Value<String?> color;
   final Value<String?> icon;
+  final Value<int> userId;
   final Value<DateTime> updatedAtLocal;
   final Value<DateTime?> updatedAtRemote;
   final Value<DateTime?> deletedAt;
@@ -1576,6 +1611,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     this.name = const Value.absent(),
     this.color = const Value.absent(),
     this.icon = const Value.absent(),
+    this.userId = const Value.absent(),
     this.updatedAtLocal = const Value.absent(),
     this.updatedAtRemote = const Value.absent(),
     this.deletedAt = const Value.absent(),
@@ -1587,6 +1623,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     required String name,
     this.color = const Value.absent(),
     this.icon = const Value.absent(),
+    this.userId = const Value.absent(),
     this.updatedAtLocal = const Value.absent(),
     this.updatedAtRemote = const Value.absent(),
     this.deletedAt = const Value.absent(),
@@ -1598,6 +1635,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     Expression<String>? name,
     Expression<String>? color,
     Expression<String>? icon,
+    Expression<int>? userId,
     Expression<DateTime>? updatedAtLocal,
     Expression<DateTime>? updatedAtRemote,
     Expression<DateTime>? deletedAt,
@@ -1609,6 +1647,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
       if (name != null) 'name': name,
       if (color != null) 'color': color,
       if (icon != null) 'icon': icon,
+      if (userId != null) 'user_id': userId,
       if (updatedAtLocal != null) 'updated_at_local': updatedAtLocal,
       if (updatedAtRemote != null) 'updated_at_remote': updatedAtRemote,
       if (deletedAt != null) 'deleted_at': deletedAt,
@@ -1622,6 +1661,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     Value<String>? name,
     Value<String?>? color,
     Value<String?>? icon,
+    Value<int>? userId,
     Value<DateTime>? updatedAtLocal,
     Value<DateTime?>? updatedAtRemote,
     Value<DateTime?>? deletedAt,
@@ -1633,6 +1673,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
       name: name ?? this.name,
       color: color ?? this.color,
       icon: icon ?? this.icon,
+      userId: userId ?? this.userId,
       updatedAtLocal: updatedAtLocal ?? this.updatedAtLocal,
       updatedAtRemote: updatedAtRemote ?? this.updatedAtRemote,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -1658,6 +1699,9 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     if (icon.present) {
       map['icon'] = Variable<String>(icon.value);
     }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
     if (updatedAtLocal.present) {
       map['updated_at_local'] = Variable<DateTime>(updatedAtLocal.value);
     }
@@ -1681,6 +1725,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
           ..write('name: $name, ')
           ..write('color: $color, ')
           ..write('icon: $icon, ')
+          ..write('userId: $userId, ')
           ..write('updatedAtLocal: $updatedAtLocal, ')
           ..write('updatedAtRemote: $updatedAtRemote, ')
           ..write('deletedAt: $deletedAt, ')
@@ -2255,12 +2300,573 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   }
 }
 
+class $ColorItemsTable extends ColorItems
+    with TableInfo<$ColorItemsTable, ColorItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ColorItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<int> remoteId = GeneratedColumn<int>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _colorsMeta = const VerificationMeta('colors');
+  @override
+  late final GeneratedColumn<String> colors = GeneratedColumn<String>(
+    'colors',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtRemoteMeta = const VerificationMeta(
+    'updatedAtRemote',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtRemote =
+      GeneratedColumn<DateTime>(
+        'updated_at_remote',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _syncStateMeta = const VerificationMeta(
+    'syncState',
+  );
+  @override
+  late final GeneratedColumn<int> syncState = GeneratedColumn<int>(
+    'sync_state',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(SyncState.synced),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    remoteId,
+    colors,
+    color,
+    createdAt,
+    updatedAt,
+    updatedAtRemote,
+    deletedAt,
+    syncState,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'color_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ColorItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('colors')) {
+      context.handle(
+        _colorsMeta,
+        colors.isAcceptableOrUnknown(data['colors']!, _colorsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_colorsMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_colorMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at_remote')) {
+      context.handle(
+        _updatedAtRemoteMeta,
+        updatedAtRemote.isAcceptableOrUnknown(
+          data['updated_at_remote']!,
+          _updatedAtRemoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_state')) {
+      context.handle(
+        _syncStateMeta,
+        syncState.isAcceptableOrUnknown(data['sync_state']!, _syncStateMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ColorItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ColorItem(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remote_id'],
+      ),
+      colors:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}colors'],
+          )!,
+      color:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}color'],
+          )!,
+      createdAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}created_at'],
+          )!,
+      updatedAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}updated_at'],
+          )!,
+      updatedAtRemote: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_remote'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      syncState:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}sync_state'],
+          )!,
+    );
+  }
+
+  @override
+  $ColorItemsTable createAlias(String alias) {
+    return $ColorItemsTable(attachedDatabase, alias);
+  }
+}
+
+class ColorItem extends DataClass implements Insertable<ColorItem> {
+  final int id;
+  final int? remoteId;
+  final String colors;
+  final String color;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? updatedAtRemote;
+  final DateTime? deletedAt;
+  final int syncState;
+  const ColorItem({
+    required this.id,
+    this.remoteId,
+    required this.colors,
+    required this.color,
+    required this.createdAt,
+    required this.updatedAt,
+    this.updatedAtRemote,
+    this.deletedAt,
+    required this.syncState,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<int>(remoteId);
+    }
+    map['colors'] = Variable<String>(colors);
+    map['color'] = Variable<String>(color);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || updatedAtRemote != null) {
+      map['updated_at_remote'] = Variable<DateTime>(updatedAtRemote);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    map['sync_state'] = Variable<int>(syncState);
+    return map;
+  }
+
+  ColorItemsCompanion toCompanion(bool nullToAbsent) {
+    return ColorItemsCompanion(
+      id: Value(id),
+      remoteId:
+          remoteId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(remoteId),
+      colors: Value(colors),
+      color: Value(color),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      updatedAtRemote:
+          updatedAtRemote == null && nullToAbsent
+              ? const Value.absent()
+              : Value(updatedAtRemote),
+      deletedAt:
+          deletedAt == null && nullToAbsent
+              ? const Value.absent()
+              : Value(deletedAt),
+      syncState: Value(syncState),
+    );
+  }
+
+  factory ColorItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ColorItem(
+      id: serializer.fromJson<int>(json['id']),
+      remoteId: serializer.fromJson<int?>(json['remoteId']),
+      colors: serializer.fromJson<String>(json['colors']),
+      color: serializer.fromJson<String>(json['color']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updatedAtRemote: serializer.fromJson<DateTime?>(json['updatedAtRemote']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      syncState: serializer.fromJson<int>(json['syncState']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'remoteId': serializer.toJson<int?>(remoteId),
+      'colors': serializer.toJson<String>(colors),
+      'color': serializer.toJson<String>(color),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updatedAtRemote': serializer.toJson<DateTime?>(updatedAtRemote),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'syncState': serializer.toJson<int>(syncState),
+    };
+  }
+
+  ColorItem copyWith({
+    int? id,
+    Value<int?> remoteId = const Value.absent(),
+    String? colors,
+    String? color,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> updatedAtRemote = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
+    int? syncState,
+  }) => ColorItem(
+    id: id ?? this.id,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    colors: colors ?? this.colors,
+    color: color ?? this.color,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    updatedAtRemote:
+        updatedAtRemote.present ? updatedAtRemote.value : this.updatedAtRemote,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    syncState: syncState ?? this.syncState,
+  );
+  ColorItem copyWithCompanion(ColorItemsCompanion data) {
+    return ColorItem(
+      id: data.id.present ? data.id.value : this.id,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      colors: data.colors.present ? data.colors.value : this.colors,
+      color: data.color.present ? data.color.value : this.color,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      updatedAtRemote:
+          data.updatedAtRemote.present
+              ? data.updatedAtRemote.value
+              : this.updatedAtRemote,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      syncState: data.syncState.present ? data.syncState.value : this.syncState,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ColorItem(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('colors: $colors, ')
+          ..write('color: $color, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('updatedAtRemote: $updatedAtRemote, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('syncState: $syncState')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    remoteId,
+    colors,
+    color,
+    createdAt,
+    updatedAt,
+    updatedAtRemote,
+    deletedAt,
+    syncState,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ColorItem &&
+          other.id == this.id &&
+          other.remoteId == this.remoteId &&
+          other.colors == this.colors &&
+          other.color == this.color &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.updatedAtRemote == this.updatedAtRemote &&
+          other.deletedAt == this.deletedAt &&
+          other.syncState == this.syncState);
+}
+
+class ColorItemsCompanion extends UpdateCompanion<ColorItem> {
+  final Value<int> id;
+  final Value<int?> remoteId;
+  final Value<String> colors;
+  final Value<String> color;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> updatedAtRemote;
+  final Value<DateTime?> deletedAt;
+  final Value<int> syncState;
+  const ColorItemsCompanion({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.colors = const Value.absent(),
+    this.color = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.updatedAtRemote = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.syncState = const Value.absent(),
+  });
+  ColorItemsCompanion.insert({
+    this.id = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    required String colors,
+    required String color,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.updatedAtRemote = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.syncState = const Value.absent(),
+  }) : colors = Value(colors),
+       color = Value(color);
+  static Insertable<ColorItem> custom({
+    Expression<int>? id,
+    Expression<int>? remoteId,
+    Expression<String>? colors,
+    Expression<String>? color,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? updatedAtRemote,
+    Expression<DateTime>? deletedAt,
+    Expression<int>? syncState,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (colors != null) 'colors': colors,
+      if (color != null) 'color': color,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (updatedAtRemote != null) 'updated_at_remote': updatedAtRemote,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (syncState != null) 'sync_state': syncState,
+    });
+  }
+
+  ColorItemsCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? remoteId,
+    Value<String>? colors,
+    Value<String>? color,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? updatedAtRemote,
+    Value<DateTime?>? deletedAt,
+    Value<int>? syncState,
+  }) {
+    return ColorItemsCompanion(
+      id: id ?? this.id,
+      remoteId: remoteId ?? this.remoteId,
+      colors: colors ?? this.colors,
+      color: color ?? this.color,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      updatedAtRemote: updatedAtRemote ?? this.updatedAtRemote,
+      deletedAt: deletedAt ?? this.deletedAt,
+      syncState: syncState ?? this.syncState,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<int>(remoteId.value);
+    }
+    if (colors.present) {
+      map['colors'] = Variable<String>(colors.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (updatedAtRemote.present) {
+      map['updated_at_remote'] = Variable<DateTime>(updatedAtRemote.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (syncState.present) {
+      map['sync_state'] = Variable<int>(syncState.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ColorItemsCompanion(')
+          ..write('id: $id, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('colors: $colors, ')
+          ..write('color: $color, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('updatedAtRemote: $updatedAtRemote, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('syncState: $syncState')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $NotesTable notes = $NotesTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $SyncQueueTable syncQueue = $SyncQueueTable(this);
+  late final $ColorItemsTable colorItems = $ColorItemsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2269,6 +2875,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     notes,
     categories,
     syncQueue,
+    colorItems,
   ];
 }
 
@@ -2772,6 +3379,7 @@ typedef $$CategoriesTableCreateCompanionBuilder =
       required String name,
       Value<String?> color,
       Value<String?> icon,
+      Value<int> userId,
       Value<DateTime> updatedAtLocal,
       Value<DateTime?> updatedAtRemote,
       Value<DateTime?> deletedAt,
@@ -2784,6 +3392,7 @@ typedef $$CategoriesTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String?> color,
       Value<String?> icon,
+      Value<int> userId,
       Value<DateTime> updatedAtLocal,
       Value<DateTime?> updatedAtRemote,
       Value<DateTime?> deletedAt,
@@ -2821,6 +3430,11 @@ class $$CategoriesTableFilterComposer
 
   ColumnFilters<String> get icon => $composableBuilder(
     column: $table.icon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2879,6 +3493,11 @@ class $$CategoriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAtLocal => $composableBuilder(
     column: $table.updatedAtLocal,
     builder: (column) => ColumnOrderings(column),
@@ -2923,6 +3542,9 @@ class $$CategoriesTableAnnotationComposer
 
   GeneratedColumn<String> get icon =>
       $composableBuilder(column: $table.icon, builder: (column) => column);
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAtLocal => $composableBuilder(
     column: $table.updatedAtLocal,
@@ -2974,6 +3596,7 @@ class $$CategoriesTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String?> color = const Value.absent(),
                 Value<String?> icon = const Value.absent(),
+                Value<int> userId = const Value.absent(),
                 Value<DateTime> updatedAtLocal = const Value.absent(),
                 Value<DateTime?> updatedAtRemote = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
@@ -2984,6 +3607,7 @@ class $$CategoriesTableTableManager
                 name: name,
                 color: color,
                 icon: icon,
+                userId: userId,
                 updatedAtLocal: updatedAtLocal,
                 updatedAtRemote: updatedAtRemote,
                 deletedAt: deletedAt,
@@ -2996,6 +3620,7 @@ class $$CategoriesTableTableManager
                 required String name,
                 Value<String?> color = const Value.absent(),
                 Value<String?> icon = const Value.absent(),
+                Value<int> userId = const Value.absent(),
                 Value<DateTime> updatedAtLocal = const Value.absent(),
                 Value<DateTime?> updatedAtRemote = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
@@ -3006,6 +3631,7 @@ class $$CategoriesTableTableManager
                 name: name,
                 color: color,
                 icon: icon,
+                userId: userId,
                 updatedAtLocal: updatedAtLocal,
                 updatedAtRemote: updatedAtRemote,
                 deletedAt: deletedAt,
@@ -3325,6 +3951,282 @@ typedef $$SyncQueueTableProcessedTableManager =
       SyncQueueData,
       PrefetchHooks Function()
     >;
+typedef $$ColorItemsTableCreateCompanionBuilder =
+    ColorItemsCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      required String colors,
+      required String color,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> updatedAtRemote,
+      Value<DateTime?> deletedAt,
+      Value<int> syncState,
+    });
+typedef $$ColorItemsTableUpdateCompanionBuilder =
+    ColorItemsCompanion Function({
+      Value<int> id,
+      Value<int?> remoteId,
+      Value<String> colors,
+      Value<String> color,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> updatedAtRemote,
+      Value<DateTime?> deletedAt,
+      Value<int> syncState,
+    });
+
+class $$ColorItemsTableFilterComposer
+    extends Composer<_$AppDatabase, $ColorItemsTable> {
+  $$ColorItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get colors => $composableBuilder(
+    column: $table.colors,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtRemote => $composableBuilder(
+    column: $table.updatedAtRemote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get syncState => $composableBuilder(
+    column: $table.syncState,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ColorItemsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ColorItemsTable> {
+  $$ColorItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get colors => $composableBuilder(
+    column: $table.colors,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtRemote => $composableBuilder(
+    column: $table.updatedAtRemote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get syncState => $composableBuilder(
+    column: $table.syncState,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ColorItemsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ColorItemsTable> {
+  $$ColorItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<String> get colors =>
+      $composableBuilder(column: $table.colors, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAtRemote => $composableBuilder(
+    column: $table.updatedAtRemote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get syncState =>
+      $composableBuilder(column: $table.syncState, builder: (column) => column);
+}
+
+class $$ColorItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ColorItemsTable,
+          ColorItem,
+          $$ColorItemsTableFilterComposer,
+          $$ColorItemsTableOrderingComposer,
+          $$ColorItemsTableAnnotationComposer,
+          $$ColorItemsTableCreateCompanionBuilder,
+          $$ColorItemsTableUpdateCompanionBuilder,
+          (
+            ColorItem,
+            BaseReferences<_$AppDatabase, $ColorItemsTable, ColorItem>,
+          ),
+          ColorItem,
+          PrefetchHooks Function()
+        > {
+  $$ColorItemsTableTableManager(_$AppDatabase db, $ColorItemsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () => $$ColorItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$ColorItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$ColorItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                Value<String> colors = const Value.absent(),
+                Value<String> color = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> updatedAtRemote = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> syncState = const Value.absent(),
+              }) => ColorItemsCompanion(
+                id: id,
+                remoteId: remoteId,
+                colors: colors,
+                color: color,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                updatedAtRemote: updatedAtRemote,
+                deletedAt: deletedAt,
+                syncState: syncState,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> remoteId = const Value.absent(),
+                required String colors,
+                required String color,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> updatedAtRemote = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> syncState = const Value.absent(),
+              }) => ColorItemsCompanion.insert(
+                id: id,
+                remoteId: remoteId,
+                colors: colors,
+                color: color,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                updatedAtRemote: updatedAtRemote,
+                deletedAt: deletedAt,
+                syncState: syncState,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ColorItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ColorItemsTable,
+      ColorItem,
+      $$ColorItemsTableFilterComposer,
+      $$ColorItemsTableOrderingComposer,
+      $$ColorItemsTableAnnotationComposer,
+      $$ColorItemsTableCreateCompanionBuilder,
+      $$ColorItemsTableUpdateCompanionBuilder,
+      (ColorItem, BaseReferences<_$AppDatabase, $ColorItemsTable, ColorItem>),
+      ColorItem,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3335,4 +4237,6 @@ class $AppDatabaseManager {
       $$CategoriesTableTableManager(_db, _db.categories);
   $$SyncQueueTableTableManager get syncQueue =>
       $$SyncQueueTableTableManager(_db, _db.syncQueue);
+  $$ColorItemsTableTableManager get colorItems =>
+      $$ColorItemsTableTableManager(_db, _db.colorItems);
 }

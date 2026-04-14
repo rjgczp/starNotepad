@@ -190,8 +190,20 @@ class NoteOfflineRepository {
         '[NoteSync] push payload deletedIds=${jsonEncode(pushPlan.deletedIds)}',
       );
       final pushRes = await _api.syncPush(
-        upserts: pushPlan.upserts,
-        deletedIds: pushPlan.deletedIds,
+        data: {
+          'notes': {
+            'upserts': pushPlan.upserts,
+            'deletedIds': pushPlan.deletedIds,
+          },
+          'categories': {
+            'upserts': <Map<String, dynamic>>[],
+            'deletedIds': <int>[],
+          },
+          'colors': {
+            'upserts': <Map<String, dynamic>>[],
+            'deletedIds': <int>[],
+          },
+        },
       );
       print(
         '[NoteSync] push raw status=${pushRes.statusCode} dataType=${pushRes.data.runtimeType}',

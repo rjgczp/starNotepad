@@ -10,8 +10,7 @@ import 'package:startnotepad_flutter/core/errors/app_exception.dart';
 import 'package:startnotepad_flutter/core/device/device_id_provider.dart';
 import 'package:startnotepad_flutter/features/auth/data/auth_api.dart';
 import 'package:startnotepad_flutter/features/auth/data/auth_repository_impl.dart';
-import 'package:startnotepad_flutter/features/note/data/note_api.dart';
-import 'package:startnotepad_flutter/features/note/data/note_offline_repository.dart';
+import 'package:startnotepad_flutter/core/sync/sync_offline_repository.dart';
 import 'package:startnotepad_flutter/tools/localData.dart';
 
 class Login extends StatefulWidget {
@@ -26,9 +25,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   TextEditingController _passwordController = TextEditingController();
   bool _isVisible = false;
 
-  final NoteOfflineRepository _noteRepo = NoteOfflineRepository(
-    NoteApi(ApiClient()),
-  );
+  final SyncOfflineRepository _noteRepo = SyncOfflineRepository();
 
   String _errorMessage(Object e) {
     if (e is AppException) return e.message;

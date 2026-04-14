@@ -9,10 +9,8 @@ import '../../../core/icons/iconfont_icons.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../tools/localData.dart';
-import '../data/category_api.dart';
-import '../data/category_offline_repository.dart';
 import '../data/note_api.dart';
-import '../data/note_offline_repository.dart';
+import '../../../core/sync/sync_offline_repository.dart';
 
 class NoteCreatePage extends StatefulWidget {
   const NoteCreatePage({super.key, this.initialRecordedAt});
@@ -25,11 +23,7 @@ class NoteCreatePage extends StatefulWidget {
 
 class _NoteCreatePageState extends State<NoteCreatePage> {
   late final NoteApi _noteApi = NoteApi(ApiClient());
-  late final NoteOfflineRepository _noteRepo = NoteOfflineRepository(
-    NoteApi(ApiClient()),
-  );
-  late final CategoryOfflineRepository _categoryRepo =
-      CategoryOfflineRepository(CategoryApi(ApiClient()));
+  late final SyncOfflineRepository _repo = SyncOfflineRepository();
   late final FlutterLocalNotificationsPlugin _notifications;
 
   // ── Form fields ──
@@ -112,13 +106,27 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
   // ── Load categories ──
   Future<void> _loadCategories() async {
     try {
-      final list = await _categoryRepo.loadAll();
+      final list = await _repo.getAllCategories();
       setState(() {
-        _categories = list;
+        _categories =
+            list
+                .map(
+                  (cat) => {
+                    'id': cat.localId,
+                    'ID': cat.remoteId,
+                    'name': cat.name,
+                    'color': cat.color,
+                    'icon': cat.icon,
+                  },
+                )
+                .toList();
         _loadingCategories = false;
       });
-    } catch (_) {
-      if (mounted) setState(() => _loadingCategories = false);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('加载分类失败：$e')));
     }
   }
 
@@ -248,7 +256,7 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
 
     try {
       final html = _plainToHtml(_contentController.text.trim());
-      await _noteRepo.createLocalFirst(
+      await _repo.createLocalFirst(
         title: title,
         content: html,
         isTop: _isTop,

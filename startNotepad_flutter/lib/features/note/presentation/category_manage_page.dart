@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/icons/iconfont_widget.dart';
-import '../../../core/network/api_client.dart';
-import '../data/category_api.dart';
-import '../data/category_offline_repository.dart';
+import '../../../core/sync/sync_offline_repository.dart';
+import '../../../tools/localData.dart';
 import 'category_create_page.dart';
 
 class CategoryManagePage extends StatefulWidget {
@@ -14,13 +13,10 @@ class CategoryManagePage extends StatefulWidget {
 }
 
 class _CategoryManagePageState extends State<CategoryManagePage> {
-  final CategoryOfflineRepository _repo = CategoryOfflineRepository(
-    CategoryApi(ApiClient()),
-  );
+  final SyncOfflineRepository _repo = SyncOfflineRepository();
 
   List<Map<String, dynamic>> _categories = [];
   bool _loading = true;
-  bool _savingOrder = false;
   bool _hasChanges = false;
 
   Future<bool> _handleBack() async {
@@ -36,10 +32,24 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
 
   Future<void> _loadCategories() async {
     try {
-      final list = await _repo.loadAll();
+      final list = await _repo.getAllCategories();
       if (!mounted) return;
       setState(() {
-        _categories = list;
+        _categories =
+            list.map((cat) {
+              final isVisible = LocalData.getBool(
+                'category_visible_${cat.localId}',
+              );
+              return {
+                'id': cat.localId,
+                'ID': cat.remoteId,
+                'name': cat.name,
+                'color': cat.color,
+                'icon': cat.icon,
+                'userId': cat.userId,
+                'isVisible': isVisible,
+              };
+            }).toList();
         _loading = false;
       });
     } catch (e) {
@@ -49,19 +59,6 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
         context,
       ).showSnackBar(SnackBar(content: Text('加载分类失败：$e')));
     }
-  }
-
-  Future<void> _toggleSystemCategory(Map<String, dynamic> category) async {
-    final id = category['ID'];
-    if (id is! int) return;
-    final isEnabled = _repo.isCategoryEnabled(id);
-    await _repo.setCategoryEnabled(id, !isEnabled);
-    _hasChanges = true;
-    await _loadCategories();
-    if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(isEnabled ? '已停用分类' : '已启用分类')));
   }
 
   Future<void> _openCreatePage() async {
@@ -101,7 +98,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
   }
 
   Future<void> _deleteCategory(Map<String, dynamic> category) async {
-    final id = category['ID'];
+    final id = category['id'];
     if (id is! int) return;
 
     final confirmed = await showDialog<bool>(
@@ -109,7 +106,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
       builder:
           (ctx) => AlertDialog(
             title: const Text('删除分类'),
-            content: Text('确定删除分类“${category['name'] ?? ''}”吗？'),
+            content: const Text('确定要删除这个分类吗？删除后不可恢复。'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
@@ -126,7 +123,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
     if (confirmed != true) return;
 
     try {
-      await _repo.deleteCategory(id: id);
+      await _repo.deleteCategory(id);
       _hasChanges = true;
       await _loadCategories();
       if (!mounted) return;
@@ -142,16 +139,26 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
   }
 
   Future<void> _saveOrder() async {
-    if (_savingOrder) return;
-    setState(() => _savingOrder = true);
-    try {
-      final ids = _categories.map((e) => e['ID']).whereType<int>().toList();
-      await _repo.saveCategoryOrder(ids);
-    } finally {
-      if (mounted) {
-        setState(() => _savingOrder = false);
-      }
-    }
+    // Order saving functionality not implemented in SyncOfflineRepository
+    // This method is now a no-op
+    return;
+  }
+
+  Future<void> _toggleCategoryVisibility(Map<String, dynamic> category) async {
+    final id = category['id'];
+    if (id is! int) return;
+
+    // Toggle visibility in local storage
+    final key = 'category_visible_${id}';
+    final currentVisibility = LocalData.getBool(key);
+    await LocalData.setBool(key, !currentVisibility);
+
+    _hasChanges = true;
+    await _loadCategories();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(!currentVisibility ? '已显示分类' : '已隐藏分类')),
+    );
   }
 
   void _reorder(int oldIndex, int newIndex) {
@@ -295,32 +302,6 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
     );
   }
 
-  Widget _buildTextActionButton({
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return Material(
-      color: color.withValues(alpha: 0.08),
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildCategoryTile({
     required Key key,
     required Map<String, dynamic> category,
@@ -328,10 +309,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
     required ColorScheme cs,
   }) {
     final color = _parseColor(category['color']?.toString()) ?? cs.primary;
-    final isSystem = category['isSystem'] == true;
-    final categoryId = category['ID'];
-    final isEnabled =
-        categoryId is int ? _repo.isCategoryEnabled(categoryId) : true;
+    final isSystem = category['userId'] == 0;
     return Container(
       key: key,
       margin: const EdgeInsets.only(bottom: 10),
@@ -367,13 +345,28 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    category['name']?.toString() ?? '',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        category['name']?.toString() ?? '',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      if (isSystem) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          '（系统默认）',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade500,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -417,11 +410,13 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
               color: Colors.black.withValues(alpha: 0.08),
             ),
             if (isSystem) ...[
-              _buildTextActionButton(
-                label: isEnabled ? '停用' : '启用',
-                color:
-                    isEnabled ? Colors.orange.shade400 : Colors.green.shade500,
-                onTap: () => _toggleSystemCategory(category),
+              _buildActionButton(
+                icon:
+                    category['isVisible'] == false
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                color: Colors.grey.shade600,
+                onTap: () => _toggleCategoryVisibility(category),
               ),
             ] else ...[
               _buildActionButton(
