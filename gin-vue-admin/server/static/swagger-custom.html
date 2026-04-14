@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css">
+    <style>
+        #filter-buttons {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            z-index: 9999;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .filter-btn {
+            margin: 0 5px;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover {
+            background: #f5f5f5;
+        }
+        .filter-btn.active {
+            background: #49cc90;
+            color: white;
+            border-color: #49cc90;
+        }
+        .swagger-ui .opblock-tag-section {
+            transition: all 0.3s;
+        }
+        .swagger-ui .opblock-tag-section.hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="filter-buttons">
+        <button class="filter-btn active" onclick="loadSwagger('all')">全部接口</button>
+        <button class="filter-btn" onclick="loadSwagger('user')">用户端</button>
+        <button class="filter-btn" onclick="loadSwagger('admin')">管理端</button>
+        <button class="filter-btn" onclick="exportJSON()" style="margin-left: 20px; background: #1890ff; color: white;">导出当前JSON</button>
+    </div>
+    <div id="swagger-ui"></div>
+
+    <script src="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-standalone-preset.js"></script>
+    <script>
+        let currentType = 'all';
+        let currentSpec = null;
+
+        function getSwaggerUrl(type) {
+            const origin = window.location.origin;
+            switch(type) {
+                case 'user':
+                    return origin + "/api/docs/swagger-user.json";
+                case 'admin':
+                    return origin + "/api/docs/swagger-admin.json";
+                default:
+                    return origin + "/api/swagger/doc.json";
+            }
+        }
+
+        function loadSwagger(type) {
+            currentType = type;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.textContent.includes('全部') && type === 'all') {
+                    btn.classList.add('active');
+                } else if (btn.textContent.includes('用户端') && type === 'user') {
+                    btn.classList.add('active');
+                } else if (btn.textContent.includes('管理端') && type === 'admin') {
+                    btn.classList.add('active');
+                } else if (!btn.textContent.includes('导出')) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // 重新加载 Swagger UI
+            const ui = SwaggerUIBundle({
+                url: getSwaggerUrl(type),
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "StandaloneLayout",
+                onComplete: function() {
+                    // 保存当前规范
+                    fetch(getSwaggerUrl(type))
+                        .then(res => res.json())
+                        .then(spec => {
+                            currentSpec = spec;
+                        });
+                }
+            });
+
+            window.ui = ui;
+        }
+
+        function exportJSON() {
+            if (!currentSpec) {
+                alert('文档尚未加载完成，请稍后再试');
+                return;
+            }
+
+            const typeNames = {
+                'all': '完整',
+                'user': '用户端',
+                'admin': '管理端'
+            };
+
+            const filename = `swagger-${currentType}-${new Date().getTime()}.json`;
+            const blob = new Blob([JSON.stringify(currentSpec, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            console.log(`已导出 ${typeNames[currentType]} API 文档: ${filename}`);
+        }
+
+        window.onload = function() {
+            loadSwagger('all');
+        };
+    </script>
+</body>
+</html>
