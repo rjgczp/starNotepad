@@ -78,18 +78,19 @@ class NoteApi {
     );
   }
 
-  Future<Response<dynamic>> syncPull() {
-    return _client.request<dynamic>('/api/unote/sync/pull', method: 'POST');
+  Future<Response<dynamic>> syncPull({Map<String, dynamic>? data}) {
+    return _client.request<dynamic>(
+      '/api/unote/sync/pull',
+      method: 'POST',
+      data: data,
+    );
   }
 
-  Future<Response<dynamic>> syncPush({
-    required List<Map<String, dynamic>> upserts,
-    required List<int> deletedIds,
-  }) {
+  Future<Response<dynamic>> syncPush({required Map<String, dynamic> data}) {
     return _client.request<dynamic>(
       '/api/unote/sync/push',
       method: 'POST',
-      data: <String, dynamic>{'upserts': upserts, 'deletedIds': deletedIds},
+      data: data,
       headers: const <String, dynamic>{'Content-Type': 'application/json'},
       receiveTimeout: const Duration(seconds: 25),
     );

@@ -308,91 +308,71 @@ class _DiaryPageState extends State<DiaryPage> {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '日记',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF111111),
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(28),
+                  topRight: Radius.circular(28),
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
-              const SizedBox(height: 14),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(28),
-                      topRight: Radius.circular(28),
-                      bottomLeft: Radius.circular(24),
-                      bottomRight: Radius.circular(24),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          DateFormat('yyyy年MM月', 'zh_CN').format(_currentMonth),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF181818),
+                          ),
+                        ),
+                      ),
+                      _buildMonthAction(
+                        icon: Icons.chevron_left,
+                        onTap: _previousMonth,
+                      ),
+                      const SizedBox(width: 6),
+                      _buildMonthAction(
+                        icon: Icons.chevron_right,
+                        onTap: _nextMonth,
                       ),
                     ],
                   ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                DateFormat(
-                                  'yyyy年MM月',
-                                  'zh_CN',
-                                ).format(_currentMonth),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF181818),
-                                ),
-                              ),
-                            ),
-                            _buildMonthAction(
-                              icon: Icons.chevron_left,
-                              onTap: _previousMonth,
-                            ),
-                            const SizedBox(width: 6),
-                            _buildMonthAction(
-                              icon: Icons.chevron_right,
-                              onTap: _nextMonth,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        _buildWeekDays(),
-                        if (_isLoading)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 48),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: primaryColor,
-                              ),
-                            ),
-                          )
-                        else
-                          _buildCalendarGrid(),
-                        const SizedBox(height: 6),
-                        _buildTimelineSection(colorScheme, primaryColor),
-                        SizedBox(height: 72 + bottomSafeArea),
-                      ],
-                    ),
-                  ),
-                ),
+                  const SizedBox(height: 10),
+                  _buildWeekDays(),
+                  if (_isLoading)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 48),
+                      child: Center(
+                        child: CircularProgressIndicator(color: primaryColor),
+                      ),
+                    )
+                  else
+                    _buildCalendarGrid(),
+                  const SizedBox(height: 6),
+                  _buildTimelineSection(colorScheme, primaryColor),
+                  SizedBox(height: 72 + bottomSafeArea),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

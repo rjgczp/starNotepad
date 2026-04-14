@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/icons/iconfont_icons.dart';
-import '../../../core/network/api_client.dart';
-import '../data/note_api.dart';
-import '../data/note_offline_repository.dart';
+import '../../../core/sync/sync_offline_repository.dart';
 
 class NoteDetailPage extends StatefulWidget {
   const NoteDetailPage({super.key, required this.note});
@@ -16,9 +14,7 @@ class NoteDetailPage extends StatefulWidget {
 }
 
 class _NoteDetailPageState extends State<NoteDetailPage> {
-  late final NoteOfflineRepository _noteRepo = NoteOfflineRepository(
-    NoteApi(ApiClient()),
-  );
+  late final SyncOfflineRepository _noteRepo = SyncOfflineRepository();
   late Map<String, dynamic> _note;
 
   @override

@@ -6,11 +6,11 @@ class AiAssistantPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('AI助手')),
+      appBar: AppBar(title: const Text('更多')),
       body: const SafeArea(
         child: Center(
           child: Text(
-            'AI助手',
+            '更多',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
           ),
         ),

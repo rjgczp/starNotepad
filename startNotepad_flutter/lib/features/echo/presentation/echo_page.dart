@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,12 +28,22 @@ class _EchoPageState extends State<EchoPage> {
   String? _error;
   Map<String, dynamic> _rawData = {};
   List<Map<String, dynamic>> _events = [];
+  final PageController _bannerController = PageController();
+  Timer? _bannerTimer;
+  int _bannerIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _historyDayApi = HistoryDayApi(ApiClient());
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    _bannerTimer?.cancel();
+    _bannerController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -98,9 +109,12 @@ class _EchoPageState extends State<EchoPage> {
     setState(() {
       _rawData = dayPayload;
       _events = events;
+      _bannerIndex = 0;
       _loading = false;
       _error = null;
     });
+
+    _resetBannerAutoPlay(events.length);
 
     return events.isNotEmpty || dayPayload.isNotEmpty || fromCache;
   }
@@ -186,23 +200,141 @@ class _EchoPageState extends State<EchoPage> {
     ], fallback: '暂无描述');
   }
 
-  String _headerTitle() {
-    final firstEvent = _events.isNotEmpty ? _events.first : <String, dynamic>{};
-    final header = _pickString(_rawData, [
-      'title',
-      'bannerTitle',
-      'sentence',
-      'content',
-      'intro',
-    ]);
-    if (header.isNotEmpty && header != '历史上的今天') {
-      return header;
-    }
-    return _pickString(firstEvent, [
+  String _eventType(Map<String, dynamic> item) {
+    return _pickString(item, [
+      'type',
+      'category',
+      'tag',
+      'group',
+    ], fallback: '历史事件');
+  }
+
+  String _eventQuote(Map<String, dynamic> item) {
+    return _pickString(item, [
       'quote',
       'summary',
-      'title',
-    ], fallback: '历史上的今天');
+      'comment',
+      'review',
+      'desc',
+      'description',
+    ], fallback: _eventSummary(item));
+  }
+
+  String _eventYear(Map<String, dynamic> item) {
+    final directYear = _pickString(item, ['year']);
+    if (directYear.isNotEmpty) return directYear;
+
+    final dateText = _pickString(item, ['date', 'eventDate', 'time', 'day']);
+    final m = RegExp(r'(\d{4})').firstMatch(dateText);
+    if (m != null) {
+      return m.group(1) ?? '--';
+    }
+    return '--';
+  }
+
+  List<Color> _gradientForType(String type) {
+    if (type.contains('重大里程碑') || type.contains('里程碑')) {
+      return const [Color(0xFF0E1A2F), Color(0xFF23395B), Color(0xFF2D4A6D)];
+    }
+    if (type.contains('社会变迁') || type.contains('社会')) {
+      return const [Color(0xFF1A1325), Color(0xFF2D1E46), Color(0xFF40305F)];
+    }
+    if (type.contains('风云人物') || type.contains('人物')) {
+      return const [Color(0xFF21130E), Color(0xFF3A2317), Color(0xFF5A3521)];
+    }
+    return const [Color(0xFF121826), Color(0xFF1E2A44), Color(0xFF2C3E63)];
+  }
+
+  void _resetBannerAutoPlay(int count) {
+    _bannerTimer?.cancel();
+    if (count <= 1) return;
+
+    _bannerTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (!mounted || !_bannerController.hasClients) return;
+      final nextIndex = (_bannerIndex + 1) % count;
+      _bannerController.animateToPage(
+        nextIndex,
+        duration: const Duration(milliseconds: 420),
+        curve: Curves.easeInOutCubic,
+      );
+    });
+  }
+
+  Widget _buildHistoryBannerSection() {
+    if (_events.isEmpty) {
+      return _HistoryBanner(
+        year: DateTime.now().year.toString(),
+        title: '历史上的今天',
+        type: '历史事件',
+        quote: _pickString(_rawData, ['title', 'content'], fallback: '回响时刻'),
+        gradientColors: _gradientForType('历史事件'),
+        onTap: null,
+      );
+    }
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 190,
+          child: PageView.builder(
+            controller: _bannerController,
+            itemCount: _events.length,
+            onPageChanged: (index) {
+              setState(() {
+                _bannerIndex = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              final item = _events[index];
+              final title = _eventTitle(item);
+              final type = _eventType(item);
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: _HistoryBanner(
+                  year: _eventYear(item),
+                  title: title,
+                  type: type,
+                  quote: _eventQuote(item),
+                  gradientColors: _gradientForType(type),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        duration: const Duration(milliseconds: 280),
+                        curve: Curves.easeOutCubic,
+                        child: EchoDetailPage(title: title, data: item),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+        if (_events.length > 1) ...[
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(_events.length, (index) {
+              final active = index == _bannerIndex;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                width: active ? 18 : 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color:
+                      active
+                          ? const Color(0xFF1E2A44)
+                          : const Color(0xFF1E2A44).withValues(alpha: 0.25),
+                ),
+              );
+            }),
+          ),
+        ],
+      ],
+    );
   }
 
   Solar _todaySolar() {
@@ -291,174 +423,266 @@ class _EchoPageState extends State<EchoPage> {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: RefreshIndicator(
+          onRefresh: _loadData,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
             children: [
-              const Text(
-                '回响',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF111111),
-                ),
-              ),
-              const SizedBox(height: 14),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(28),
-                      topRight: Radius.circular(28),
-                      bottomLeft: Radius.circular(24),
-                      bottomRight: Radius.circular(24),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(28),
+                    topRight: Radius.circular(28),
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
-                  child: RefreshIndicator(
-                    onRefresh: _loadData,
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: [
-                        Container(
-                          height: 180,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                primary.withValues(alpha: 0.22),
-                                primary.withValues(alpha: 0.08),
-                              ],
-                            ),
-                            border: Border.all(
-                              color: primary.withValues(alpha: 0.08),
-                            ),
-                          ),
-                          padding: const EdgeInsets.all(18),
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            _headerTitle(),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              height: 1.45,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black87,
-                            ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHistoryBannerSection(),
+                    if (_cacheUpdatedAtText().isNotEmpty) ...[
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(
+                          _cacheUpdatedAtText(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black.withValues(alpha: 0.45),
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        if (_cacheUpdatedAtText().isNotEmpty) ...[
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: Text(
-                              _cacheUpdatedAtText(),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black.withValues(alpha: 0.45),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                      ),
+                    ],
+                    const SizedBox(height: 14),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _EchoInfoCard(
+                            title: _weekText(),
+                            value: _lunarValue(),
+                            subtitle: _lunarSubtitle(),
                           ),
-                        ],
-                        const SizedBox(height: 14),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _EchoInfoCard(
-                                title: _weekText(),
-                                value: _lunarValue(),
-                                subtitle: _lunarSubtitle(),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _EchoInfoCard(
-                                title: '距离',
-                                value: holidayInfo.title,
-                                subtitle: holidayInfo.subtitle,
-                              ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _EchoInfoCard(
+                            title: '距离',
+                            value: holidayInfo.title,
+                            subtitle: holidayInfo.subtitle,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    if (_loading)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 60),
+                        child: Center(
+                          child: CircularProgressIndicator(color: primary),
+                        ),
+                      )
+                    else if (_error != null)
+                      _EchoStateCard(
+                        text: _error!,
+                        actionLabel: '重试',
+                        onTap: _loadData,
+                      )
+                    else if (_events.isEmpty)
+                      const _EchoStateCard(text: '今天还没有可展示的历史内容')
+                    else
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.black.withValues(alpha: 0.05),
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x12000000),
+                              blurRadius: 18,
+                              offset: Offset(0, 8),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 14),
-                        if (_loading)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 60),
-                            child: Center(
-                              child: CircularProgressIndicator(color: primary),
-                            ),
-                          )
-                        else if (_error != null)
-                          _EchoStateCard(
-                            text: _error!,
-                            actionLabel: '重试',
-                            onTap: _loadData,
-                          )
-                        else if (_events.isEmpty)
-                          const _EchoStateCard(text: '今天还没有可展示的历史内容')
-                        else
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Colors.black.withValues(alpha: 0.05),
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x12000000),
-                                  blurRadius: 18,
-                                  offset: Offset(0, 8),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: List.generate(_events.length, (index) {
-                                final item = _events[index];
-                                return _EchoTimelineItem(
-                                  title: _eventTitle(item),
-                                  summary: _eventSummary(item),
-                                  isLast: index == _events.length - 1,
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      PageTransition(
-                                        type: PageTransitionType.rightToLeft,
-                                        duration: const Duration(
-                                          milliseconds: 280,
-                                        ),
-                                        curve: Curves.easeOutCubic,
-                                        child: EchoDetailPage(
-                                          title: _eventTitle(item),
-                                          data: item,
-                                        ),
-                                      ),
-                                    );
-                                  },
+                        child: Column(
+                          children: List.generate(_events.length, (index) {
+                            final item = _events[index];
+                            return _EchoTimelineItem(
+                              title: _eventTitle(item),
+                              summary: _eventSummary(item),
+                              isLast: index == _events.length - 1,
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    duration: const Duration(milliseconds: 280),
+                                    curve: Curves.easeOutCubic,
+                                    child: EchoDetailPage(
+                                      title: _eventTitle(item),
+                                      data: item,
+                                    ),
+                                  ),
                                 );
-                              }),
-                            ),
-                          ),
-                        const SizedBox(height: 96),
-                      ],
-                    ),
-                  ),
+                              },
+                            );
+                          }),
+                        ),
+                      ),
+                    const SizedBox(height: 96),
+                  ],
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryBanner extends StatelessWidget {
+  const _HistoryBanner({
+    required this.year,
+    required this.title,
+    required this.type,
+    required this.quote,
+    required this.gradientColors,
+    required this.onTap,
+  });
+
+  final String year;
+  final String title;
+  final String type;
+  final String quote;
+  final List<Color> gradientColors;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final shownYear = year.trim().isEmpty ? '--' : year.trim();
+    final shownQuote = quote.trim().isEmpty ? '时间会记住每一个改变。' : quote.trim();
+    const radius = BorderRadius.all(Radius.circular(24));
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          height: 190,
+          decoration: const BoxDecoration(
+            borderRadius: radius,
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x00000000),
+                blurRadius: 14,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: radius,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: gradientColors,
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: 12,
+                    bottom: -14,
+                    child: Text(
+                      shownYear,
+                      style: TextStyle(
+                        fontSize: 108,
+                        height: 1,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white.withValues(alpha: 0.10),
+                        letterSpacing: -2,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 14,
+                    left: 14,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.30),
+                        ),
+                      ),
+                      child: Text(
+                        type,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 28, 16, 56),
+                      child: Text(
+                        title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          height: 1.35,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 14,
+                    right: 14,
+                    bottom: 12,
+                    child: Text(
+                      '“$shownQuote”',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.90),
+                        fontSize: 13,
+                        height: 1.45,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
