@@ -179,6 +179,7 @@ class SyncOfflineRepository {
             name: name,
             color: Value(color),
             icon: Value(icon),
+            userId: const Value(1),
             updatedAtLocal: Value(now),
             syncState: const Value(SyncState.pendingCreate),
           ),
