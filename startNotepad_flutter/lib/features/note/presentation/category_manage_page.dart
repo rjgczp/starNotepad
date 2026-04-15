@@ -14,6 +14,7 @@ class CategoryManagePage extends StatefulWidget {
 
 class _CategoryManagePageState extends State<CategoryManagePage> {
   final SyncOfflineRepository _repo = SyncOfflineRepository();
+  static const String _categoryOrderKey = 'category_order_local_ids';
 
   List<Map<String, dynamic>> _categories = [];
   bool _loading = true;
@@ -22,6 +23,39 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
   Future<bool> _handleBack() async {
     Navigator.pop(context, _hasChanges);
     return false;
+  }
+
+  List<int> _readSavedOrder() {
+    final raw = LocalData.getString(_categoryOrderKey).trim();
+    if (raw.isEmpty) return const [];
+    return raw
+        .split(',')
+        .map((e) => int.tryParse(e.trim()))
+        .whereType<int>()
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _applySavedOrder(List<Map<String, dynamic>> list) {
+    final order = _readSavedOrder();
+    if (order.isEmpty) return list;
+
+    final rank = <int, int>{};
+    for (var i = 0; i < order.length; i++) {
+      rank[order[i]] = i;
+    }
+
+    final sorted = [...list];
+    sorted.sort((a, b) {
+      final aId = a['id'] as int?;
+      final bId = b['id'] as int?;
+      final aRank = aId != null ? rank[aId] : null;
+      final bRank = bId != null ? rank[bId] : null;
+      if (aRank != null && bRank != null) return aRank.compareTo(bRank);
+      if (aRank != null) return -1;
+      if (bRank != null) return 1;
+      return 0;
+    });
+    return sorted;
   }
 
   @override
@@ -35,11 +69,12 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
       final list = await _repo.getAllCategories();
       if (!mounted) return;
       setState(() {
-        _categories =
+        final mapped =
             list.map((cat) {
-              final isVisible = LocalData.getBool(
-                'category_visible_${cat.localId}',
-              );
+              final visibilityKey = 'category_visible_${cat.localId}';
+              final savedVisibility = LocalData.getValue(visibilityKey);
+              final isVisible =
+                  savedVisibility is bool ? savedVisibility : true;
               return {
                 'id': cat.localId,
                 'ID': cat.remoteId,
@@ -50,6 +85,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                 'isVisible': isVisible,
               };
             }).toList();
+        _categories = _applySavedOrder(mapped);
         _loading = false;
       });
     } catch (e) {
@@ -80,7 +116,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
       MaterialPageRoute(
         builder:
             (_) => CategoryCreatePage(
-              categoryId: category['ID'] as int?,
+              categoryId: category['id'] as int?,
               initialName: category['name']?.toString(),
               initialColor: category['color']?.toString(),
               initialIcon: category['icon']?.toString(),
@@ -139,9 +175,8 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
   }
 
   Future<void> _saveOrder() async {
-    // Order saving functionality not implemented in SyncOfflineRepository
-    // This method is now a no-op
-    return;
+    final ids = _categories.map((e) => e['id']).whereType<int>().toList();
+    await LocalData.setString(_categoryOrderKey, ids.join(','));
   }
 
   Future<void> _toggleCategoryVisibility(Map<String, dynamic> category) async {
@@ -287,7 +322,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                                   itemBuilder: (context, index) {
                                     final category = _categories[index];
                                     return _buildCategoryTile(
-                                      key: ValueKey(category['ID']),
+                                      key: ValueKey(category['id']),
                                       category: category,
                                       index: index,
                                       cs: cs,
@@ -297,6 +332,35 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                       ),
                     ],
                   ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextActionButton({
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: color.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 52),
+          height: 38,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
         ),
       ),
     );
@@ -410,12 +474,9 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
               color: Colors.black.withValues(alpha: 0.08),
             ),
             if (isSystem) ...[
-              _buildActionButton(
-                icon:
-                    category['isVisible'] == false
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                color: Colors.grey.shade600,
+              _buildTextActionButton(
+                label: category['isVisible'] == false ? '显示' : '隐藏',
+                color: Colors.grey.shade700,
                 onTap: () => _toggleCategoryVisibility(category),
               ),
             ] else ...[

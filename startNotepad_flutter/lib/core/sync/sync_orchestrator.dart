@@ -246,7 +246,7 @@ class SyncOrchestrator {
       return;
     }
 
-    await _updateLocalCategoryFromRemote(item, local.localId);
+    await _updateLocalCategoryFromRemote(item, local.localId, local.userId);
   }
 
   /// Create local category from remote data
@@ -254,11 +254,13 @@ class SyncOrchestrator {
     Map<String, dynamic> item,
     int remoteId,
   ) async {
+    final parsedUserId = _extractCategoryUserId(item, fallback: 1);
     final category = CategoriesCompanion.insert(
       remoteId: Value(remoteId),
       name: item['name']?.toString() ?? '',
       color: Value(item['color']?.toString()),
       icon: Value(item['icon']?.toString()),
+      userId: Value(parsedUserId),
       updatedAtLocal: Value(_asDateTime(item['updatedAt']) ?? DateTime.now()),
       updatedAtRemote: Value(_asDateTime(item['updatedAt'])),
       syncState: const Value(SyncState.synced),
@@ -272,11 +274,14 @@ class SyncOrchestrator {
   Future<void> _updateLocalCategoryFromRemote(
     Map<String, dynamic> item,
     int localId,
+    int currentUserId,
   ) async {
+    final parsedUserId = _extractCategoryUserId(item, fallback: currentUserId);
     final category = CategoriesCompanion(
       name: Value(item['name']?.toString() ?? ''),
       color: Value(item['color']?.toString()),
       icon: Value(item['icon']?.toString()),
+      userId: Value(parsedUserId),
       updatedAtLocal: Value(_asDateTime(item['updatedAt']) ?? DateTime.now()),
       updatedAtRemote: Value(_asDateTime(item['updatedAt'])),
       syncState: const Value(SyncState.synced),
@@ -614,5 +619,21 @@ class SyncOrchestrator {
       }
     }
     return null;
+  }
+
+  bool _extractSystemFlag(Map<String, dynamic> map) {
+    return _asBool(map['isSystem']) ||
+        _asBool(map['system']) ||
+        _asBool(map['isDefault']) ||
+        _asBool(map['default']);
+  }
+
+  int _extractCategoryUserId(
+    Map<String, dynamic> map, {
+    required int fallback,
+  }) {
+    final uid = _asInt(map['userID'] ?? map['userId']);
+    if (uid != null) return uid;
+    return _extractSystemFlag(map) ? 0 : fallback;
   }
 }

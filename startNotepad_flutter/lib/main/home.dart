@@ -367,9 +367,42 @@ class _CategorySelector extends StatefulWidget {
 
 class _CategorySelectorState extends State<_CategorySelector> {
   final SyncOfflineRepository _repo = SyncOfflineRepository();
+  static const String _categoryOrderKey = 'category_order_local_ids';
   List<Map<String, dynamic>> _categories = [];
   bool _loading = true;
   int _totalNotes = 0;
+
+  List<int> _readSavedOrder() {
+    final raw = LocalData.getString(_categoryOrderKey).trim();
+    if (raw.isEmpty) return const [];
+    return raw
+        .split(',')
+        .map((e) => int.tryParse(e.trim()))
+        .whereType<int>()
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _applySavedOrder(List<Map<String, dynamic>> list) {
+    final order = _readSavedOrder();
+    if (order.isEmpty) return list;
+    final rank = <int, int>{};
+    for (var i = 0; i < order.length; i++) {
+      rank[order[i]] = i;
+    }
+
+    final sorted = [...list];
+    sorted.sort((a, b) {
+      final aId = a['id'] as int?;
+      final bId = b['id'] as int?;
+      final aRank = aId != null ? rank[aId] : null;
+      final bRank = bId != null ? rank[bId] : null;
+      if (aRank != null && bRank != null) return aRank.compareTo(bRank);
+      if (aRank != null) return -1;
+      if (bRank != null) return 1;
+      return 0;
+    });
+    return sorted;
+  }
 
   @override
   void initState() {
@@ -382,14 +415,13 @@ class _CategorySelectorState extends State<_CategorySelector> {
     try {
       final list = await _repo.getAllCategories();
       setState(() {
-        _categories =
+        final mapped =
             list
                 .where((cat) {
-                  // For system categories (userId=0), check visibility setting
-                  if (cat.userId == 0) {
-                    return LocalData.getBool('category_visible_${cat.localId}');
-                  }
-                  return true; // User categories are always visible
+                  if (cat.userId != 0) return true;
+                  final key = 'category_visible_${cat.localId}';
+                  final saved = LocalData.getValue(key);
+                  return saved is bool ? saved : true;
                 })
                 .map(
                   (cat) => {
@@ -402,6 +434,7 @@ class _CategorySelectorState extends State<_CategorySelector> {
                   },
                 )
                 .toList();
+        _categories = _applySavedOrder(mapped);
         _loading = false;
       });
     } catch (e) {
