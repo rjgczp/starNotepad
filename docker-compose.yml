@@ -20,3 +20,13 @@ services:
     volumes:
       # 这里就是把服务器上的 config.yaml 挂载进容器的关键
       - ./gin-vue-admin/server/config.yaml:/app/config.yaml
+gva-web:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"  # 你访问 http://82.157.105.7 即可看到后台
+    volumes:
+      # 把打包好的 dist 目录挂载到 nginx 的网页目录
+      - ./gin-vue-admin/web/dist:/usr/share/nginx/html
+    depends_on:
+      - gva-server
