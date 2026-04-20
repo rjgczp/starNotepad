@@ -118,4 +118,49 @@ class AuthApi {
       headers: const <String, dynamic>{'Content-Type': 'application/json'},
     );
   }
+
+  Future<Response<dynamic>> getCurrentUserProfile() {
+    return _client.request<dynamic>(
+      '/api/ua/getCurrentUserProfile',
+      method: 'GET',
+    );
+  }
+
+  Future<Response<dynamic>> uploadFile({required String filePath}) async {
+    final name = filePath.split('/').last;
+    final form = FormData.fromMap({
+      'file': await MultipartFile.fromFile(filePath, filename: name),
+    });
+    return _client.request<dynamic>(
+      '/api/ufile/upload',
+      method: 'POST',
+      data: form,
+    );
+  }
+
+  Future<Response<dynamic>> updateCurrentUserProfile({
+    String? address,
+    String? avatar,
+    String? emailPhone,
+    String? gender,
+    String? nickname,
+    String? signature,
+    String? username,
+  }) {
+    final data = <String, dynamic>{};
+    if (address != null) data['address'] = address;
+    if (avatar != null) data['avatar'] = avatar;
+    if (emailPhone != null) data['emailPhone'] = emailPhone;
+    if (gender != null) data['gender'] = gender;
+    if (nickname != null) data['nickname'] = nickname;
+    if (signature != null) data['signature'] = signature;
+    if (username != null) data['username'] = username;
+
+    return _client.request<dynamic>(
+      '/api/ua/updateCurrentUserProfile',
+      method: 'PUT',
+      data: data,
+      headers: const <String, dynamic>{'Content-Type': 'application/json'},
+    );
+  }
 }
