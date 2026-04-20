@@ -35,15 +35,23 @@ class ThemeColorItem {
 class ThemeProvider extends ChangeNotifier {
   static const String _selectedColorKey = 'theme_selected_color';
   static const String _colorListKey = 'theme_color_list';
+  static const String _colorOrderKey = 'theme_color_order_ids';
+  static const String _colorHiddenKey = 'theme_color_hidden_ids';
   static const Color _defaultColor = Color(0xFF4E80EE);
 
   Color _primaryColor = _defaultColor;
   List<ThemeColorItem> _colors = [];
+  Set<int> _hiddenColorIds = <int>{};
   bool _loading = false;
 
   Color get primaryColor => _primaryColor;
-  List<ThemeColorItem> get colors => _colors;
+  List<ThemeColorItem> get colors =>
+      _colors.where((item) => !_hiddenColorIds.contains(item.id)).toList();
+  List<ThemeColorItem> get allColors =>
+      List<ThemeColorItem>.unmodifiable(_colors);
   bool get loading => _loading;
+
+  bool isColorVisible(int id) => !_hiddenColorIds.contains(id);
 
   /// Singleton
   static final ThemeProvider _instance = ThemeProvider._();
@@ -74,6 +82,7 @@ class ThemeProvider extends ChangeNotifier {
             final color = _parseHexColor(item.color) ?? _defaultColor;
             return ThemeColorItem(id: item.id, name: item.colors, color: color);
           }).toList();
+      _applyDisplayPreferencesToColors();
 
       // If no colors in database, try to load from cache
       if (_colors.isEmpty) {
@@ -88,13 +97,16 @@ class ThemeProvider extends ChangeNotifier {
                           ThemeColorItem.fromJson(Map<String, dynamic>.from(e)),
                     )
                     .toList();
+            _applyDisplayPreferencesToColors();
           } catch (_) {}
         }
       }
 
       // If no color was previously selected, use the first one
       if (_colors.isNotEmpty && savedHex.isEmpty) {
-        _primaryColor = _colors.first.color;
+        final visible = colors;
+        _primaryColor =
+            (visible.isNotEmpty ? visible.first : _colors.first).color;
         await _saveSelectedColor(_primaryColor);
       }
 
@@ -113,6 +125,7 @@ class ThemeProvider extends ChangeNotifier {
                         ThemeColorItem.fromJson(Map<String, dynamic>.from(e)),
                   )
                   .toList();
+          _applyDisplayPreferencesToColors();
           notifyListeners();
         } catch (_) {}
       }
@@ -152,6 +165,7 @@ class ThemeProvider extends ChangeNotifier {
 
       if (items.isNotEmpty) {
         _colors = items;
+        _applyDisplayPreferencesToColors();
 
         // Cache list
         final encoded = jsonEncode(items.map((e) => e.toJson()).toList());
@@ -160,7 +174,9 @@ class ThemeProvider extends ChangeNotifier {
         // If no color was previously selected, use the first one
         final savedHex = LocalData.getString(_selectedColorKey);
         if (savedHex.isEmpty) {
-          _primaryColor = items.first.color;
+          final visible = colors;
+          _primaryColor =
+              (visible.isNotEmpty ? visible.first : items.first).color;
           await _saveSelectedColor(_primaryColor);
         }
       }
@@ -178,6 +194,81 @@ class ThemeProvider extends ChangeNotifier {
     _primaryColor = color;
     notifyListeners();
     await _saveSelectedColor(color);
+  }
+
+  Future<void> reorderColors(int oldIndex, int newIndex) async {
+    if (_colors.isEmpty) return;
+    if (oldIndex < 0 || oldIndex >= _colors.length) return;
+    if (newIndex < 0 || newIndex > _colors.length) return;
+
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final item = _colors.removeAt(oldIndex);
+    _colors.insert(newIndex, item);
+
+    await _saveColorOrder();
+    notifyListeners();
+  }
+
+  Future<void> setColorVisibility(int id, bool visible) async {
+    if (visible) {
+      _hiddenColorIds.remove(id);
+    } else {
+      _hiddenColorIds.add(id);
+    }
+    await _saveHiddenColorIds();
+    notifyListeners();
+  }
+
+  void _applyDisplayPreferencesToColors() {
+    _hiddenColorIds = _readHiddenColorIds();
+    final order = _readColorOrder();
+    if (order.isEmpty || _colors.length <= 1) return;
+
+    final rank = <int, int>{};
+    for (var i = 0; i < order.length; i++) {
+      rank[order[i]] = i;
+    }
+
+    _colors.sort((a, b) {
+      final aRank = rank[a.id];
+      final bRank = rank[b.id];
+      if (aRank != null && bRank != null) return aRank.compareTo(bRank);
+      if (aRank != null) return -1;
+      if (bRank != null) return 1;
+      return 0;
+    });
+  }
+
+  List<int> _readColorOrder() {
+    final raw = LocalData.getString(_colorOrderKey).trim();
+    if (raw.isEmpty) return const [];
+    return raw
+        .split(',')
+        .map((e) => int.tryParse(e.trim()))
+        .whereType<int>()
+        .toList();
+  }
+
+  Set<int> _readHiddenColorIds() {
+    final raw = LocalData.getString(_colorHiddenKey).trim();
+    if (raw.isEmpty) return <int>{};
+    return raw
+        .split(',')
+        .map((e) => int.tryParse(e.trim()))
+        .whereType<int>()
+        .toSet();
+  }
+
+  Future<void> _saveColorOrder() async {
+    final ids = _colors.map((e) => e.id).toList();
+    await LocalData.setString(_colorOrderKey, ids.join(','));
+  }
+
+  Future<void> _saveHiddenColorIds() async {
+    final ids = _hiddenColorIds.toList()..sort();
+    await LocalData.setString(_colorHiddenKey, ids.join(','));
   }
 
   Future<void> _saveSelectedColor(Color color) async {

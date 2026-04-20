@@ -47,6 +47,8 @@ dependencies:
   timezone: ^0.9.4
   timelines_plus: ^1.0.6
   lunar: ^1.7.8
+  image_picker: ^1.1.2
+  image_cropper: ^8.1.0
   flutter_localizations:
     sdk: flutter
   flutter:
