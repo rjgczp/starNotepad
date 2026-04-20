@@ -1,0 +1,32 @@
+jwt:
+  signing-key: "请换成你自己的超长随机串"
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: qmPlus
+
+system:
+  addr: 8888
+  db-type: mysql
+  oss-type: local
+  router-prefix: "/api"
+  use-redis: false
+  use-mongo: false
+  use-multipoint: false
+  disable-auto-migrate: false
+
+mysql:
+  path: mysql
+  port: "3306"
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+  db-name: starNotepad
+  username: root
+  password: "your_password_here"
+  log-mode: error
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+
+local:
+  path: uploads/file
+  store-path: uploads/file
