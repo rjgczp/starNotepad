@@ -1,0 +1,17 @@
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 关键点：反向代理 API 请求
+    location /api/ {
+        proxy_pass http://gva-server:8888/;  # 这里的 gva-server 对应 docker-compose 里的服务名
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
