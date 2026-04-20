@@ -20,7 +20,7 @@ services:
     volumes:
       # 这里就是把服务器上的 config.yaml 挂载进容器的关键
       - ./gin-vue-admin/server/config.yaml:/app/config.yaml
-gva-web:
+  gva-web:
     image: nginx:alpine
     restart: always
     ports:
@@ -30,3 +30,4 @@ gva-web:
       - ./gin-vue-admin/web/dist:/usr/share/nginx/html
     depends_on:
       - gva-server
+
