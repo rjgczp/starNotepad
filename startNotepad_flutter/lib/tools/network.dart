@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class Network {
   // static const String _defaultBaseUrl = 'http://10.0.2.2:8888'; // 模拟器测试
-  static const String _defaultBaseUrl = 'http://127.0.0.1:8888'; // 真机测试
+  static const String _defaultBaseUrl = 'http://82.157.105.7:8888'; // 真机测试
   static const String _baseUrl = String.fromEnvironment(
     'BASE_URL',
     defaultValue: _defaultBaseUrl,
