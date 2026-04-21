@@ -1,33 +1,55 @@
+version: "3.8"
+
 services:
   mysql:
     image: mysql:8.0
+    container_name: gva-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 123
-      MYSQL_DATABASE: starNotepad
+      MYSQL_ROOT_PASSWORD: "123123"     # 要和 server/config.yaml 里的 mysql.password 一致
+      MYSQL_DATABASE: "starNotepad"
+      TZ: "Asia/Shanghai"
     ports:
       - "3306:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
+    command:
+      [
+        "--default-authentication-plugin=mysql_native_password",
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_general_ci"
+      ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p123123"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
 
   gva-server:
     build: ./gin-vue-admin/server
+    container_name: gva-server
     restart: always
     ports:
       - "8888:8888"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    environment:
+      GVA_CONFIG: /app/config.yaml
+      DB_PATH: mysql                  # 关键：容器内应连服务名，不是 127.0.0.1
     volumes:
-      # 这里就是把服务器上的 config.yaml 挂载进容器的关键
       - ./gin-vue-admin/server/config.yaml:/app/config.yaml
+      - ./uploads:/app/uploads
+      - ./logs:/app/log
+
   gva-web:
     image: nginx:alpine
+    container_name: gva-web
     restart: always
     ports:
       - "80:80"
     volumes:
       - ./gin-vue-admin/web/dist:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf # 挂载配置文件
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - gva-server
-
