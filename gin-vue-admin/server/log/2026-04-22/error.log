@@ -48,3 +48,24 @@ github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService
 	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
 github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
 	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 16:09:59.088	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:68	登录失败!	{"error": "535 Login fail. Account is abnormal, service is not open, password is incorrect, login frequency limited, or system is busy. More information at https://help.mail.qq.com/detail/108/1023"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:68
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
