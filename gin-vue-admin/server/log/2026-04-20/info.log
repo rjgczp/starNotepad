@@ -1,0 +1,17 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:23:49.207	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:23:49.208	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:23:49.218	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:24:06.933	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:24:06.934	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:24:06.937	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:36:40.001	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:36:40.002	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:36:40.005	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:36:54.842	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:36:54.843	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:36:54.846	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:37:11.171	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:37:11.172	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:37:11.177	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:31:52.517	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/note_model.go:686	SyncUserNotesPull request	{"userID": 1, "req": {"lastSyncAt":null}}
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:31:53.375	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/note_model.go:750	SyncUserNotesPush request	{"userID": 1, "req": {"notes":{"upserts":[],"deletedIds":[]},"categories":{"upserts":[],"deletedIds":[]},"colors":{"upserts":[],"deletedIds":[]}}}

@@ -2,6 +2,7 @@ package starNote
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -62,7 +63,7 @@ func (uaApi *UserAccountApi) Login(c *gin.Context) {
 		})
 		return
 	}
-	ua, needEmailVerify, challengeID, err := uaService.LoginWithDevice(ctx, req)
+	ua, needEmailVerify, challengeID, verifyCode, err := uaService.LoginWithDevice(ctx, req)
 	if err != nil {
 		global.GVA_LOG.Error("登录失败!", zap.Error(err))
 		msg := "登录失败"
@@ -90,13 +91,17 @@ func (uaApi *UserAccountApi) Login(c *gin.Context) {
 		return
 	}
 	if needEmailVerify {
+		message := "需要邮箱验证"
+		if !global.GVA_CONFIG.Email.Pattern && verifyCode != "" {
+			message = verifyCode
+		}
 		c.JSON(http.StatusOK, gin.H{
 			"code": http.StatusOK,
 			"data": gin.H{
 				"needEmailVerify": true,
 				"challengeId":     challengeID,
 			},
-			"message": "需要邮箱验证",
+			"message": message,
 		})
 		return
 	}
@@ -112,6 +117,7 @@ func (uaApi *UserAccountApi) Login(c *gin.Context) {
 		return
 	}
 	utils.SetToken(c, token, int(claims.RegisteredClaims.ExpiresAt.Unix()-time.Now().Unix()))
+	stService.TriggerOnLoginSuccessAsync(ctx, ua.ID)
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,
 		"data": gin.H{
@@ -143,7 +149,8 @@ func (uaApi *UserAccountApi) SendChangePasswordEmailCode(c *gin.Context) {
 		})
 		return
 	}
-	if err := uaService.SendChangePasswordEmailCode(ctx, req); err != nil {
+	result, err := uaService.SendChangePasswordEmailCode(ctx, req)
+	if err != nil {
 		global.GVA_LOG.Error("发送验证码失败!", zap.Error(err))
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -152,10 +159,14 @@ func (uaApi *UserAccountApi) SendChangePasswordEmailCode(c *gin.Context) {
 		})
 		return
 	}
+	message := "验证码已发送"
+	if !global.GVA_CONFIG.Email.Pattern && result.Code != "" {
+		message = result.Code
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"data":    gin.H{},
-		"message": "验证码已发送",
+		"message": message,
 	})
 }
 
@@ -253,6 +264,7 @@ func (uaApi *UserAccountApi) Register(c *gin.Context) {
 		return
 	}
 	utils.SetToken(c, token, int(claims.RegisteredClaims.ExpiresAt.Unix()-time.Now().Unix()))
+	stService.TriggerOnLoginSuccessAsync(ctx, ua.ID)
 	c.JSON(http.StatusCreated, gin.H{
 		"code": http.StatusCreated,
 		"data": gin.H{
@@ -284,7 +296,8 @@ func (uaApi *UserAccountApi) SendRegisterEmailCode(c *gin.Context) {
 		})
 		return
 	}
-	if err := uaService.SendRegisterEmailCode(ctx, req.Email); err != nil {
+	result, err := uaService.SendRegisterEmailCode(ctx, req.Email)
+	if err != nil {
 		global.GVA_LOG.Error("发送验证码失败!", zap.Error(err))
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -293,10 +306,14 @@ func (uaApi *UserAccountApi) SendRegisterEmailCode(c *gin.Context) {
 		})
 		return
 	}
+	message := "验证码已发送"
+	if !global.GVA_CONFIG.Email.Pattern && result.Code != "" {
+		message = result.Code
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"data":    gin.H{},
-		"message": "验证码已发送",
+		"message": message,
 	})
 }
 
@@ -332,6 +349,7 @@ func (uaApi *UserAccountApi) LoginVerify(c *gin.Context) {
 		return
 	}
 	utils.SetToken(c, token, int(claims.RegisteredClaims.ExpiresAt.Unix()-time.Now().Unix()))
+	stService.TriggerOnLoginSuccessAsync(ctx, ua.ID)
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,
 		"data": gin.H{
@@ -479,6 +497,174 @@ func (uaApi *UserAccountApi) GetUserAccountList(c *gin.Context) {
 		Page:     pageInfo.Page,
 		PageSize: pageInfo.PageSize,
 	}, "获取成功", c)
+}
+
+// GetCurrentUserProfile 获取当前登录用户信息（含已获标签）
+//
+//	UserAccount
+//	获取当前登录用户信息（含已获标签）
+//	ApiKeyAuth
+//	application/json
+//	application/json
+//	200 {object} response.Response{data=object,msg=string} "获取成功"
+//	/ua/getCurrentUserProfile [get]
+func (uaApi *UserAccountApi) GetCurrentUserProfile(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	userID := utils.GetUserID(c)
+	if userID == 0 {
+		response.FailWithMessage("用户未登录或token无效", c)
+		return
+	}
+
+	ua, tags, err := uaService.GetCurrentUserProfile(ctx, userID)
+	if err != nil {
+		global.GVA_LOG.Error("获取当前用户信息失败!", zap.Error(err), zap.Uint("userID", userID))
+		response.FailWithMessage("获取失败:"+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(gin.H{
+		"user": gin.H{
+			"id":         ua.ID,
+			"username":   ua.Username,
+			"emailPhone": ua.EmailPhone,
+			"nickname":   ua.Nickname,
+			"avatar":     ua.Avatar,
+			"gender":     ua.Gender,
+			"address":    ua.Address,
+			"signature":  ua.Signature,
+			"createdAt":  ua.CreatedAt,
+			"updatedAt":  ua.UpdatedAt,
+		},
+		"tags": tags,
+	}, c)
+}
+
+// UpdateCurrentUserProfile 更新当前登录用户信息（可选字段局部更新）
+// @Tags UserAccount
+// @Summary 更新当前登录用户信息（可选字段局部更新）
+// @Security ApiKeyAuth
+// @Accept application/json
+// @Produce application/json
+// @Param data body starNoteReq.UpdateCurrentUserProfileReq true "更新字段（均可选）"
+// @Success 200 {object} response.Response{msg=string} "更新成功"
+// @Router /ua/updateCurrentUserProfile [put]
+func (uaApi *UserAccountApi) UpdateCurrentUserProfile(c *gin.Context) {
+	ctx := c.Request.Context()
+	userID := utils.GetUserID(c)
+	if userID == 0 {
+		response.FailWithMessage("用户未登录或token无效", c)
+		return
+	}
+
+	var req starNoteReq.UpdateCurrentUserProfileReq
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.FailWithMessage("参数错误:"+err.Error(), c)
+		return
+	}
+
+	if err := uaService.UpdateCurrentUserProfile(ctx, userID, req); err != nil {
+		global.GVA_LOG.Error("更新当前用户信息失败!", zap.Error(err), zap.Uint("userID", userID))
+		response.FailWithMessage("更新失败:"+err.Error(), c)
+		return
+	}
+
+	response.OkWithMessage("更新成功", c)
+}
+
+// GetAdminTags 管理端获取全系统标签字典
+// @Tags UserAccount
+// @Summary 管理端获取全系统标签字典
+// @Security ApiKeyAuth
+// @Accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
+// @Router /admin/tags [get]
+func (uaApi *UserAccountApi) GetAdminTags(c *gin.Context) {
+	ctx := c.Request.Context()
+	tags, err := uaService.GetAdminTagDictionary(ctx)
+	if err != nil {
+		global.GVA_LOG.Error("获取系统标签字典失败!", zap.Error(err))
+		response.FailWithMessage("获取失败:"+err.Error(), c)
+		return
+	}
+	response.OkWithData(gin.H{"tags": tags}, c)
+}
+
+// GetAdminUserTags 管理端获取指定用户标签信息
+// @Tags UserAccount
+// @Summary 管理端获取指定用户标签信息
+// @Security ApiKeyAuth
+// @Accept application/json
+// @Produce application/json
+// @Param id path uint true "用户ID"
+// @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
+// @Router /admin/users/{id}/tags [get]
+func (uaApi *UserAccountApi) GetAdminUserTags(c *gin.Context) {
+	ctx := c.Request.Context()
+	userID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil || userID == 0 {
+		response.FailWithMessage("用户ID无效", c)
+		return
+	}
+
+	tags, err := uaService.GetAdminTagDictionary(ctx)
+	if err != nil {
+		global.GVA_LOG.Error("获取系统标签字典失败!", zap.Error(err))
+		response.FailWithMessage("获取失败:"+err.Error(), c)
+		return
+	}
+
+	selectedTagIDs, err := uaService.GetAdminUserTagIDs(ctx, uint(userID))
+	if err != nil {
+		global.GVA_LOG.Error("获取用户标签失败!", zap.Error(err), zap.Uint64("userID", userID))
+		response.FailWithMessage("获取失败:"+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(gin.H{
+		"userId":         userID,
+		"tags":           tags,
+		"selectedTagIds": selectedTagIDs,
+	}, c)
+}
+
+// UpdateAdminUserTags 管理端全量覆盖更新指定用户标签
+// @Tags UserAccount
+// @Summary 管理端全量覆盖更新指定用户标签
+// @Security ApiKeyAuth
+// @Accept application/json
+// @Produce application/json
+// @Param id path uint true "用户ID"
+// @Param data body starNoteReq.AdminUpdateUserTagsReq true "标签ID列表"
+// @Success 200 {object} response.Response{msg=string} "更新成功"
+// @Router /admin/users/{id}/tags [post]
+func (uaApi *UserAccountApi) UpdateAdminUserTags(c *gin.Context) {
+	ctx := c.Request.Context()
+	userID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil || userID == 0 {
+		response.FailWithMessage("用户ID无效", c)
+		return
+	}
+
+	var req starNoteReq.AdminUpdateUserTagsReq
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.FailWithMessage("参数错误:"+err.Error(), c)
+		return
+	}
+
+	if req.TagIDs == nil {
+		req.TagIDs = []uint{}
+	}
+
+	if err := uaService.ReplaceAdminUserTags(ctx, uint(userID), req.TagIDs); err != nil {
+		global.GVA_LOG.Error("更新用户标签失败!", zap.Error(err), zap.Uint64("userID", userID))
+		response.FailWithMessage("更新失败:"+err.Error(), c)
+		return
+	}
+
+	response.OkWithMessage("更新成功", c)
 }
 
 // GetUserAccountPublic 不需要鉴权的用户账号接口

@@ -58,8 +58,6 @@ import {
 import { getNoteCategoryList } from '@/api/starNote/noteCategory'
 import icon from '@/view/superAdmin/menu/icon.vue'
 import ColorPicker from '@/components/colorPicker/colorPicker.vue'
-// 富文本组件
-import RichEdit from '@/components/richtext/rich-edit.vue'
 
 defineOptions({
     name: 'NoteModelForm'

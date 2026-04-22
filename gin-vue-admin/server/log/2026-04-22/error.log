@@ -1,0 +1,50 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 09:04:30.813	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37	record login failed	{"userID": 5, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 09:04:30.837	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40	evaluate tags after login failed	{"userID": 5, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 14:57:38.651	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37	record login failed	{"userID": 5, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 14:57:38.661	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40	evaluate tags after login failed	{"userID": 5, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:07:34.741	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37	record login failed	{"userID": 5, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:07:34.746	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40	evaluate tags after login failed	{"userID": 5, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:08:06.705	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37	record login failed	{"userID": 6, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:08:06.707	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40	evaluate tags after login failed	{"userID": 6, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:12:14.738	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37	record login failed	{"userID": 6, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:12:14.742	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40	evaluate tags after login failed	{"userID": 6, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75

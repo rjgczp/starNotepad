@@ -11,6 +11,9 @@ type UserAccountRouter struct{}
 func (s *UserAccountRouter) InitUserAccountRouter(Router *gin.RouterGroup, PublicRouter *gin.RouterGroup) {
 	uaRouter := Router.Group("ua").Use(middleware.OperationRecord())
 	uaRouterWithoutRecord := Router.Group("ua")
+	adminRouter := Router.Group("admin")
+	adminUsersRouter := adminRouter.Group("users")
+	uaRouterUserAuth := PublicRouter.Group("ua").Use(middleware.JWTAuthHeaderOnlyRest())
 	uaRouterWithoutAuth := PublicRouter.Group("ua")
 	{
 		uaRouter.POST("createUserAccount", uaApi.CreateUserAccount)             // 新建用户账号
@@ -21,6 +24,15 @@ func (s *UserAccountRouter) InitUserAccountRouter(Router *gin.RouterGroup, Publi
 	{
 		uaRouterWithoutRecord.GET("findUserAccount", uaApi.FindUserAccount)       // 根据ID获取用户账号
 		uaRouterWithoutRecord.GET("getUserAccountList", uaApi.GetUserAccountList) // 获取用户账号列表
+	}
+	{
+		adminRouter.GET("tags", uaApi.GetAdminTags)                  // 管理端获取全量标签
+		adminUsersRouter.GET(":id/tags", uaApi.GetAdminUserTags)     // 管理端获取用户标签
+		adminUsersRouter.POST(":id/tags", uaApi.UpdateAdminUserTags) // 管理端更新用户标签
+	}
+	{
+		uaRouterUserAuth.GET("getCurrentUserProfile", uaApi.GetCurrentUserProfile) // 获取当前登录用户信息（含标签）
+		uaRouterUserAuth.PUT("updateCurrentUserProfile", uaApi.UpdateCurrentUserProfile)
 	}
 	{
 		uaRouterWithoutAuth.POST("login", uaApi.Login)                                             // 用户账号登录

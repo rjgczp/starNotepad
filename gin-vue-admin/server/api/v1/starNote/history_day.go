@@ -7,6 +7,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/starNote"
 	starNoteReq "github.com/flipped-aurora/gin-vue-admin/server/model/starNote/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -180,6 +181,9 @@ func (hdApi *HistoryDayApi) GetHistoryDayList(c *gin.Context) {
 // @Router /hd/getHistoryDayToday [get]
 func (hdApi *HistoryDayApi) GetHistoryDayToday(c *gin.Context) {
 	ctx := c.Request.Context()
+	if userID := utils.GetUserID(c); userID > 0 {
+		stService.TriggerOnHistoryViewedAsync(ctx, userID)
+	}
 	list, err := hdService.GetHistoryDayToday(ctx)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
@@ -227,6 +231,9 @@ func (hdApi *HistoryDayApi) GetHistoryDayPublic(c *gin.Context) {
 // @Router /hd/getHistoryDayFuture [get]
 func (hdApi *HistoryDayApi) GetHistoryDayFuture(c *gin.Context) {
 	ctx := c.Request.Context()
+	if userID := utils.GetUserID(c); userID > 0 {
+		stService.TriggerOnHistoryViewedAsync(ctx, userID)
+	}
 	data, err := hdService.GetHistoryDayFuture(ctx)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))

@@ -67,14 +67,15 @@ db-list:
 disk-list:
     - mount-point: /
 email:
-    to: xxx@qq.com
-    from: 13403488056@163.com
-    host: smtp.163.com
-    secret: CLRmgmTupaY82FLm
+    to: 674094391@qq.com
+    from: 674094391@qq.com
+    host: smtp.qq.com
+    secret: tjvdtgkvvqbkbiii
     nickname: test
     port: 465
     is-ssl: true
     is-loginauth: false
+    pattern: false
 excel:
     dir: ./resource/excel/
 hua-wei-obs:
@@ -143,7 +144,7 @@ mysql:
     db-name: starNotepad
     username: root
     password: "123123"
-    path: 127.0.0.1
+    path: ${DB_PATH:-127.0.0.1}
     engine: ""
     log-mode: error
     max-idle-conns: 10

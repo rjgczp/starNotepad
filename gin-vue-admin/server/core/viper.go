@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/core/internal"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -12,6 +13,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
+
+var envTemplatePattern = regexp.MustCompile(`\$\{([A-Za-z_][A-Za-z0-9_]*)(:-([^}]*))?\}`)
 
 // Viper 配置
 func Viper() *viper.Viper {
@@ -24,10 +27,12 @@ func Viper() *viper.Viper {
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
+	expandViperConfigEnv(v)
 	v.WatchConfig()
 
 	v.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Println("config file changed:", e.Name)
+		expandViperConfigEnv(v)
 		if err = v.Unmarshal(&global.GVA_CONFIG); err != nil {
 			fmt.Println(err)
 		}
@@ -39,6 +44,47 @@ func Viper() *viper.Viper {
 	// root 适配性 根据root位置去找到对应迁移位置,保证root路径有效
 	global.GVA_CONFIG.AutoCode.Root, _ = filepath.Abs("..")
 	return v
+}
+
+func expandViperConfigEnv(v *viper.Viper) {
+	expandSettingMap(v, "", v.AllSettings())
+}
+
+func expandSettingMap(v *viper.Viper, prefix string, settings map[string]any) {
+	for key, value := range settings {
+		fullKey := key
+		if prefix != "" {
+			fullKey = prefix + "." + key
+		}
+
+		switch val := value.(type) {
+		case map[string]any:
+			expandSettingMap(v, fullKey, val)
+		case string:
+			v.Set(fullKey, expandEnvTemplate(val))
+		}
+	}
+}
+
+func expandEnvTemplate(value string) string {
+	return envTemplatePattern.ReplaceAllStringFunc(value, func(match string) string {
+		parts := envTemplatePattern.FindStringSubmatch(match)
+		if len(parts) < 2 {
+			return match
+		}
+
+		key := parts[1]
+		defaultValue := ""
+		if len(parts) >= 4 {
+			defaultValue = parts[3]
+		}
+
+		if envValue, ok := os.LookupEnv(key); ok && envValue != "" {
+			return envValue
+		}
+
+		return defaultValue
+	})
 }
 
 // getConfigPath 获取配置文件路径, 优先级: 命令行 > 环境变量 > 默认值

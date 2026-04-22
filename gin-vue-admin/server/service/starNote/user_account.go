@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"sort"
 	"strings"
 	"time"
 
@@ -20,6 +21,16 @@ import (
 )
 
 type UserAccountService struct{}
+
+type CodeSendResult struct {
+	Code string
+}
+
+type userAcquiredTag struct {
+	ID    uint   `gorm:"column:id"`
+	Name  string `gorm:"column:name"`
+	Color string `gorm:"column:color"`
+}
 
 const (
 	userEmailCodeSceneRegister       = "register"
@@ -78,6 +89,9 @@ func (uaService *UserAccountService) Login(ctx context.Context, info starNoteReq
 	db := global.GVA_DB.Model(&starNote.UserAccount{})
 	if info.Username != "" {
 		err = db.Where("username = ?", info.Username).First(&ua).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return uaService.autoRegisterOnLogin(ctx, info)
+		}
 	} else if info.EmailPhone != "" {
 		var cnt int64
 		if err := db.Where("email_phone = ?", info.EmailPhone).Count(&cnt).Error; err != nil {
@@ -108,20 +122,65 @@ func (uaService *UserAccountService) Login(ctx context.Context, info starNoteReq
 	return ua, nil
 }
 
-func (uaService *UserAccountService) SendRegisterEmailCode(ctx context.Context, email string) error {
+func (uaService *UserAccountService) autoRegisterOnLogin(ctx context.Context, info starNoteReq.UserAccountLogin) (ua starNote.UserAccount, err error) {
+	username := info.Username
+	emailPhone := info.EmailPhone
+	if emailPhone == "" {
+		emailPhone = username
+	}
+	password := info.Password
+	nickname := username
+	ua.Username = &username
+	ua.EmailPhone = &emailPhone
+	ua.Password = &password
+	ua.Nickname = &nickname
+	ua.Gender = "未知"
+
+	if err = uaService.CreateUserAccount(ctx, &ua); err != nil {
+		return ua, err
+	}
+	if info.DeviceID != "" {
+		if e := uaService.markUserDeviceVerified(ctx, ua.ID, info.DeviceID); e != nil {
+			global.GVA_LOG.Warn("mark login device verified failed", zap.Uint("userID", ua.ID), zap.String("deviceID", info.DeviceID), zap.Error(e))
+		}
+	}
+	global.GVA_LOG.Info("auto register on login", zap.Uint("userID", ua.ID), zap.String("username", username))
+	return ua, nil
+}
+
+func (uaService *UserAccountService) markUserDeviceVerified(ctx context.Context, userID uint, deviceID string) error {
+	if deviceID == "" {
+		return nil
+	}
+	return global.GVA_DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		var device starNote.UserDevice
+		e := tx.Where("user_id = ? AND device_id = ?", userID, deviceID).First(&device).Error
+		if errors.Is(e, gorm.ErrRecordNotFound) {
+			device = starNote.UserDevice{UserID: userID, DeviceID: deviceID, Verified: true}
+			return tx.Create(&device).Error
+		}
+		if e != nil {
+			return e
+		}
+		return tx.Model(&starNote.UserDevice{}).Where("id = ?", device.ID).Update("verified", true).Error
+	})
+}
+
+func (uaService *UserAccountService) SendRegisterEmailCode(ctx context.Context, email string) (CodeSendResult, error) {
+	result := CodeSendResult{}
 	if global.GVA_DB == nil {
-		return errors.New("db not init")
+		return result, errors.New("db not init")
 	}
 	if email == "" {
-		return errors.New("email required")
+		return result, errors.New("email required")
 	}
 	if !strings.Contains(email, "@") {
-		return errors.New("email invalid")
+		return result, errors.New("email invalid")
 	}
 
 	code, err := uaService.generate6DigitCode()
 	if err != nil {
-		return err
+		return result, err
 	}
 
 	subject := "验证码"
@@ -139,8 +198,10 @@ func (uaService *UserAccountService) SendRegisterEmailCode(ctx context.Context, 
     </p>
 </div>
 `, code)
-	if err := emailPlugService.ServiceGroupApp.SendEmail(email, subject, body); err != nil {
-		return err
+	if global.GVA_CONFIG.Email.Pattern {
+		if err := emailPlugService.ServiceGroupApp.SendEmail(email, subject, body); err != nil {
+			return result, err
+		}
 	}
 
 	expiresAt := time.Now().Add(10 * time.Minute)
@@ -150,7 +211,14 @@ func (uaService *UserAccountService) SendRegisterEmailCode(ctx context.Context, 
 		CodeHash:  utils.BcryptHash(code),
 		ExpiresAt: expiresAt,
 	}
-	return global.GVA_DB.WithContext(ctx).Create(&rec).Error
+	if err := global.GVA_DB.WithContext(ctx).Create(&rec).Error; err != nil {
+		return result, err
+	}
+	result.Code = code
+	if !global.GVA_CONFIG.Email.Pattern {
+		global.GVA_LOG.Info("register verify code direct return mode", zap.String("email", email))
+	}
+	return result, nil
 }
 
 func (uaService *UserAccountService) verifyEmailCode(ctx context.Context, email, scene, code, challengeID, deviceID string) error {
@@ -192,44 +260,47 @@ func (uaService *UserAccountService) verifyEmailCode(ctx context.Context, email,
 	})
 }
 
-func (uaService *UserAccountService) LoginWithDevice(ctx context.Context, info starNoteReq.UserAccountLogin) (ua starNote.UserAccount, needEmailVerify bool, challengeID string, err error) {
+func (uaService *UserAccountService) LoginWithDevice(ctx context.Context, info starNoteReq.UserAccountLogin) (ua starNote.UserAccount, needEmailVerify bool, challengeID string, verifyCode string, err error) {
 	ua, err = uaService.Login(ctx, info)
 	if err != nil {
-		return ua, false, "", err
+		return ua, false, "", "", err
 	}
 	if info.DeviceID == "" {
-		return ua, false, "", errors.New("deviceId required")
+		return ua, false, "", "", errors.New("deviceId required")
 	}
 
 	var device starNote.UserDevice
 	err = global.GVA_DB.WithContext(ctx).Where("user_id = ? AND device_id = ? AND verified = ?", ua.ID, info.DeviceID, true).First(&device).Error
 	if err == nil {
-		return ua, false, "", nil
+		return ua, false, "", "", nil
 	}
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return ua, false, "", err
+		return ua, false, "", "", err
 	}
 
 	needEmailVerify = true
 	challengeID = uuid.NewString()
-	if err := uaService.sendNewDeviceLoginCode(ctx, ua, info.DeviceID, challengeID); err != nil {
-		return ua, false, "", err
+	verifyCode, err = uaService.sendNewDeviceLoginCode(ctx, ua, info.DeviceID, challengeID)
+	if err != nil {
+		return ua, false, "", "", err
 	}
-	return ua, needEmailVerify, challengeID, nil
+	return ua, needEmailVerify, challengeID, verifyCode, nil
 }
 
-func (uaService *UserAccountService) sendNewDeviceLoginCode(ctx context.Context, ua starNote.UserAccount, deviceID, challengeID string) error {
+func (uaService *UserAccountService) sendNewDeviceLoginCode(ctx context.Context, ua starNote.UserAccount, deviceID, challengeID string) (string, error) {
 	if ua.EmailPhone == nil || *ua.EmailPhone == "" {
-		return errors.New("emailPhone not set")
+		return "", errors.New("emailPhone not set")
 	}
 	code, err := uaService.generate6DigitCode()
 	if err != nil {
-		return err
+		return "", err
 	}
 	subject := "新设备登录验证码"
 	body := fmt.Sprintf("<p>你正在新设备登录，验证码是：<b>%s</b></p><p>有效期 10 分钟。</p>", code)
-	if err := emailPlugService.ServiceGroupApp.SendEmail(*ua.EmailPhone, subject, body); err != nil {
-		return err
+	if global.GVA_CONFIG.Email.Pattern {
+		if err := emailPlugService.ServiceGroupApp.SendEmail(*ua.EmailPhone, subject, body); err != nil {
+			return "", err
+		}
 	}
 	expiresAt := time.Now().Add(10 * time.Minute)
 	rec := starNote.UserEmailCode{
@@ -241,7 +312,13 @@ func (uaService *UserAccountService) sendNewDeviceLoginCode(ctx context.Context,
 		ChallengeID: challengeID,
 		DeviceID:    deviceID,
 	}
-	return global.GVA_DB.WithContext(ctx).Create(&rec).Error
+	if err := global.GVA_DB.WithContext(ctx).Create(&rec).Error; err != nil {
+		return "", err
+	}
+	if !global.GVA_CONFIG.Email.Pattern {
+		global.GVA_LOG.Info("new device verify code direct return mode", zap.Uint("userID", ua.ID), zap.String("deviceID", deviceID), zap.String("challengeID", challengeID))
+	}
+	return code, nil
 }
 
 func (uaService *UserAccountService) LoginVerify(ctx context.Context, req starNoteReq.LoginVerifyReq) (ua starNote.UserAccount, err error) {
@@ -296,12 +373,13 @@ func (uaService *UserAccountService) generate6DigitCode() (string, error) {
 	return fmt.Sprintf("%06d", n.Int64()), nil
 }
 
-func (uaService *UserAccountService) SendChangePasswordEmailCode(ctx context.Context, req starNoteReq.SendChangePasswordEmailCodeReq) error {
+func (uaService *UserAccountService) SendChangePasswordEmailCode(ctx context.Context, req starNoteReq.SendChangePasswordEmailCodeReq) (CodeSendResult, error) {
+	result := CodeSendResult{}
 	if global.GVA_DB == nil {
-		return errors.New("db not init")
+		return result, errors.New("db not init")
 	}
 	if req.Username == "" && req.EmailPhone == "" {
-		return errors.New("username or emailPhone required")
+		return result, errors.New("username or emailPhone required")
 	}
 
 	var ua starNote.UserAccount
@@ -311,31 +389,33 @@ func (uaService *UserAccountService) SendChangePasswordEmailCode(ctx context.Con
 	} else {
 		var cnt int64
 		if err := global.GVA_DB.WithContext(ctx).Model(&starNote.UserAccount{}).Where("email_phone = ?", req.EmailPhone).Count(&cnt).Error; err != nil {
-			return err
+			return result, err
 		}
 		if cnt > 1 {
-			return errors.New("emailPhone ambiguous")
+			return result, errors.New("emailPhone ambiguous")
 		}
 		err = global.GVA_DB.WithContext(ctx).Where("email_phone = ?", req.EmailPhone).First(&ua).Error
 	}
 	if err != nil {
-		return err
+		return result, err
 	}
 	if ua.EmailPhone == nil || *ua.EmailPhone == "" {
-		return errors.New("emailPhone not set")
+		return result, errors.New("emailPhone not set")
 	}
 	if !strings.Contains(*ua.EmailPhone, "@") {
-		return errors.New("emailPhone must be email")
+		return result, errors.New("emailPhone must be email")
 	}
 
 	code, err := uaService.generate6DigitCode()
 	if err != nil {
-		return err
+		return result, err
 	}
 	subject := "修改密码验证码"
 	body := fmt.Sprintf("<p>你正在修改密码，验证码是：<b>%s</b></p><p>有效期 10 分钟。</p>", code)
-	if err := emailPlugService.ServiceGroupApp.SendEmail(*ua.EmailPhone, subject, body); err != nil {
-		return err
+	if global.GVA_CONFIG.Email.Pattern {
+		if err := emailPlugService.ServiceGroupApp.SendEmail(*ua.EmailPhone, subject, body); err != nil {
+			return result, err
+		}
 	}
 
 	expiresAt := time.Now().Add(10 * time.Minute)
@@ -346,7 +426,14 @@ func (uaService *UserAccountService) SendChangePasswordEmailCode(ctx context.Con
 		ExpiresAt: expiresAt,
 		DeviceID:  req.DeviceID,
 	}
-	return global.GVA_DB.WithContext(ctx).Create(&rec).Error
+	if err := global.GVA_DB.WithContext(ctx).Create(&rec).Error; err != nil {
+		return result, err
+	}
+	result.Code = code
+	if !global.GVA_CONFIG.Email.Pattern {
+		global.GVA_LOG.Info("change password verify code direct return mode", zap.Uint("userID", ua.ID))
+	}
+	return result, nil
 }
 
 func (uaService *UserAccountService) ChangePassword(ctx context.Context, req starNoteReq.ChangePasswordReq) error {
@@ -464,20 +551,7 @@ func (uaService *UserAccountService) Register(ctx context.Context, info starNote
 	if err != nil {
 		return ua, err
 	}
-	if info.DeviceID != "" {
-		_ = global.GVA_DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-			var device starNote.UserDevice
-			e := tx.Where("user_id = ? AND device_id = ?", ua.ID, info.DeviceID).First(&device).Error
-			if errors.Is(e, gorm.ErrRecordNotFound) {
-				device = starNote.UserDevice{UserID: ua.ID, DeviceID: info.DeviceID, Verified: true}
-				return tx.Create(&device).Error
-			}
-			if e != nil {
-				return e
-			}
-			return tx.Model(&starNote.UserDevice{}).Where("id = ?", device.ID).Update("verified", true).Error
-		})
-	}
+	_ = uaService.markUserDeviceVerified(ctx, ua.ID, info.DeviceID)
 	return ua, nil
 }
 
@@ -486,6 +560,183 @@ func (uaService *UserAccountService) Register(ctx context.Context, info starNote
 func (uaService *UserAccountService) GetUserAccount(ctx context.Context, ID string) (ua starNote.UserAccount, err error) {
 	err = global.GVA_DB.Where("id = ?", ID).First(&ua).Error
 	return
+}
+
+func (uaService *UserAccountService) GetCurrentUserProfile(ctx context.Context, userID uint) (ua starNote.UserAccount, tags []starNote.BuiltinTagMeta, err error) {
+	err = global.GVA_DB.WithContext(ctx).Where("id = ?", userID).First(&ua).Error
+	if err != nil {
+		return ua, nil, err
+	}
+
+	var tagRows []userAcquiredTag
+	err = global.GVA_DB.WithContext(ctx).Model(&starNote.UserTag{}).
+		Select("user_tags.tag_id as id, COALESCE(star_tags.name, '') as name, COALESCE(star_tags.color, '') as color").
+		Joins("LEFT JOIN star_tags ON star_tags.id = user_tags.tag_id").
+		Where("user_tags.user_id = ?", userID).
+		Order("user_tags.created_at asc").
+		Scan(&tagRows).Error
+	if err != nil {
+		return ua, nil, err
+	}
+
+	tags = make([]starNote.BuiltinTagMeta, 0, len(tagRows))
+	for _, row := range tagRows {
+		tag := starNote.BuiltinTagMeta{ID: row.ID, Name: row.Name, Color: row.Color}
+		if tag.Name == "" || tag.Color == "" {
+			if builtinTag, ok := starNote.GetBuiltinTagByID(row.ID); ok {
+				if tag.Name == "" {
+					tag.Name = builtinTag.Name
+				}
+				if tag.Color == "" {
+					tag.Color = builtinTag.Color
+				}
+			}
+		}
+		tags = append(tags, tag)
+	}
+
+	return ua, tags, nil
+}
+
+func (uaService *UserAccountService) UpdateCurrentUserProfile(ctx context.Context, userID uint, req starNoteReq.UpdateCurrentUserProfileReq) error {
+	updates := map[string]any{}
+	if req.Username != nil {
+		updates["username"] = *req.Username
+	}
+	if req.EmailPhone != nil {
+		updates["email_phone"] = *req.EmailPhone
+	}
+	if req.Nickname != nil {
+		updates["nickname"] = *req.Nickname
+	}
+	if req.Avatar != nil {
+		updates["avatar"] = *req.Avatar
+	}
+	if req.Gender != nil {
+		updates["gender"] = *req.Gender
+	}
+	if req.Address != nil {
+		updates["address"] = *req.Address
+	}
+	if req.Signature != nil {
+		updates["signature"] = *req.Signature
+	}
+
+	if len(updates) == 0 {
+		return nil
+	}
+
+	result := global.GVA_DB.WithContext(ctx).Model(&starNote.UserAccount{}).Where("id = ?", userID).Updates(updates)
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+}
+
+func (uaService *UserAccountService) GetAdminTagDictionary(ctx context.Context) (tags []starNote.BuiltinTagMeta, err error) {
+	builtinMap := make(map[uint]starNote.BuiltinTagMeta, len(starNote.BuiltinTagList))
+	for _, item := range starNote.BuiltinTagList {
+		builtinMap[item.ID] = item
+	}
+
+	var dbRows []userAcquiredTag
+	err = global.GVA_DB.WithContext(ctx).Model(&starNote.StarTag{}).
+		Select("id, COALESCE(name, '') as name, COALESCE(color, '') as color").
+		Order("id asc").
+		Scan(&dbRows).Error
+	if err != nil {
+		return nil, err
+	}
+
+	for _, row := range dbRows {
+		tag := starNote.BuiltinTagMeta{ID: row.ID, Name: row.Name, Color: row.Color}
+		if tag.Name == "" || tag.Color == "" {
+			if builtinTag, ok := builtinMap[row.ID]; ok {
+				if tag.Name == "" {
+					tag.Name = builtinTag.Name
+				}
+				if tag.Color == "" {
+					tag.Color = builtinTag.Color
+				}
+			}
+		}
+		builtinMap[row.ID] = tag
+	}
+
+	tags = make([]starNote.BuiltinTagMeta, 0, len(builtinMap))
+	for _, tag := range builtinMap {
+		tags = append(tags, tag)
+	}
+	sort.Slice(tags, func(i, j int) bool {
+		return tags[i].ID < tags[j].ID
+	})
+	return tags, nil
+}
+
+func (uaService *UserAccountService) GetAdminUserTagIDs(ctx context.Context, userID uint) (tagIDs []uint, err error) {
+	var user starNote.UserAccount
+	if err = global.GVA_DB.WithContext(ctx).Select("id").Where("id = ?", userID).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	err = global.GVA_DB.WithContext(ctx).Model(&starNote.UserTag{}).
+		Where("user_id = ?", userID).
+		Order("tag_id asc").
+		Pluck("tag_id", &tagIDs).Error
+	if err != nil {
+		return nil, err
+	}
+	return tagIDs, nil
+}
+
+func (uaService *UserAccountService) ReplaceAdminUserTags(ctx context.Context, userID uint, tagIDs []uint) error {
+	var user starNote.UserAccount
+	if err := global.GVA_DB.WithContext(ctx).Select("id").Where("id = ?", userID).First(&user).Error; err != nil {
+		return err
+	}
+
+	validTags, err := uaService.GetAdminTagDictionary(ctx)
+	if err != nil {
+		return err
+	}
+	validSet := make(map[uint]struct{}, len(validTags))
+	for _, tag := range validTags {
+		validSet[tag.ID] = struct{}{}
+	}
+
+	uniqIDs := make([]uint, 0, len(tagIDs))
+	seen := make(map[uint]struct{}, len(tagIDs))
+	for _, tagID := range tagIDs {
+		if _, ok := validSet[tagID]; !ok {
+			return fmt.Errorf("invalid tag id: %d", tagID)
+		}
+		if _, ok := seen[tagID]; ok {
+			continue
+		}
+		seen[tagID] = struct{}{}
+		uniqIDs = append(uniqIDs, tagID)
+	}
+
+	return global.GVA_DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("user_id = ?", userID).Delete(&starNote.UserTag{}).Error; err != nil {
+			return err
+		}
+
+		if len(uniqIDs) == 0 {
+			return nil
+		}
+
+		now := time.Now()
+		relations := make([]starNote.UserTag, 0, len(uniqIDs))
+		for _, tagID := range uniqIDs {
+			relations = append(relations, starNote.UserTag{UserID: userID, TagID: tagID, CreatedAt: now})
+		}
+
+		return tx.Create(&relations).Error
+	})
 }
 
 // GetUserAccountInfoList 分页获取用户账号记录

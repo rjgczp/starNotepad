@@ -331,11 +331,17 @@ func (userService *UserService) FindUserByUuid(uuid string) (user *system.SysUse
 //@return: err error
 
 func (userService *UserService) ResetPassword(ID uint, password string) (err error) {
+	if global.GVA_DB == nil {
+		return errors.New("数据库未初始化")
+	}
 	err = global.GVA_DB.Model(&system.SysUser{}).Where("id = ?", ID).Update("password", utils.BcryptHash(password)).Error
 	return err
 }
 
 func (userService *UserService) ResetPasswordByUsername(username, password string) (err error) {
+	if global.GVA_DB == nil {
+		return errors.New("数据库未初始化")
+	}
 	result := global.GVA_DB.Model(&system.SysUser{}).Where("username = ?", username).Update("password", utils.BcryptHash(password))
 	if result.Error != nil {
 		return result.Error
