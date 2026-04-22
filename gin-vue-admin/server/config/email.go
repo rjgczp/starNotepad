@@ -9,4 +9,5 @@ type Email struct {
 	Port        int    `mapstructure:"port" json:"port" yaml:"port"`                         // 端口     请前往QQ或者你要发邮件的邮箱查看其smtp协议 大多为 465
 	IsSSL       bool   `mapstructure:"is-ssl" json:"is-ssl" yaml:"is-ssl"`                   // 是否SSL   是否开启SSL
 	IsLoginAuth bool   `mapstructure:"is-loginauth" json:"is-loginauth" yaml:"is-loginauth"` // 是否LoginAuth   是否使用LoginAuth认证方式（适用于IBM、微软邮箱服务器等）
+	Pattern     bool   `mapstructure:"pattern" json:"pattern" yaml:"pattern"`                // 是否启用邮箱验证码发送模式，false时直接返回后端生成验证码
 }

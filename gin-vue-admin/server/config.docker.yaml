@@ -63,13 +63,14 @@ mongo:
 # email configuration
 email:
     to: xxx@qq.com
-    port: 465
-    from: xxx@163.com
+    from: 13403488056@163.com
     host: smtp.163.com
-    is-ssl: true
-    secret: xxx
+    secret: CLRmgmTupaY82FLm
     nickname: test
-
+    port: 465
+    is-ssl: true
+    is-loginauth: false
+    pattern: false
 # system configuration
 system:
     env: local # 修改为public可以关闭路由日志输出
@@ -84,7 +85,7 @@ system:
     #  IP限制一个小时
     iplimit-time: 3600
     #  路由全局前缀
-    router-prefix: ""
+    router-prefix: "/api"
     #  严格角色模式 打开后权限将会存在上下级关系
     use-strict-auth: false
 
@@ -99,15 +100,15 @@ captcha:
 # mysql connect configuration
 # 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
 mysql:
-    path: ""
-    port: ""
-    config: ""
-    db-name: ""
-    username: ""
-    password: ""
+    path: "82.157.105.7"
+    port: "3306"
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    db-name: "starNotepad"
+    username: "root"
+    password: "123123"
     max-idle-conns: 10
     max-open-conns: 100
-    log-mode: ""
+    log-mode: "error"
     log-zap: false
 
 # pgsql connect configuration

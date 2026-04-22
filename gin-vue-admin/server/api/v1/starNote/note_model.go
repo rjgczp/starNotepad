@@ -94,6 +94,7 @@ func (evtApi *NoteModelApi) CreateUserNoteModel(c *gin.Context) {
 		})
 		return
 	}
+	stService.TriggerAfterNoteChangedAsync(ctx, userID)
 	c.JSON(http.StatusCreated, gin.H{
 		"code": http.StatusCreated,
 		"data": gin.H{
@@ -255,6 +256,7 @@ func (evtApi *NoteModelApi) UpdateUserNoteModel(c *gin.Context) {
 		})
 		return
 	}
+	stService.TriggerAfterNoteChangedAsync(ctx, userID)
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"data":    gin.H{},
@@ -495,6 +497,7 @@ func (evtApi *NoteModelApi) GetNoteModelPublic(c *gin.Context) {
 func (evtApi *NoteModelApi) CheckToken(c *gin.Context) {
 	userID := utils.GetUserID(c)
 	claims := utils.GetUserInfo(c)
+	stService.TriggerRefreshSimpleTagsAsync(c.Request.Context(), userID)
 
 	// 生成新的 token 实现续期
 	j := utils.NewJWT()
@@ -647,6 +650,8 @@ func (evtApi *NoteModelApi) PolishUserNoteText(c *gin.Context) {
 		})
 		return
 	}
+	userID := utils.GetUserID(c)
+	stService.TriggerOnAIPolishSuccessAsync(ctx, userID)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
@@ -754,6 +759,7 @@ func (evtApi *NoteModelApi) SyncUserNotesPush(c *gin.Context) {
 		})
 		return
 	}
+	stService.TriggerAfterNoteChangedAsync(ctx, userID)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,

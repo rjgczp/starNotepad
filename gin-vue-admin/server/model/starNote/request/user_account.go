@@ -56,3 +56,17 @@ type ChangePasswordReq struct {
 	EmailCode   string `json:"emailCode" binding:"required"`
 	DeviceID    string `json:"deviceId"`
 }
+
+type AdminUpdateUserTagsReq struct {
+	TagIDs []uint `json:"tagIds"`
+}
+
+type UpdateCurrentUserProfileReq struct {
+	Username   *string `json:"username"`
+	EmailPhone *string `json:"emailPhone"`
+	Nickname   *string `json:"nickname"`
+	Avatar     *string `json:"avatar"`
+	Gender     *string `json:"gender"`
+	Address    *string `json:"address"`
+	Signature  *string `json:"signature"`
+}

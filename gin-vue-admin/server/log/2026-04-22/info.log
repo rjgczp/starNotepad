@@ -1,0 +1,22 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 08:42:20.604	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 08:42:20.604	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 08:42:20.608	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 08:42:27.976	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/user_account.go:272	new device verify code direct return mode	{"userID": 1, "deviceID": "cs777", "challengeID": "df97c557-c385-4318-a4f1-c338e66a452c"}
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 09:00:17.634	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/user_account.go:387	change password verify code direct return mode	{"userID": 1}
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 09:02:58.132	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 09:02:58.133	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 09:02:58.136	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 09:04:30.812	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/user_account.go:147	auto register on login	{"userID": 5, "username": "xdg"}
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 14:57:18.087	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 14:57:18.089	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 14:57:18.100	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:08:06.704	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/user_account.go:147	auto register on login	{"userID": 6, "username": "xdg111"}
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:13:26.856	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:13:26.898	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:13:29.859	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:13:56.584	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:13:56.584	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:13:56.587	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:14:40.807	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:14:40.807	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-22 15:14:40.811	[34minfo[0m	/Users/charles/Documents/back/gin-vue-admin/server/initialize/router.go:147	router register success

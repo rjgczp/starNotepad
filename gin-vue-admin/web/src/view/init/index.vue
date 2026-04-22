@@ -157,11 +157,11 @@
   const form = reactive({
     adminPassword: '123456',
     dbType: 'mysql',
-    host: '127.0.0.1',
+    host: 'gva-mysql',
     port: '3306',
     userName: 'root',
-    password: '',
-    dbName: 'gva',
+    password: '123123',
+    dbName: 'starNotepad',
     dbPath: ''
   })
 

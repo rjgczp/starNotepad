@@ -79,7 +79,7 @@
                   >登 录</el-button
                 >
               </el-form-item>
-              <el-form-item v-if="isDev" class="mb-6">
+              <el-form-item class="mb-6">
                 <el-button
                   class="shadow shadow-active h-11 w-full"
                   type="primary"
@@ -88,7 +88,7 @@
                   >前往初始化</el-button
                 >
               </el-form-item>
-              <el-form-item v-if="isDev" class="mb-2">
+              <el-form-item class="mb-2">
                 <el-button
                   class="h-11 w-full"
                   plain
@@ -149,8 +149,6 @@
   import { useRouter } from 'vue-router'
   import { useUserStore } from '@/pinia/modules/user'
   import Logo from '@/components/logo/index.vue'
-  import { isDev } from '@/utils/env.js'
-
   defineOptions({
     name: 'Login'
   })

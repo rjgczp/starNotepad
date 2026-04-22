@@ -108,3 +108,25 @@ export const getUserAccountPublic = () => {
     method: 'get',
   })
 }
+
+export const getAdminTags = () => {
+  return service({
+    url: '/admin/tags',
+    method: 'get',
+  })
+}
+
+export const getAdminUserTags = (userId) => {
+  return service({
+    url: `/admin/users/${userId}/tags`,
+    method: 'get',
+  })
+}
+
+export const updateAdminUserTags = (userId, data) => {
+  return service({
+    url: `/admin/users/${userId}/tags`,
+    method: 'post',
+    data,
+  })
+}

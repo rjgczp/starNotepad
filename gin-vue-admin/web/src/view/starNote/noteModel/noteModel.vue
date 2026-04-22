@@ -241,7 +241,6 @@ import {
 } from '@/api/starNote/noteModel'
 import { getNoteCategoryList } from '@/api/starNote/noteCategory'
 // 富文本组件
-import RichEdit from '@/components/richtext/rich-edit.vue'
 import RichView from '@/components/richtext/rich-view.vue'
 
 // 全量引入格式化工具 请按需保留

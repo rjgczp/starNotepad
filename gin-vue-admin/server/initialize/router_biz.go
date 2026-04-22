@@ -21,7 +21,9 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 		starNoteRouter.InitHistoryDayRouter(privateGroup, publicGroup)
 		starNoteRouter.InitUserFileRouter(privateGroup, publicGroup)
 		starNoteRouter.InitNoteCategoryRouter(privateGroup, publicGroup)
-		starNoteRouter.InitStarColorRouter(privateGroup, publicGroup) // 占位方法，保证文件可以正确加载，避免go空变量检测报错，请勿删除。
+		starNoteRouter.InitStarColorRouter(privateGroup, publicGroup)
 		starNoteRouter.InitProviderRouter(privateGroup, publicGroup)
 	}
 }
+
+// 占位方法，保证文件可以正确加载，避免go空变量检测报错，请勿删除。

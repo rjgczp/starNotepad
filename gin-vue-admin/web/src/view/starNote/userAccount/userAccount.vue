@@ -79,6 +79,7 @@
         <el-table-column align="left" label="操作" fixed="right" :min-width="appStore.operateMinWith">
             <template #default="scope">
             <el-button  type="primary" link class="table-button" @click="getDetails(scope.row)"><el-icon style="margin-right: 5px"><InfoFilled /></el-icon>查看</el-button>
+            <el-button type="primary" link class="table-button" @click="openTagDialog(scope.row)">管理标签</el-button>
             <el-button  type="primary" link icon="edit" class="table-button" @click="updateUserAccountFunc(scope.row)">编辑</el-button>
             <el-button   type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
             </template>
@@ -140,6 +141,24 @@
           </el-form>
     </el-drawer>
 
+    <el-dialog v-model="tagDialogVisible" title="管理用户标签" width="560px" :close-on-click-modal="false" @close="closeTagDialog">
+      <div v-loading="tagDialogLoading">
+        <el-checkbox-group v-model="selectedTagIds" class="tag-checkbox-group">
+          <el-checkbox v-for="tag in allTags" :key="tag.ID" :label="tag.ID">
+            <span class="tag-chip" :style="{ borderColor: tag.Color || '#dcdfe6', color: tag.Color || '#606266' }">
+              {{ tag.Name }}
+            </span>
+          </el-checkbox>
+        </el-checkbox-group>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="closeTagDialog">取 消</el-button>
+          <el-button type="primary" :loading="tagSaveLoading" @click="saveUserTags">保 存</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <el-drawer destroy-on-close :size="appStore.drawerSize" v-model="detailShow" :show-close="true" :before-close="closeDetailShow" title="查看">
             <el-descriptions :column="1" border>
                     <el-descriptions-item label="账号/ID">
@@ -179,7 +198,9 @@ import {
   deleteUserAccountByIds,
   updateUserAccount,
   findUserAccount,
-  getUserAccountList
+  getUserAccountList,
+  getAdminUserTags,
+  updateAdminUserTags,
 } from '@/api/starNote/userAccount'
 import { getUrl } from '@/utils/image'
 // 图片选择组件
@@ -498,9 +519,71 @@ const closeDetailShow = () => {
   detailForm.value = {}
 }
 
+const tagDialogVisible = ref(false)
+const tagDialogLoading = ref(false)
+const tagSaveLoading = ref(false)
+const currentTagUserId = ref(0)
+const allTags = ref([])
+const selectedTagIds = ref([])
+
+const openTagDialog = async (row) => {
+  currentTagUserId.value = row.ID
+  tagDialogVisible.value = true
+  tagDialogLoading.value = true
+  try {
+    const res = await getAdminUserTags(row.ID)
+    if (res.code === 0) {
+      allTags.value = res.data.tags || []
+      selectedTagIds.value = [...(res.data.selectedTagIds || [])]
+    }
+  } finally {
+    tagDialogLoading.value = false
+  }
+}
+
+const closeTagDialog = () => {
+  tagDialogVisible.value = false
+  currentTagUserId.value = 0
+  allTags.value = []
+  selectedTagIds.value = []
+}
+
+const saveUserTags = async () => {
+  if (!currentTagUserId.value) {
+    return
+  }
+  tagSaveLoading.value = true
+  try {
+    const res = await updateAdminUserTags(currentTagUserId.value, {
+      tagIds: selectedTagIds.value,
+    })
+    if (res.code === 0) {
+      ElMessage({ type: 'success', message: '标签更新成功' })
+      closeTagDialog()
+    }
+  } finally {
+    tagSaveLoading.value = false
+  }
+}
+
 
 </script>
 
 <style>
+.tag-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 18px;
+}
 
 </style>

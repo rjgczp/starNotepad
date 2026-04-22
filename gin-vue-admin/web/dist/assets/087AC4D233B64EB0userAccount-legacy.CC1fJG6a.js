@@ -1,0 +1,4 @@
+/*! 
+ Build based on gin-vue-admin 
+ Time : 1776761790000 */
+System.register(["./087AC4D233B64EB0index-legacy.DhHcSdIi.js"],function(t,e){"use strict";var u;return{setters:[function(t){u=t.s}],execute:function(){t("c",function(t){return u({url:"/ua/createUserAccount",method:"post",data:t})}),t("e",function(t){return u({url:"/ua/deleteUserAccount",method:"delete",params:t})}),t("d",function(t){return u({url:"/ua/deleteUserAccountByIds",method:"delete",params:t})}),t("u",function(t){return u({url:"/ua/updateUserAccount",method:"put",data:t})}),t("f",function(t){return u({url:"/ua/findUserAccount",method:"get",params:t})}),t("g",function(t){return u({url:"/ua/getUserAccountList",method:"get",params:t})}),t("a",function(t){return u({url:"/admin/users/".concat(t,"/tags"),method:"get"})}),t("b",function(t,e){return u({url:"/admin/users/".concat(t,"/tags"),method:"post",data:e})})}}});

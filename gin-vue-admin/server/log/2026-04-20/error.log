@@ -1,0 +1,340 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:22:14.794	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:39:15.391	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37	record login failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:39:15.395	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40	evaluate tags after login failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 10:47:02.353	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 11:10:00.963	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 11:12:33.435	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 11:17:00.476	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 11:19:32.357	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 11:25:16.118	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 11:29:08.882	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 14:06:54.607	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:13:00.766	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:19:26.514	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21	refresh simple tags failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerRefreshSimpleTagsAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:21
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:26:41.545	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49	重新写入cookie token失败,未能成功解析token,请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetToken
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:58
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:26:41.554	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62	从Gin的Context中获取从jwt解析信息失败, 请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:26:58.400	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49	重新写入cookie token失败,未能成功解析token,请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetToken
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:58
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:26:58.405	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62	从Gin的Context中获取从jwt解析信息失败, 请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:26:59.792	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49	重新写入cookie token失败,未能成功解析token,请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetToken
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:58
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:26:59.795	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62	从Gin的Context中获取从jwt解析信息失败, 请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:30:46.983	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49	重新写入cookie token失败,未能成功解析token,请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetToken
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:58
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:30:46.988	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62	从Gin的Context中获取从jwt解析信息失败, 请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:31:52.332	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37	record login failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:37
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:31:52.336	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40	evaluate tags after login failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerOnLoginSuccessAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:40
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 15:31:53.376	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:29	evaluate tags after note change failed	{"userID": 1, "error": "context canceled"}
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).TriggerAfterNoteChangedAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:29
+github.com/flipped-aurora/gin-vue-admin/server/service/starNote.(*StarTagService).runAsync.func1
+	/Users/charles/Documents/back/gin-vue-admin/server/service/starNote/tag_auto_assign.go:75
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 17:23:28.840	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49	重新写入cookie token失败,未能成功解析token,请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetToken
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:49
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:58
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-20 17:23:28.854	[31merror[0m	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62	从Gin的Context中获取从jwt解析信息失败, 请检查请求头是否存在x-token且claims是否为规定结构
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetClaims
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:62
+github.com/flipped-aurora/gin-vue-admin/server/utils.GetUserID
+	/Users/charles/Documents/back/gin-vue-admin/server/utils/claims.go:70
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*HistoryDayApi).GetHistoryDayFuture
+	/Users/charles/Documents/back/gin-vue-admin/server/api/v1/starNote/history_day.go:234
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/back/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
