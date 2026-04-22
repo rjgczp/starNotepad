@@ -1,0 +1,100 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-11 14:39:44.036	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638	润色失败!	{"error": "Param Incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*NoteModelApi).PolishUserNoteText
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/router/starNote.(*NoteModelRouter).InitNoteModelRouter.JWTAuthHeaderOnlyRest.func2
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:123
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-11 14:39:53.481	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638	润色失败!	{"error": "Param Incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*NoteModelApi).PolishUserNoteText
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/router/starNote.(*NoteModelRouter).InitNoteModelRouter.JWTAuthHeaderOnlyRest.func2
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:123
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-11 14:40:12.218	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638	润色失败!	{"error": "Param Incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*NoteModelApi).PolishUserNoteText
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/router/starNote.(*NoteModelRouter).InitNoteModelRouter.JWTAuthHeaderOnlyRest.func2
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:123
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-11 14:42:05.206	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638	润色失败!	{"error": "Param Incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*NoteModelApi).PolishUserNoteText
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:638
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/router/starNote.(*NoteModelRouter).InitNoteModelRouter.JWTAuthHeaderOnlyRest.func2
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:123
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func7
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102

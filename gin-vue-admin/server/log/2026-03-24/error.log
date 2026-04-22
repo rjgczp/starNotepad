@@ -1,0 +1,616 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 10:37:40.105	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107	字典未创建或未开启!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/system.(*DictionaryApi).FindSysDictionary
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 10:37:55.249	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107	字典未创建或未开启!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/system.(*DictionaryApi).FindSysDictionary
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 10:38:24.338	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107	字典未创建或未开启!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/system.(*DictionaryApi).FindSysDictionary
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 10:38:27.197	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107	字典未创建或未开启!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/system.(*DictionaryApi).FindSysDictionary
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 10:40:05.867	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107	字典未创建或未开启!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/system.(*DictionaryApi).FindSysDictionary
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/system/sys_dictionary.go:107
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 14:41:31.232	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:83	register biz_table failed	{"error": "Error 1406 (22001): Data too long for column 'title' at row 48"}
+github.com/flipped-aurora/gin-vue-admin/server/initialize.RegisterTables
+	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:83
+main.initializeSystem
+	/Users/charles/Documents/notepad/gin-vue-admin/server/main.go:49
+main.main
+	/Users/charles/Documents/notepad/gin-vue-admin/server/main.go:32
+runtime.main
+	/Applications/ServBay/package/go/1.24/1.24.3/src/runtime/proc.go:283
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 14:45:01.927	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:62	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:62
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 15:26:19.152	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:121	修改密码失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:121
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 15:44:03.678	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:122	修改密码失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:122
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 15:56:53.298	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:122	修改密码失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:122
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 15:59:00.183	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158	修改密码失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 16:05:09.597	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 16:05:17.703	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 16:09:00.105	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:273	邮箱验证失败!	{"error": "challenge invalid"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).LoginVerify
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:273
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 16:55:35.515	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 16:55:50.327	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 16:56:02.496	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 16:56:06.329	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 17:04:49.486	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:273	邮箱验证失败!	{"error": "emailCode invalid"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).LoginVerify
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:273
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 17:32:29.022	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:273	邮箱验证失败!	{"error": "challenge invalid"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).LoginVerify
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:273
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 20:18:02.709	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158	修改密码失败!	{"error": "emailCode invalid"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 20:18:12.986	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158	修改密码失败!	{"error": "emailCode invalid"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 20:18:19.126	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158	修改密码失败!	{"error": "emailCode invalid"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 20:18:22.424	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158	修改密码失败!	{"error": "emailCode invalid"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).ChangePassword
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:158
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 20:39:26.597	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 21:24:30.660	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 21:28:02.303	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-24 21:28:23.901	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:67
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102

@@ -1,0 +1,843 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:32.531	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:35.450	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:36.035	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:36.236	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:36.414	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:36.588	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:36.748	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:40.259	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:40.892	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:47.217	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:47.781	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:03:57.230	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:05:39.465	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:05:40.186	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:05:54.734	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:05:57.711	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:05:58.880	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:06:00.077	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:06:00.720	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:06:03.660	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:06:04.565	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:06:04.732	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:06:04.919	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).FindUserAccount
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 11:09:14.695	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:134	查询失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*NoteModelApi).FindNoteModel
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/note_model.go:134
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.CasbinHandler.func6
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/casbin_rbac.go:30
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.JWTAuth.func5
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/jwt.go:69
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 16:28:11.519	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:62	登录失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:62
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 16:29:09.130	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:62	登录失败!	{"error": "record not found"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:62
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 16:30:53.611	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 16:31:35.823	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 16:31:36.334	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 16:33:29.557	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-21 16:33:31.844	[31merror[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63	登录失败!	{"error": "password incorrect"}
+github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote.(*UserAccountApi).Login
+	/Users/charles/Documents/notepad/gin-vue-admin/server/api/v1/starNote/user_account.go:63
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/flipped-aurora/gin-vue-admin/server/initialize.Routers.GinRecovery.func4
+	/Users/charles/Documents/notepad/gin-vue-admin/server/middleware/error.go:78
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/charles/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:3301
+net/http.(*conn).serve
+	/Applications/ServBay/package/go/1.24/1.24.3/src/net/http/server.go:2102
