@@ -1,5 +1,7 @@
 import '../../auth/domain/auth_repository.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../../tools/network.dart';
+import '../../../tools/system_tip_broadcast.dart';
 import '../../../tools/localData.dart';
 import 'auth_api.dart';
 
@@ -13,6 +15,17 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthApi _api;
 
   AuthRepositoryImpl(this._api);
+
+  Future<void> _broadcastVerifyCodeIfNeeded({
+    required String? message,
+    required String scene,
+  }) async {
+    if (Network.emailVerifyCodeMode) return;
+    await SystemTipBroadcast.notifyVerifyCode(
+      verifyCode: message ?? '',
+      scene: scene,
+    );
+  }
 
   Future<Map<String, dynamic>> _requireBodyMap(dynamic body) async {
     if (body is Map<String, dynamic>) return body;
@@ -108,6 +121,7 @@ class AuthRepositoryImpl implements AuthRepository {
     if (data is Map) {
       final m = Map<String, dynamic>.from(data);
       if (m['needEmailVerify'] == true) {
+        await _broadcastVerifyCodeIfNeeded(message: message, scene: '登录');
         final challengeId = m['challengeId'];
         if (challengeId is String && challengeId.isNotEmpty) {
           throw NeedEmailVerifyException(
@@ -161,6 +175,8 @@ class AuthRepositoryImpl implements AuthRepository {
         statusCode: res.statusCode,
       );
     }
+
+    await _broadcastVerifyCodeIfNeeded(message: message, scene: '修改密码');
   }
 
   @override

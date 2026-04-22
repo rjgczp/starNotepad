@@ -7,8 +7,13 @@ class Network {
     'BASE_URL',
     defaultValue: _defaultBaseUrl,
   );
+  static const bool _emailVerifyCodeMode = bool.fromEnvironment(
+    'EMAIL_VERIFY_CODE_MODE',
+    defaultValue: false,
+  );
 
   static String get baseUrl => _baseUrl;
+  static bool get emailVerifyCodeMode => _emailVerifyCodeMode;
 
   // 单例配置
   static final Dio _dio = Dio(
