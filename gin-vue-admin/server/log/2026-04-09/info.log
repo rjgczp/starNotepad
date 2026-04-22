@@ -1,0 +1,15 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 08:53:37.186	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 08:53:37.187	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 08:53:37.192	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 11:17:13.022	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 11:17:13.023	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 11:17:13.028	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:15:42.100	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:15:42.100	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:15:42.104	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:16:01.804	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:16:01.805	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:16:01.809	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:147	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:16:57.216	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:16:57.216	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:93	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-04-09 14:16:57.219	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:147	router register success

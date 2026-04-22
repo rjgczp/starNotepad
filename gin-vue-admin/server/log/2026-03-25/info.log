@@ -1,0 +1,87 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:09:53.057	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:09:53.059	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:10:00.095	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:10:00.096	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:10:00.099	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:14:30.006	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:14:30.007	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:14:35.839	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:14:35.840	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:14:35.843	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:30:33.554	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:30:33.556	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:30:41.008	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:30:41.010	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:30:41.020	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:35:56.630	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:35:56.632	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:36:59.237	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:36:59.237	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 14:36:59.241	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:06.999	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:07.002	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:09.805	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:09.806	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:09.809	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:10.334	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:10.334	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:34.034	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:34.037	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:03:34.042	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:10:35.260	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:10:35.263	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:39:39.585	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:39:39.586	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:39:39.590	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:43:36.380	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:43:36.381	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:43:42.611	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:43:42.612	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:75	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:43:42.615	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:129	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:55:34.494	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:55:34.496	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:55:40.944	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:55:40.944	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:79	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:55:40.948	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:133	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:57:57.620	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:57:57.622	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:03.739	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:03.740	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:79	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:03.743	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:133	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:22.370	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:22.371	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:26.446	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:26.447	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:79	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:58:26.450	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:133	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:59:58.185	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 15:59:58.187	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:00:03.972	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:00:03.972	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:81	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:00:03.975	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:135	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:02:04.215	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:02:04.216	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:02:06.998	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:02:06.999	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:81	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:02:07.002	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:135	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:06:02.754	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:06:02.755	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:06:08.547	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:06:24.372	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:07:20.908	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:07:20.910	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:89	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:07:20.914	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:143	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:11:53.818	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:11:53.822	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:12:00.317	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:12:00.317	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:89	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:12:00.321	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:143	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:14:13.444	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:14:13.445	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:14:16.208	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:14:16.208	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:89	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:14:16.213	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:143	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:57:08.724	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:48	关闭WEB服务...
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:57:08.728	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/core/server_run.go:59	WEB服务已关闭
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:57:10.245	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/gorm.go:86	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:57:10.246	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:89	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2026-03-25 16:57:10.252	[34minfo[0m	/Users/charles/Documents/notepad/gin-vue-admin/server/initialize/router.go:143	router register success
