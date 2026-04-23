@@ -29,7 +29,8 @@ services:
     build: ./gin-vue-admin/server
     container_name: gva-server
     restart: always
-    command: /go/src/github.com/flipped-aurora/gin-vue-admin/server/server -c /app/config.yaml
+    entrypoint: ["/go/src/github.com/flipped-aurora/gin-vue-admin/server/server"]
+    command: ["-c", "/app/config.yaml"]
     ports:
       - "8888:8888"
     depends_on:
