@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils/crypto"
+	"gorm.io/gorm"
 )
 
 // 记事本 结构体  NoteModel
@@ -26,4 +28,29 @@ type NoteModel struct {
 // TableName 记事本 NoteModel自定义表名 notes
 func (NoteModel) TableName() string {
 	return "notes"
+}
+
+// BeforeSave 在写入数据库前对 title/content 进行加密（幂等：已加密字符串不会重复加密）。
+func (n *NoteModel) BeforeSave(tx *gorm.DB) error {
+	if err := crypto.EncryptStringPtr(n.Title); err != nil {
+		return err
+	}
+	if err := crypto.EncryptStringPtr(n.Content); err != nil {
+		return err
+	}
+	return nil
+}
+
+// AfterSave 保存完成后将结构体字段还原为明文，避免调用方后续拿到密文。
+func (n *NoteModel) AfterSave(tx *gorm.DB) error {
+	crypto.DecryptStringPtr(n.Title)
+	crypto.DecryptStringPtr(n.Content)
+	return nil
+}
+
+// AfterFind 查询结果返回前自动解密（旧明文数据直接透传，保持向后兼容）。
+func (n *NoteModel) AfterFind(tx *gorm.DB) error {
+	crypto.DecryptStringPtr(n.Title)
+	crypto.DecryptStringPtr(n.Content)
+	return nil
 }

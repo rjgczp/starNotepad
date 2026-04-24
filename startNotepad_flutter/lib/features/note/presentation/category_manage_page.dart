@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/icons/iconfont_widget.dart';
 import '../../../core/sync/sync_offline_repository.dart';
 import '../../../tools/localData.dart';
+import '../../../public/publicWidget.dart';
 import 'category_create_page.dart';
 
 class CategoryManagePage extends StatefulWidget {
@@ -58,6 +59,21 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
     return sorted;
   }
 
+  List<Map<String, dynamic>> _groupHiddenToBottom(
+    List<Map<String, dynamic>> list,
+  ) {
+    final visible = <Map<String, dynamic>>[];
+    final hidden = <Map<String, dynamic>>[];
+    for (final item in list) {
+      if (item['isVisible'] == false) {
+        hidden.add(item);
+      } else {
+        visible.add(item);
+      }
+    }
+    return <Map<String, dynamic>>[...visible, ...hidden];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,15 +101,13 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
                 'isVisible': isVisible,
               };
             }).toList();
-        _categories = _applySavedOrder(mapped);
+        _categories = _groupHiddenToBottom(_applySavedOrder(mapped));
         _loading = false;
       });
     } catch (e) {
       if (!mounted) return;
       setState(() => _loading = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('加载分类失败：$e')));
+      Publicwidget.showToast(context, '加载分类失败：$e', false);
     }
   }
 
@@ -105,9 +119,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
       _hasChanges = true;
       await _loadCategories();
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('分类创建成功')));
+      Publicwidget.showToast(context, '分类创建成功', true);
     }
   }
 
@@ -127,9 +139,7 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
       _hasChanges = true;
       await _loadCategories();
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('分类已更新')));
+      Publicwidget.showToast(context, '分类已更新', true);
     }
   }
 
@@ -163,14 +173,10 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
       _hasChanges = true;
       await _loadCategories();
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('分类已删除')));
+      Publicwidget.showToast(context, '分类已删除', true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      Publicwidget.showToast(context, e.toString(), false);
     }
   }
 
@@ -184,16 +190,37 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
     if (id is! int) return;
 
     // Toggle visibility in local storage
-    final key = 'category_visible_${id}';
+    final key = 'category_visible_$id';
     final currentVisibility = LocalData.getBool(key);
-    await LocalData.setBool(key, !currentVisibility);
+    final nextVisibility = !currentVisibility;
+    await LocalData.setBool(key, nextVisibility);
+
+    final currentIndex = _categories.indexWhere((e) => e['id'] == id);
+    if (currentIndex >= 0) {
+      final item = Map<String, dynamic>.from(
+        _categories.removeAt(currentIndex),
+      );
+      item['isVisible'] = nextVisibility;
+      if (nextVisibility) {
+        final firstHiddenIndex = _categories.indexWhere(
+          (e) => e['isVisible'] == false,
+        );
+        if (firstHiddenIndex == -1) {
+          _categories.add(item);
+        } else {
+          _categories.insert(firstHiddenIndex, item);
+        }
+      } else {
+        _categories.add(item);
+      }
+    }
 
     _hasChanges = true;
-    await _loadCategories();
+    await _saveOrder();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(!currentVisibility ? '已显示分类' : '已隐藏分类')),
-    );
+    setState(() {});
+    if (!mounted) return;
+    Publicwidget.showToast(context, nextVisibility ? '已显示分类' : '已隐藏分类', true);
   }
 
   void _reorder(int oldIndex, int newIndex) {
@@ -476,7 +503,10 @@ class _CategoryManagePageState extends State<CategoryManagePage> {
             if (isSystem) ...[
               _buildTextActionButton(
                 label: category['isVisible'] == false ? '显示' : '隐藏',
-                color: Colors.grey.shade700,
+                color:
+                    category['isVisible'] == false
+                        ? Colors.green.shade600
+                        : Colors.orange.shade700,
                 onTap: () => _toggleCategoryVisibility(category),
               ),
             ] else ...[

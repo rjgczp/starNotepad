@@ -7,6 +7,7 @@ import 'package:startnotepad_flutter/core/theme/theme_provider.dart';
 import 'package:startnotepad_flutter/core/sync/sync_offline_repository.dart';
 import 'package:startnotepad_flutter/features/note/presentation/note_create_page.dart';
 import 'package:startnotepad_flutter/features/note/presentation/note_detail_page.dart';
+import 'package:startnotepad_flutter/public/publicWidget.dart';
 
 class NoteListPage extends StatefulWidget {
   const NoteListPage({super.key, this.onOpenDrawer, this.categoryId});
@@ -419,9 +420,7 @@ class _NoteListPageState extends State<NoteListPage>
       await _repo.syncSilently();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('同步失败：$e')));
+        Publicwidget.showToast(context, '同步失败：$e', false);
       }
     }
 

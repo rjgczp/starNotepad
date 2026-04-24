@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../../core/icons/iconfont_icons.dart';
 import '../../../core/sync/sync_offline_repository.dart';
+import '../../../public/publicWidget.dart';
 
 class NoteDetailPage extends StatefulWidget {
   const NoteDetailPage({super.key, required this.note});
@@ -565,14 +566,10 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
       await _noteRepo.updateLocalFirst(note: updated);
       if (!mounted) return;
       setState(() => _note = updated);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('已更新')));
+      Publicwidget.showToast(context, '已更新', true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      Publicwidget.showToast(context, e.toString(), false);
     }
   }
 
@@ -722,8 +719,8 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
       child: Scaffold(
         backgroundColor: colorScheme.surface,
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(18, 8, 18, 0),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -810,70 +807,66 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(28),
-                        topRight: Radius.circular(28),
-                        bottomLeft: Radius.circular(24),
-                        bottomRight: Radius.circular(24),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(28),
+                      topRight: Radius.circular(28),
+                      bottomLeft: Radius.circular(24),
+                      bottomRight: Radius.circular(24),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.06),
-                          blurRadius: 24,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: SingleChildScrollView(
-                      child:
-                          plainContent.isNotEmpty
-                              ? SelectableText.rich(
-                                _htmlToSpan(
-                                  content,
-                                  TextStyle(
-                                    fontSize: 16,
-                                    height: 1.8,
-                                    color: Colors.grey.shade800,
-                                    letterSpacing: 0.2,
-                                  ),
-                                ),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  height: 1.8,
-                                  color: Colors.grey.shade800,
-                                  letterSpacing: 0.2,
-                                ),
-                              )
-                              : Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 60),
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.note_outlined,
-                                        size: 48,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Text(
-                                        '暂无内容',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                    ),
+                    ],
                   ),
+                  child:
+                      plainContent.isNotEmpty
+                          ? SelectableText.rich(
+                            _htmlToSpan(
+                              content,
+                              TextStyle(
+                                fontSize: 16,
+                                height: 1.8,
+                                color: Colors.grey.shade800,
+                                letterSpacing: 0.2,
+                              ),
+                            ),
+                            style: TextStyle(
+                              fontSize: 16,
+                              height: 1.8,
+                              color: Colors.grey.shade800,
+                              letterSpacing: 0.2,
+                            ),
+                          )
+                          : Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 60),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.note_outlined,
+                                    size: 48,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    '暂无内容',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                 ),
               ],
             ),

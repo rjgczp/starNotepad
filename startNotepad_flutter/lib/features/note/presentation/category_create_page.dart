@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/icons/iconfont_icons.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../core/sync/sync_offline_repository.dart';
+import '../../../public/publicWidget.dart';
 
 class CategoryCreatePage extends StatefulWidget {
   const CategoryCreatePage({
@@ -70,9 +71,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
   Future<void> _submit() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('请输入分类名称')));
+      Publicwidget.showToast(context, '请输入分类名称', false);
       return;
     }
     if (_submitting) return;
@@ -97,9 +96,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      Publicwidget.showToast(context, e.toString(), false);
     } finally {
       if (mounted) {
         setState(() => _submitting = false);

@@ -28,14 +28,7 @@
           <el-input v-model="searchInfo.userName" placeholder="模糊搜索" clearable />
         </el-form-item>
 
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="searchInfo.title" placeholder="模糊搜索" clearable />
-        </el-form-item>
-
-        <el-form-item label="内容" prop="content">
-          <el-input v-model="searchInfo.content" placeholder="模糊搜索" clearable />
-        </el-form-item>
-
+        <!-- 标题/正文已加密存储，无法模糊搜索，这里不再提供查询入口 -->
 
         <template v-if="showAllQuery">
           <!-- 将需要控制显示状态的查询条件添加到此范围内 -->
@@ -81,13 +74,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column align="left" label="标题" prop="title" width="120" />
-
-            <el-table-column label="正文" prop="content" width="200">
-   <template #default="scope">
-      [富文本内容]
-   </template>
-</el-table-column>
+            <!-- 标题/正文为加密字段，列表中不再展示 -->
             <el-table-column align="left" label="是否置顶" prop="isTop" width="120">
     <template #default="scope">{{ formatBoolean(scope.row.isTop) }}</template>
 </el-table-column>

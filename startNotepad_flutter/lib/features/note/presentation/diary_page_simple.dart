@@ -64,6 +64,7 @@ class _DiaryPageState extends State<DiaryPage> {
       _isLoading = true;
     });
 
+    Map<String, List<String>> remoteData = {};
     var loadedRemotely = false;
 
     try {
@@ -76,13 +77,7 @@ class _DiaryPageState extends State<DiaryPage> {
       if (body['code'] == 200) {
         final data = body['data'] as Map<String, dynamic>?;
         if (data != null) {
-          final formattedData = _formatRemoteStatistics(data);
-          if (mounted) {
-            setState(() {
-              _statisticsData = formattedData;
-              _isLoading = false;
-            });
-          }
+          remoteData = _formatRemoteStatistics(data);
           loadedRemotely = true;
         }
       }
@@ -90,26 +85,42 @@ class _DiaryPageState extends State<DiaryPage> {
       print('加载统计数据失败: $e');
     }
 
-    if (loadedRemotely) {
-      return;
-    }
+    Map<String, List<String>> localData = {};
 
     try {
-      final localData = await _loadLocalStatistics(firstDay, lastDay);
-      if (mounted) {
-        setState(() {
-          _statisticsData = localData;
-        });
-      }
+      localData = await _loadLocalStatistics(firstDay, lastDay);
     } catch (e) {
       print('加载本地统计数据失败: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _statisticsData =
+          loadedRemotely ? _mergeStatistics(remoteData, localData) : localData;
+      _isLoading = false;
+    });
+  }
+
+  Map<String, List<String>> _mergeStatistics(
+    Map<String, List<String>> remote,
+    Map<String, List<String>> local,
+  ) {
+    final merged = <String, List<String>>{};
+
+    for (final entry in remote.entries) {
+      merged[entry.key] = List<String>.from(entry.value);
+    }
+
+    for (final entry in local.entries) {
+      final icons = merged.putIfAbsent(entry.key, () => <String>[]);
+      for (final icon in entry.value) {
+        if (!icons.contains(icon)) {
+          icons.add(icon);
+        }
       }
     }
+
+    return merged;
   }
 
   Future<void> _loadSelectedDayNotes() async {
@@ -118,6 +129,9 @@ class _DiaryPageState extends State<DiaryPage> {
     setState(() {
       _isTimelineLoading = true;
     });
+
+    var loadedRemotely = false;
+    List<Map<String, dynamic>> remoteNotes = [];
 
     try {
       final response = await _noteApi.calendar(
@@ -132,35 +146,81 @@ class _DiaryPageState extends State<DiaryPage> {
                   .whereType<Map>()
                   .map((e) => Map<String, dynamic>.from(e))
                   .toList();
-          if (mounted) {
-            setState(() {
-              _selectedDayNotes = notes;
-              _isTimelineLoading = false;
-            });
-          }
-          return;
+          remoteNotes = notes;
+          loadedRemotely = true;
         }
       }
     } catch (e) {
       print('加载日历明细失败: $e');
     }
 
+    List<Map<String, dynamic>> local = [];
+
     try {
-      final local = await _loadLocalNotesForDay(_selectedDay);
-      if (mounted) {
-        setState(() {
-          _selectedDayNotes = local;
-        });
-      }
+      local = await _loadLocalNotesForDay(_selectedDay);
     } catch (e) {
       print('加载本地日历明细失败: $e');
     } finally {
       if (mounted) {
+        final merged =
+            loadedRemotely
+                ? _mergeDayNotes(remoteNotes: remoteNotes, localNotes: local)
+                : local;
         setState(() {
+          _selectedDayNotes = merged;
           _isTimelineLoading = false;
         });
       }
     }
+  }
+
+  List<Map<String, dynamic>> _mergeDayNotes({
+    required List<Map<String, dynamic>> remoteNotes,
+    required List<Map<String, dynamic>> localNotes,
+  }) {
+    final merged = <String, Map<String, dynamic>>{};
+
+    for (final note in remoteNotes) {
+      merged[_noteKey(note)] = note;
+    }
+
+    for (final note in localNotes) {
+      merged[_noteKey(note)] = note;
+    }
+
+    final list = merged.values.toList();
+    list.sort((a, b) {
+      final aDate = _parseDate(a['createdAt'] ?? a['recordedAt']);
+      final bDate = _parseDate(b['createdAt'] ?? b['recordedAt']);
+      if (aDate == null || bDate == null) return 0;
+      return aDate.compareTo(bDate);
+    });
+    return list;
+  }
+
+  String _noteKey(Map<String, dynamic> note) {
+    final remoteId = note['remoteId'] ?? note['ID'] ?? note['id'];
+    if (remoteId != null && remoteId.toString().isNotEmpty) {
+      return 'r_${remoteId.toString()}';
+    }
+
+    final localId = note['localId'];
+    if (localId != null) {
+      return 'l_${localId.toString()}';
+    }
+
+    final uuid = note['uuid'];
+    if (uuid != null && uuid.toString().isNotEmpty) {
+      return 'u_${uuid.toString()}';
+    }
+
+    final title = note['title']?.toString() ?? '';
+    final date =
+        note['createdAt']?.toString() ??
+        note['recordedAt']?.toString() ??
+        note['updatedAt']?.toString() ??
+        '';
+    return 'f_${title}_$date';
   }
 
   /// 获取指定日期的图标列表（最多3个）
