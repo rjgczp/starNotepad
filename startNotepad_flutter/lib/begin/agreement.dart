@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:startnotepad_flutter/public/publicWidget.dart';
 
 class Agreement extends StatefulWidget {
@@ -44,15 +45,8 @@ class _AgreementState extends State<Agreement> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-                  child: SelectionArea(
-                    child: SingleChildScrollView(
-                      child: Text(
-                        Publicwidget.agreement,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(height: 1.45),
-                      ),
-                    ),
+                  child: SingleChildScrollView(
+                    child: Html(data: Publicwidget.agreement),
                   ),
                 ),
               ),

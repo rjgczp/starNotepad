@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -8,6 +10,7 @@ import '../../../begin/login.dart';
 import '../../../core/icons/iconfont_icons.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/theme/theme_provider.dart';
+import '../../../public/publicWidget.dart';
 import '../../../tools/localData.dart';
 import '../data/note_api.dart';
 import '../../../core/sync/sync_offline_repository.dart';
@@ -22,6 +25,8 @@ class NoteCreatePage extends StatefulWidget {
 }
 
 class _NoteCreatePageState extends State<NoteCreatePage> {
+  static const String _draftKey = 'note_create_single_draft';
+
   late final NoteApi _noteApi = NoteApi(ApiClient());
   late final SyncOfflineRepository _repo = SyncOfflineRepository();
   late final FlutterLocalNotificationsPlugin _notifications;
@@ -50,6 +55,8 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
   bool _submitting = false;
   bool _polishing = false;
   bool _showMoreSettings = false;
+  bool _canPopPage = false;
+  bool _leavingPage = false;
 
   @override
   void initState() {
@@ -58,6 +65,9 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
     _initializeNotifications();
     _loadCategories();
     _setDefaultColorAndIcon();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _promptDraftIfNeeded();
+    });
   }
 
   void _setDefaultColorAndIcon() {
@@ -103,6 +113,122 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
     super.dispose();
   }
 
+  bool get _hasDraftableInput {
+    return _titleController.text.trim().isNotEmpty ||
+        _contentController.text.trim().isNotEmpty;
+  }
+
+  Future<Map<String, dynamic>?> _readDraft() async {
+    final raw = LocalData.getString(_draftKey).trim();
+    if (raw.isEmpty) return null;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map) {
+        return Map<String, dynamic>.from(decoded);
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<void> _clearDraft() async {
+    await LocalData.setString(_draftKey, '');
+  }
+
+  Future<void> _saveDraftIfNeeded({required bool showToast}) async {
+    if (!_hasDraftableInput) return;
+
+    final payload = <String, dynamic>{
+      'title': _titleController.text,
+      'content': _contentController.text,
+      'recordedAt': _recordedAt.toIso8601String(),
+      'icon': _selectedIconCss,
+      'isTop': _isTop,
+      'isHighlight': _isHighlight,
+      'isReminder': _isReminder,
+      'categoryId': _selectedCategoryId,
+      'color': _selectedColorHex,
+      'savedAt': DateTime.now().toIso8601String(),
+    };
+
+    await LocalData.setString(_draftKey, jsonEncode(payload));
+    if (showToast && mounted) {
+      Publicwidget.showToast(context, '内容已保存至草稿箱', true);
+    }
+  }
+
+  void _applyDraft(Map<String, dynamic> draft) {
+    final draftTitle = draft['title']?.toString() ?? '';
+    final draftContent = draft['content']?.toString() ?? '';
+    final draftRecordedAt = draft['recordedAt']?.toString() ?? '';
+    final draftIcon = draft['icon']?.toString() ?? '';
+
+    DateTime? parsedRecordedAt;
+    if (draftRecordedAt.isNotEmpty) {
+      parsedRecordedAt = DateTime.tryParse(draftRecordedAt);
+    }
+
+    setState(() {
+      _titleController.text = draftTitle;
+      _contentController.text = draftContent;
+      if (parsedRecordedAt != null) {
+        _recordedAt = parsedRecordedAt;
+      }
+      _selectedIconCss = draftIcon;
+    });
+  }
+
+  Future<void> _promptDraftIfNeeded() async {
+    if (!mounted) return;
+    final draft = await _readDraft();
+    if (!mounted || draft == null) return;
+
+    final title = draft['title']?.toString().trim() ?? '';
+    final content = draft['content']?.toString().trim() ?? '';
+    if (title.isEmpty && content.isEmpty) {
+      await _clearDraft();
+      return;
+    }
+
+    final shouldUse = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('检测到草稿'),
+            content: const Text('是否使用上次未发布的草稿内容？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: const Text('不使用'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(ctx).pop(true),
+                child: const Text('使用草稿'),
+              ),
+            ],
+          ),
+    );
+
+    if (!mounted) return;
+    if (shouldUse == true) {
+      _applyDraft(draft);
+      return;
+    }
+
+    await _clearDraft();
+  }
+
+  Future<void> _handleLeavePage() async {
+    if (_leavingPage) return;
+    _leavingPage = true;
+    await _saveDraftIfNeeded(showToast: true);
+    if (!mounted) return;
+    setState(() {
+      _canPopPage = true;
+    });
+    Navigator.of(context).pop();
+  }
+
   // ── Load categories ──
   Future<void> _loadCategories() async {
     try {
@@ -124,9 +250,7 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
       });
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('加载分类失败：$e')));
+      Publicwidget.showToast(context, '加载分类失败：$e', false);
     }
   }
 
@@ -176,9 +300,7 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
     final text = [title, content].where((e) => e.isNotEmpty).join('\n');
 
     if (text.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('请先输入标题或内容')));
+      Publicwidget.showToast(context, '请先输入标题或内容', false);
       return;
     }
     if (_polishing || _submitting) return;
@@ -227,14 +349,10 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
       }
 
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('AI润色完成')));
+      Publicwidget.showToast(context, 'AI润色完成', true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('AI润色失败：$e')));
+      Publicwidget.showToast(context, 'AI润色失败：$e', false);
     } finally {
       if (mounted) {
         setState(() => _polishing = false);
@@ -246,9 +364,7 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
   Future<void> _submit() async {
     final title = _titleController.text.trim();
     if (title.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('请输入标题')));
+      Publicwidget.showToast(context, '请输入标题', false);
       return;
     }
     if (_submitting) return;
@@ -276,12 +392,14 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
         if (!mounted) return;
       }
 
+      await _clearDraft();
+      if (!mounted) return;
+      _canPopPage = true;
+
       Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      Publicwidget.showToast(context, e.toString(), false);
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -334,9 +452,7 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
       _showNotificationSuccessDialog(title, description);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('设置提醒失败: ${e.toString()}')));
+      Publicwidget.showToast(context, '设置提醒失败: ${e.toString()}', false);
     }
   }
 
@@ -506,52 +622,63 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      backgroundColor: cs.surface,
-      appBar: AppBar(
-        title: const Text('新增'),
+    return PopScope(
+      canPop: _canPopPage,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        _handleLeavePage();
+      },
+      child: Scaffold(
         backgroundColor: cs.surface,
-        foregroundColor: Colors.black,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          TextButton.icon(
-            onPressed: _submitting ? null : _submit,
-            icon:
-                _submitting
-                    ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.black,
-                      ),
-                    )
-                    : const Icon(Icons.check_rounded),
-            label: const Text('保存'),
-            style: TextButton.styleFrom(foregroundColor: Colors.black),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: _handleLeavePage,
+            icon: const Icon(Icons.arrow_back_rounded),
           ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: Stack(
-        children: [
-          SafeArea(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
-              children: [
-                _buildTitleField(),
-                const SizedBox(height: 12),
-                _buildAiPolishCard(cs),
-                const SizedBox(height: 12),
-                _buildEditorCard(cs),
-                const SizedBox(height: 12),
-                _buildMoreSettingsCard(cs),
-              ],
+          title: const Text('新增'),
+          backgroundColor: cs.surface,
+          foregroundColor: Colors.black,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            TextButton.icon(
+              onPressed: _submitting ? null : _submit,
+              icon:
+                  _submitting
+                      ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                      )
+                      : const Icon(Icons.check_rounded),
+              label: const Text('保存'),
+              style: TextButton.styleFrom(foregroundColor: Colors.black),
             ),
-          ),
-          if (_polishing) _buildLoadingOverlay(),
-        ],
+            const SizedBox(width: 8),
+          ],
+        ),
+        body: Stack(
+          children: [
+            SafeArea(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+                children: [
+                  _buildTitleField(),
+                  const SizedBox(height: 12),
+                  _buildAiPolishCard(cs),
+                  const SizedBox(height: 12),
+                  _buildEditorCard(cs),
+                  const SizedBox(height: 12),
+                  _buildMoreSettingsCard(cs),
+                ],
+              ),
+            ),
+            if (_polishing) _buildLoadingOverlay(),
+          ],
+        ),
       ),
     );
   }
@@ -675,7 +802,10 @@ class _NoteCreatePageState extends State<NoteCreatePage> {
       ),
       child: TextField(
         controller: _titleController,
-        textInputAction: TextInputAction.next,
+        minLines: 1,
+        maxLines: null,
+        keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           hintText: '输入标题…',

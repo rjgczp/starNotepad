@@ -10,6 +10,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/starNote"
 	starNoteReq "github.com/flipped-aurora/gin-vue-admin/server/model/starNote/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils/crypto"
 	"gorm.io/gorm"
 )
 
@@ -128,12 +129,7 @@ func (evtService *NoteModelService) GetNoteModelInfoList(ctx context.Context, in
 	if strings.TrimSpace(info.UserName) != "" {
 		db = db.Where("sys_users.username LIKE ?", "%"+strings.TrimSpace(info.UserName)+"%")
 	}
-	if strings.TrimSpace(info.Title) != "" {
-		db = db.Where("notes.title LIKE ?", "%"+strings.TrimSpace(info.Title)+"%")
-	}
-	if strings.TrimSpace(info.Content) != "" {
-		db = db.Where("notes.content LIKE ?", "%"+strings.TrimSpace(info.Content)+"%")
-	}
+	// 标题/正文已加密存储，无法使用 LIKE 模糊搜索，这里主动忽略以避免返回错误结果。
 
 	err = db.Count(&total).Error
 	if err != nil {
@@ -144,8 +140,15 @@ func (evtService *NoteModelService) GetNoteModelInfoList(ctx context.Context, in
 		db = db.Limit(limit).Offset(offset)
 	}
 
-	err = db.Find(&evts).Error
-	return evts, total, err
+	if err = db.Find(&evts).Error; err != nil {
+		return evts, total, err
+	}
+	// 管理端列表不展示标题与正文（加密字段），直接置空，避免前端误用并降低泄露面。
+	for i := range evts {
+		evts[i].Title = nil
+		evts[i].Content = nil
+	}
+	return evts, total, nil
 }
 
 func (evtService *NoteModelService) GetUserNoteModelInfoList(ctx context.Context, userID uint, info starNoteReq.NoteModelSearch) (list []starNote.NoteModel, total int64, err error) {
@@ -294,12 +297,13 @@ func (evtService *NoteModelService) GetNoteCalendar(ctx context.Context, userID 
 		return nil, err
 	}
 
-	// 转换为返回格式
+	// 转换为返回格式（title 字段因 Scan 未触发 GORM 钩子，此处手动解密以保证前端看到明文）
 	result := make([]map[string]interface{}, len(notes))
 	for i, note := range notes {
+		title, _ := crypto.DecryptString(note.Title)
 		result[i] = map[string]interface{}{
 			"id":        note.ID,
-			"title":     note.Title,
+			"title":     title,
 			"createdAt": note.CreatedAt,
 			"icon":      note.Icon,
 		}

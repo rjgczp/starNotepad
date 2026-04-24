@@ -11,6 +11,7 @@ import 'package:startnotepad_flutter/features/ai_assistant/presentation/ai_assis
 import 'package:startnotepad_flutter/features/echo/presentation/echo_page.dart';
 import 'package:startnotepad_flutter/features/note/presentation/note_list_page.dart';
 import 'package:startnotepad_flutter/features/note/presentation/category_manage_page.dart';
+import 'package:startnotepad_flutter/public/publicWidget.dart';
 import 'package:startnotepad_flutter/tools/localData.dart';
 import '../begin/login.dart';
 import '../core/sync/sync_offline_repository.dart';
@@ -235,9 +236,7 @@ class _ProfilePageState extends State<_ProfilePage> {
       await _updateProfileFieldRemote(fieldKey: fieldKey, value: result);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      Publicwidget.showToast(context, e.toString(), false);
       return;
     }
 
@@ -379,14 +378,10 @@ class _ProfilePageState extends State<_ProfilePage> {
       await _saveProfileCache(needRefresh: false);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('头像更新成功')));
+      Publicwidget.showToast(context, '头像更新成功', true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      Publicwidget.showToast(context, e.toString(), false);
     } finally {
       if (mounted) {
         setState(() => _avatarUploading = false);
@@ -1402,9 +1397,14 @@ class _ThemeColorManagePageState extends State<_ThemeColorManagePage> {
                                     ),
                                   ),
                                   Material(
-                                    color: Colors.grey.shade700.withValues(
-                                      alpha: 0.08,
-                                    ),
+                                    color:
+                                        visible
+                                            ? Colors.orange.shade700.withValues(
+                                              alpha: 0.10,
+                                            )
+                                            : Colors.green.shade600.withValues(
+                                              alpha: 0.10,
+                                            ),
                                     borderRadius: BorderRadius.circular(12),
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
@@ -1427,7 +1427,10 @@ class _ThemeColorManagePageState extends State<_ThemeColorManagePage> {
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w700,
-                                            color: Colors.grey.shade700,
+                                            color:
+                                                visible
+                                                    ? Colors.orange.shade700
+                                                    : Colors.green.shade600,
                                           ),
                                         ),
                                       ),
@@ -1627,9 +1630,7 @@ class _CategorySelectorState extends State<_CategorySelector> {
           if (created == true && mounted) {
             await _loadCategories();
             if (!mounted) return;
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('分类已更新')));
+            Publicwidget.showToast(context, '分类已更新', true);
           }
         },
         child: Container(
@@ -1875,20 +1876,28 @@ class _HomeState extends State<Home> {
     ).push(MaterialPageRoute(builder: (_) => const _ProfilePage()));
   }
 
+  void _openSettingsFromMore() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const _SettingsPage()));
+  }
+
+  void _openProfileFromMore() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const _ProfilePage()));
+  }
+
   Future<void> _syncDataFromDrawer() async {
     Navigator.of(context).pop();
     try {
       final noteRepo = SyncOfflineRepository();
       await noteRepo.syncSilently();
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('数据同步完成')));
+      Publicwidget.showToast(context, '数据同步完成', true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('同步失败：$e')));
+      Publicwidget.showToast(context, '同步失败：$e', false);
     }
   }
 
@@ -1902,19 +1911,12 @@ class _HomeState extends State<Home> {
       await authRepo.logout();
 
       // 显示提示
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('已退出登录，进入离线模式'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      Publicwidget.showToast(context, '已退出登录，进入离线模式', true);
 
       // 触发重建，进入离线模式
       setState(() {});
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('退出失败：$e'), backgroundColor: Colors.red),
-      );
+      Publicwidget.showToast(context, '退出失败：$e', false);
     }
   }
 
@@ -1927,7 +1929,10 @@ class _HomeState extends State<Home> {
       ),
       const DiaryPage(),
       const EchoPage(),
-      const AiAssistantPage(),
+      AiAssistantPage(
+        onOpenSettings: _openSettingsFromMore,
+        onOpenProfile: _openProfileFromMore,
+      ),
     ];
   }
 
@@ -1940,6 +1945,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isLoggedIn = LocalData.getString(ApiClient.tokenKey).isNotEmpty;
 
     const items = <_HomeNavItemData>[
       _HomeNavItemData(label: '记事本', icon: Icons.note_alt_outlined),
@@ -1982,50 +1988,50 @@ class _HomeState extends State<Home> {
                   onTap: _syncDataFromDrawer,
                 ),
               ),
-              // 退出登录按钮
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: _logout,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: 0.04),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.red.withValues(alpha: 0.12),
+              if (isLoggedIn)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: _logout,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 14,
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.logout_rounded,
-                            color: Colors.red.shade300,
-                            size: 20,
+                        decoration: BoxDecoration(
+                          color: Colors.red.withValues(alpha: 0.04),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.red.withValues(alpha: 0.12),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              '退出登录',
-                              style: TextStyle(
-                                color: Colors.red.shade300,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.logout_rounded,
+                              color: Colors.red.shade300,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                '退出登录',
+                                style: TextStyle(
+                                  color: Colors.red.shade300,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

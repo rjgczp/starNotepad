@@ -206,17 +206,40 @@ class ThemeProvider extends ChangeNotifier {
     }
     final item = _colors.removeAt(oldIndex);
     _colors.insert(newIndex, item);
+    _groupHiddenToBottomInPlace();
 
     await _saveColorOrder();
     notifyListeners();
   }
 
   Future<void> setColorVisibility(int id, bool visible) async {
+    final currentIndex = _colors.indexWhere((item) => item.id == id);
+    ThemeColorItem? movedItem;
+    if (currentIndex >= 0) {
+      movedItem = _colors.removeAt(currentIndex);
+    }
+
     if (visible) {
       _hiddenColorIds.remove(id);
+      if (movedItem != null) {
+        final firstHiddenIndex = _colors.indexWhere(
+          (item) => _hiddenColorIds.contains(item.id),
+        );
+        if (firstHiddenIndex == -1) {
+          _colors.add(movedItem);
+        } else {
+          _colors.insert(firstHiddenIndex, movedItem);
+        }
+      }
     } else {
       _hiddenColorIds.add(id);
+      if (movedItem != null) {
+        _colors.add(movedItem);
+      }
     }
+
+    _groupHiddenToBottomInPlace();
+    await _saveColorOrder();
     await _saveHiddenColorIds();
     notifyListeners();
   }
@@ -239,6 +262,21 @@ class ThemeProvider extends ChangeNotifier {
       if (bRank != null) return 1;
       return 0;
     });
+    _groupHiddenToBottomInPlace();
+  }
+
+  void _groupHiddenToBottomInPlace() {
+    if (_colors.length <= 1) return;
+    final visible = <ThemeColorItem>[];
+    final hidden = <ThemeColorItem>[];
+    for (final item in _colors) {
+      if (_hiddenColorIds.contains(item.id)) {
+        hidden.add(item);
+      } else {
+        visible.add(item);
+      }
+    }
+    _colors = [...visible, ...hidden];
   }
 
   List<int> _readColorOrder() {

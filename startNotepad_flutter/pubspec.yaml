@@ -49,6 +49,7 @@ dependencies:
   lunar: ^1.7.8
   image_picker: ^1.1.2
   image_cropper: ^8.1.0
+  flutter_html: ^3.0.0
   flutter_localizations:
     sdk: flutter
   flutter:
