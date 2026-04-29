@@ -4,6 +4,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/User"
 	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/aiAge"
 	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/example"
+	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/mc"
 	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNodeCore"
 	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/starNote"
 	"github.com/flipped-aurora/gin-vue-admin/server/api/v1/system"
@@ -18,4 +19,5 @@ type ApiGroup struct {
 	StarNodeCoreApiGroup starNodeCore.ApiGroup
 	StarNoteApiGroup     starNote.ApiGroup
 	AiAgeApiGroup        aiAge.ApiGroup
+	McApiGroup           mc.ApiGroup
 }

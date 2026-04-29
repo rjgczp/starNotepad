@@ -1,0 +1,42 @@
+{
+  "bio": "你好，我是 查理斯，来自山西，目前大三在校生，主要研究全栈开发以及人工智能方向，对好用的开源框架，AI agent有浓厚兴趣，很高兴认识你！",
+  "name": "查理斯",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Flutter",
+    "Gin",
+    "Docker"
+  ],
+  "hobby": [
+    "AI",
+    "个人开发者",
+    "红石生电技术",
+    "CS2",
+    "小米",
+    "Mac"
+  ],
+  "title": "全栈开发 / 人工智能",
+  "contact": {
+    "X": "https://x.com/panzhao454670",
+    "email": "https://mail.google.com/mail/?view=cm&fs=1&to=pzhao1337@gmail.com",
+    "github": "https://github.com/rjgczp",
+    "weChat": "weixin://dl/chat?Charles_13370618",
+    "telegram": "t.me/Charles_1337",
+    "black_box": "https://web.xiaoheihe.cn/account/steam_personal_page/home?userid=52562596&steam_id=76561199182682781&heybox_id=52562596",
+    "cloudMusic": "https://y.music.163.com/m/user?id=1766947529"
+  },
+  "projects": [
+    {
+      "link": "https://github.com/rjgczp/starNotepad",
+      "name": "starNotepad",
+      "description": "一款跨端记事工具，支持管理后台、移动端和同步能力。"
+    },
+    {
+      "link": "Here",
+      "name": "个人主页",
+      "description": "基于 Next.js 构建，作为个人主页与内容展示入口。"
+    }
+  ],
+  "siteLabel": "Personal Homepage"
+}

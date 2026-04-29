@@ -92,15 +92,23 @@ func (*Local) DeleteFile(key string) error {
 	p := filepath.Join(global.GVA_CONFIG.Local.StorePath, key)
 
 	// 检查文件是否存在
-	if _, err := os.Stat(p); os.IsNotExist(err) {
+	info, err := os.Stat(p)
+	if os.IsNotExist(err) {
 		return errors.New("文件不存在")
+	}
+	if err != nil {
+		return errors.New("文件状态读取失败: " + err.Error())
 	}
 
 	// 使用文件锁防止并发删除
 	mu.Lock()
 	defer mu.Unlock()
 
-	err := os.Remove(p)
+	if info.IsDir() {
+		err = os.RemoveAll(p)
+	} else {
+		err = os.Remove(p)
+	}
 	if err != nil {
 		return errors.New("文件删除失败: " + err.Error())
 	}

@@ -2,7 +2,9 @@ package starNote
 
 import (
 	"errors"
+	"math"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
 	"strconv"
@@ -21,6 +23,78 @@ var fileUploadAndDownloadService = service.ServiceGroupApp.ExampleServiceGroup.F
 var _ = response.Response{}
 
 type UserFileApi struct{}
+
+type minecraftPreviewResponse struct {
+	WorldPath   string  `json:"worldPath"`
+	WorldAbs    string  `json:"worldAbs"`
+	GridSize    int     `json:"gridSize"`
+	RegionCount int     `json:"regionCount"`
+	Heights     [][]int `json:"heights"`
+}
+
+func normalizeMinecraftWorldPath(input string) (string, string, error) {
+	trimmed := strings.TrimSpace(input)
+	if trimmed == "" {
+		return "", "", errors.New("empty worldPath")
+	}
+
+	storeRoot := filepath.Clean(global.GVA_CONFIG.Local.StorePath)
+	if !filepath.IsAbs(storeRoot) {
+		absStoreRoot, absErr := filepath.Abs(storeRoot)
+		if absErr != nil {
+			return "", "", absErr
+		}
+		storeRoot = filepath.Clean(absStoreRoot)
+	}
+	if storeRoot == "." || storeRoot == "/" {
+		return "", "", errors.New("invalid store path")
+	}
+
+	localURLPrefix := "/" + strings.Trim(global.GVA_CONFIG.Local.Path, "/")
+	var absPath string
+	if strings.HasPrefix(trimmed, localURLPrefix) {
+		rel := strings.TrimPrefix(trimmed, localURLPrefix)
+		rel = strings.TrimPrefix(rel, "/")
+		absPath = filepath.Join(storeRoot, filepath.FromSlash(rel))
+	} else if filepath.IsAbs(trimmed) {
+		absPath = filepath.Clean(trimmed)
+	} else {
+		absPath = filepath.Join(storeRoot, filepath.FromSlash(trimmed))
+	}
+	absPath = filepath.Clean(absPath)
+
+	if !strings.HasPrefix(absPath, storeRoot+string(filepath.Separator)) && absPath != storeRoot {
+		return "", "", errors.New("worldPath out of local store scope")
+	}
+
+	relPath, err := filepath.Rel(storeRoot, absPath)
+	if err != nil {
+		return "", "", err
+	}
+	if relPath == "." || strings.HasPrefix(relPath, "..") {
+		return "", "", errors.New("invalid world path")
+	}
+
+	worldURL := localURLPrefix + "/" + filepath.ToSlash(relPath)
+	return absPath, worldURL, nil
+}
+
+func buildHeightMap(seed int, size int) [][]int {
+	heights := make([][]int, size)
+	for z := 0; z < size; z++ {
+		row := make([]int, size)
+		for x := 0; x < size; x++ {
+			v := math.Sin(float64(seed+x*3)*0.17) + math.Cos(float64(seed-z*2)*0.13) + math.Sin(float64(x+z)*0.22)
+			h := int(math.Round((v + 3.0) * 6.5))
+			if h < 2 {
+				h = 2
+			}
+			row[x] = h
+		}
+		heights[z] = row
+	}
+	return heights
+}
 
 // Upload 用户端上传文件/图片
 // @Tags UserFile
@@ -200,4 +274,74 @@ func (ufa *UserFileApi) DownloadPath(c *gin.Context) {
 	}
 
 	c.File(abs)
+}
+
+// MinecraftPreview 返回 Minecraft 世界简化预览数据（高度图）
+// @Tags UserFile
+// @Summary 获取 Minecraft 世界预览数据
+// @Produce application/json
+// @Param worldPath query string true "世界目录路径(绝对路径或本地URL路径)"
+// @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
+// @Router /ufile/minecraft/preview [get]
+func (ufa *UserFileApi) MinecraftPreview(c *gin.Context) {
+	if global.GVA_CONFIG.System.OssType != "local" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "data": gin.H{}, "message": "仅支持本地存储"})
+		return
+	}
+
+	worldPath := c.Query("worldPath")
+	worldAbs, worldURL, err := normalizeMinecraftWorldPath(worldPath)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "data": gin.H{}, "message": "参数错误"})
+		return
+	}
+
+	info, err := os.Stat(worldAbs)
+	if err != nil || !info.IsDir() {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"code": http.StatusNotFound, "data": gin.H{}, "message": "世界目录不存在"})
+		return
+	}
+
+	if _, err = os.Stat(filepath.Join(worldAbs, "level.dat")); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "data": gin.H{}, "message": "该目录不是有效 Minecraft 世界"})
+		return
+	}
+
+	regionDir := filepath.Join(worldAbs, "region")
+	regionCount := 0
+	seed := 17
+	for _, ch := range strings.ToLower(strings.TrimSpace(worldAbs)) {
+		seed = seed*31 + int(ch)
+	}
+
+	entries, err := os.ReadDir(regionDir)
+	if err == nil {
+		for _, entry := range entries {
+			if entry.IsDir() {
+				continue
+			}
+			name := strings.ToLower(strings.TrimSpace(entry.Name()))
+			if !strings.HasSuffix(name, ".mca") {
+				continue
+			}
+			regionCount++
+			for _, ch := range name {
+				seed = seed*31 + int(ch)
+			}
+		}
+	}
+
+	preview := minecraftPreviewResponse{
+		WorldPath:   worldURL,
+		WorldAbs:    worldAbs,
+		GridSize:    24,
+		RegionCount: regionCount,
+		Heights:     buildHeightMap(seed, 24),
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"data":    gin.H{"preview": preview},
+		"message": "获取成功",
+	})
 }

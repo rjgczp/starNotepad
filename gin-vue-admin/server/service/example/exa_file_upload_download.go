@@ -1,8 +1,13 @@
 package example
 
 import (
+	"archive/zip"
 	"errors"
+	"io"
+	"io/fs"
 	"mime/multipart"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -11,6 +16,90 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/utils/upload"
 	"gorm.io/gorm"
 )
+
+func unzipToDir(zipPath, targetDir string) error {
+	r, err := zip.OpenReader(zipPath)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	if err = os.MkdirAll(targetDir, os.ModePerm); err != nil {
+		return err
+	}
+
+	cleanTarget := filepath.Clean(targetDir)
+	for _, f := range r.File {
+		dstPath := filepath.Join(targetDir, f.Name)
+		cleanDst := filepath.Clean(dstPath)
+		if !strings.HasPrefix(cleanDst, cleanTarget+string(os.PathSeparator)) && cleanDst != cleanTarget {
+			return errors.New("invalid zip file path")
+		}
+
+		if f.FileInfo().IsDir() {
+			if err = os.MkdirAll(cleanDst, os.ModePerm); err != nil {
+				return err
+			}
+			continue
+		}
+
+		if err = os.MkdirAll(filepath.Dir(cleanDst), os.ModePerm); err != nil {
+			return err
+		}
+
+		rc, openErr := f.Open()
+		if openErr != nil {
+			return openErr
+		}
+
+		out, createErr := os.OpenFile(cleanDst, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if createErr != nil {
+			rc.Close()
+			return createErr
+		}
+
+		_, copyErr := io.Copy(out, rc)
+		_ = out.Close()
+		_ = rc.Close()
+		if copyErr != nil {
+			return copyErr
+		}
+	}
+
+	return nil
+}
+
+func detectWorldRootDir(baseDir string) (string, error) {
+	cleanBase := filepath.Clean(baseDir)
+	if _, err := os.Stat(filepath.Join(cleanBase, "level.dat")); err == nil {
+		return cleanBase, nil
+	}
+
+	best := ""
+	err := filepath.WalkDir(cleanBase, func(path string, d fs.DirEntry, walkErr error) error {
+		if walkErr != nil || d.IsDir() {
+			return nil
+		}
+		if !strings.EqualFold(d.Name(), "level.dat") {
+			return nil
+		}
+		candidate := filepath.Clean(filepath.Dir(path))
+		if !strings.HasPrefix(candidate, cleanBase+string(os.PathSeparator)) && candidate != cleanBase {
+			return nil
+		}
+		if best == "" || len(candidate) < len(best) {
+			best = candidate
+		}
+		return nil
+	})
+	if err != nil {
+		return "", err
+	}
+	if best == "" {
+		return cleanBase, nil
+	}
+	return best, nil
+}
 
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: Upload
@@ -99,6 +188,31 @@ func (e *FileUploadAndDownloadService) UploadFile(header *multipart.FileHeader, 
 	if uploadErr != nil {
 		return file, uploadErr
 	}
+
+	if global.GVA_CONFIG.System.OssType == "local" && strings.EqualFold(filepath.Ext(header.Filename), ".zip") {
+		zipAbsPath := filepath.Join(global.GVA_CONFIG.Local.StorePath, key)
+		dirName := strings.TrimSuffix(key, filepath.Ext(key))
+		targetDir := filepath.Join(global.GVA_CONFIG.Local.StorePath, dirName)
+
+		if unzipErr := unzipToDir(zipAbsPath, targetDir); unzipErr != nil {
+			_ = os.RemoveAll(targetDir)
+			return file, unzipErr
+		}
+
+		_ = os.Remove(zipAbsPath)
+		worldRootDir, detectErr := detectWorldRootDir(targetDir)
+		if detectErr != nil {
+			return file, detectErr
+		}
+		relWorldRoot, relErr := filepath.Rel(global.GVA_CONFIG.Local.StorePath, worldRootDir)
+		if relErr == nil && relWorldRoot != "." && !strings.HasPrefix(relWorldRoot, "..") {
+			filePath = strings.TrimRight(global.GVA_CONFIG.Local.Path, "/") + "/" + filepath.ToSlash(relWorldRoot)
+		} else {
+			filePath = strings.TrimRight(global.GVA_CONFIG.Local.Path, "/") + "/" + dirName
+		}
+		key = dirName
+	}
+
 	s := strings.Split(header.Filename, ".")
 	f := example.ExaFileUploadAndDownload{
 		Url:     filePath,
