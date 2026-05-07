@@ -56,4 +56,5 @@ var (
 	apiTokenService         = service.ServiceGroupApp.SystemServiceGroup.ApiTokenService
 	skillsService           = service.ServiceGroupApp.SystemServiceGroup.SkillsService
 	bcService               = service.ServiceGroupApp.SystemServiceGroup.UserBlog_configService
+	aiProviderService       = service.ServiceGroupApp.StarNoteServiceGroup.ProviderService
 )

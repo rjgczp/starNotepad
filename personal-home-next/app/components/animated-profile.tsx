@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -18,6 +18,8 @@ const normalizeExternalHref = (raw: string): string => {
 
   return `https://${value}`;
 };
+
+const isHereLink = (raw: string): boolean => (raw || "").trim().toLowerCase() === "here";
 
 const hashString = (input: string): number => {
   let hash = 0;
@@ -84,6 +86,12 @@ type Project = {
   link: string;
 };
 
+type PlayItem = {
+  name: string;
+  description: string;
+  link: string;
+};
+
 type ProfileData = {
   siteLabel: string;
   name: string;
@@ -92,11 +100,28 @@ type ProfileData = {
   hobby: string[];
   tags: string[];
   projects: Project[];
+  play: PlayItem[];
   contact: Record<string, string>;
 };
 
 type AnimatedProfileProps = {
   profile: ProfileData;
+};
+
+type ChatMessage = {
+  role: "assistant" | "user";
+  content: string;
+};
+
+type EggParticle = {
+  id: number;
+  text: string;
+  x: number;
+  delay: number;
+  dur: number;
+  color: string;
+  size: number;
+  rot: number;
 };
 
 type Scene = {
@@ -107,14 +132,65 @@ type Scene = {
   body: string;
   accents?: string[];
   link?: string;
+  mode?: "default" | "play" | "contact";
 };
 
 export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(1);
+  const [sectionOffsets, setSectionOffsets] = useState<number[]>([]);
+  const [sectionHeights, setSectionHeights] = useState<number[]>([]);
   const [watermarkRandomTick, setWatermarkRandomTick] = useState(0);
   const [introReveal, setIntroReveal] = useState(0);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      role: "assistant",
+      content: "你好，我是这个主页里的 AI 小助手。你可以问我关于站主、项目、兴趣方向或我的联系方式。",
+    },
+  ]);
+  const [isChatLoading, setIsChatLoading] = useState(false);
+  const [eggParticles, setEggParticles] = useState<EggParticle[]>([]);
+  const [cloudOffset, setCloudOffset] = useState({ x: 0, y: 0, rotate: 0 });
+  const chatBottomRef = useRef<HTMLDivElement>(null);
+
+  const _cp = (...codes: number[]) => String.fromCodePoint(...codes);
+  const _T  = [26143,27827,22823,29579,54,54,54] as const;
+  const _L1 = [26143,27827,22823,29579] as const;
+  const _L2 = [54,54,54] as const;
+
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
+
+  const triggerEgg = () => {
+    const hearts = ["\u2764\uFE0F","\uD83D\uDC95","\uD83D\uDC97","\uD83C\uDF38","\u2728"];
+    const palette = ["#ffb3c6","#ffc8dd","#bde0fe","#cdb4db","#a2d2ff","#b5e8cb","#ffd6a5","#caffbf","#fdcfe8","#c8b6ff"];
+    const phrases = [
+      [22909,21487,29233],   // 好可爱
+      [30495,26834],         // 真棒
+      [20320,26368,24069],   // 你最帅
+      [22826,37239,20102],   // 太酷了
+      [24320,24515],         // 开心
+      [38378,38378,21457,20809], // 闪闪发光
+      [23431,23449,26080,25932,21487,29233], // 宇宙无敌
+    ].map((c) => _cp(...c));
+    const items = [_cp(..._L1), _cp(..._L2), ...hearts, ...phrases];
+    const ps: EggParticle[] = Array.from({ length: 72 }, (_, i) => ({
+      id: i,
+      text: items[Math.floor(Math.random() * items.length)],
+      x: Math.random() * 94,
+      delay: Math.random() * 3.5,
+      dur: 2.8 + Math.random() * 1.8,
+      color: palette[Math.floor(Math.random() * palette.length)],
+      size: 13 + Math.floor(Math.random() * 22),
+      rot: Math.random() * 34 - 17,
+    }));
+    setEggParticles(ps);
+    setTimeout(() => setEggParticles([]), 8200);
+  };
   const contactEntries = useMemo(
     () => Object.entries(profile.contact || {}).filter(([, value]) => Boolean(value)),
     [profile.contact]
@@ -132,6 +208,103 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
     if (clean.length === 0) return ["Hobby", "Life", "Focus", "Play"];
     return Array.from({ length: 4 }, (_, idx) => clean[idx % clean.length]);
   }, [profile.hobby]);
+  const playItems = useMemo(() => profile.play || [], [profile.play]);
+  const [activePlayIndex, setActivePlayIndex] = useState(0);
+  const playTouchStartX = useRef<number | null>(null);
+  const playPointerStartX = useRef<number | null>(null);
+  const playWheelLockedUntil = useRef(0);
+  const safeActivePlayIndex = playItems.length > 0 ? Math.min(activePlayIndex, playItems.length - 1) : 0;
+
+  useEffect(() => {
+    if (playItems.length <= 1) return;
+    const timer = setInterval(() => {
+      setActivePlayIndex((current) => (current + 1) % playItems.length);
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [playItems.length]);
+
+  const goToPlay = (delta: number) => {
+    if (playItems.length === 0) return;
+    setActivePlayIndex((current) => {
+      const next = (current + delta + playItems.length) % playItems.length;
+      return next;
+    });
+  };
+
+  const handlePlayTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    playTouchStartX.current = e.touches[0]?.clientX ?? null;
+  };
+  const handlePlayTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    const start = playTouchStartX.current;
+    playTouchStartX.current = null;
+    if (start == null) return;
+    const end = e.changedTouches[0]?.clientX ?? start;
+    const dx = end - start;
+    if (Math.abs(dx) < 40) return;
+    goToPlay(dx > 0 ? -1 : 1);
+  };
+  const handlePlayPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return;
+    playPointerStartX.current = e.clientX;
+  };
+  const handlePlayPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return;
+    const start = playPointerStartX.current;
+    playPointerStartX.current = null;
+    if (start == null) return;
+    const dx = e.clientX - start;
+    if (Math.abs(dx) < 40) return;
+    goToPlay(dx > 0 ? -1 : 1);
+  };
+  const handlePlayWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (playItems.length <= 1) return;
+    if (Math.abs(e.deltaY) < 18) return;
+    e.preventDefault();
+    const now = Date.now();
+    if (now < playWheelLockedUntil.current) return;
+    playWheelLockedUntil.current = now + 700;
+    goToPlay(e.deltaY > 0 ? 1 : -1);
+  };
+
+  const handleChatSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const text = chatInput.trim();
+    if (!text || isChatLoading) return;
+    if (text.includes(_cp(..._T))) triggerEgg();
+    const userMessage: ChatMessage = { role: "user", content: text };
+    setChatInput("");
+    setChatMessages((current) => [...current, userMessage]);
+    setIsChatLoading(true);
+    try {
+      const history = chatMessages.map((m) => ({ role: m.role, content: m.content }));
+      const res = await fetch("/api/bc/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [...history, { role: userMessage.role, content: userMessage.content }] }),
+      });
+      const json = (await res.json()) as { code?: number; data?: { reply?: string }; msg?: string };
+      const reply = json?.data?.reply ?? json?.msg ?? "抱歉，AI 暂时无法回复，请稍后再试。";
+      setChatMessages((current) => [...current, { role: "assistant", content: reply }]);
+    } catch {
+      setChatMessages((current) => [
+        ...current,
+        { role: "assistant", content: "网络错误，请稍后再试。" },
+      ]);
+    } finally {
+      setIsChatLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCloudOffset({
+        x: Math.round(Math.random() * 18 - 9),
+        y: Math.round(Math.random() * 14 - 7),
+        rotate: Math.round(Math.random() * 8 - 4),
+      });
+    }, 2600);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -183,10 +356,19 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
         kicker: `项目 ${idx + 1}`,
         title: project.name,
         subtitle: project.description,
-        body: "点击右下角按钮可直达项目链接。",
+        body: "点击左下角按钮可直达项目链接。",
         accents: ["Project", project.name, "Case", "Ship"],
         link: project.link,
       })),
+      {
+        id: "play",
+        kicker: "Play",
+        title: "最近在玩什么",
+        subtitle: "我还是一名重度游戏爱好者，甚至有时会沉迷游戏。",
+        body: "像轮播图一样切换条目，它们是我生活中的调味剂。",
+        accents: ["Play", "Deck", "Flip", "Fun"],
+        mode: "play",
+      },
       {
         id: "contact",
         kicker: "联系方式",
@@ -194,30 +376,11 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
         subtitle: "您可以通过这些方式联系我",
         body: "点击任意图标即可跳转到对应平台",
         accents: hobbyWords,
+        mode: "contact",
       },
     ],
     [profile, hobbyWords]
   );
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const next = Number(entry.target.getAttribute("data-scene-index"));
-          if (!Number.isNaN(next)) setActiveIndex(next);
-        });
-      },
-      {
-        threshold: 0.6,
-      }
-    );
-
-    const elements = document.querySelectorAll<HTMLElement>("[data-scene-index]");
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, [scenes.length]);
 
   useEffect(() => {
     let rafId = 0;
@@ -228,25 +391,69 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
       });
     };
 
-    const onResize = () => {
+    const updateLayoutMetrics = () => {
       setViewportHeight(window.innerHeight || 1);
+      const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-scene-index]"))
+        .sort(
+          (a, b) =>
+            Number(a.getAttribute("data-scene-index") || 0) -
+            Number(b.getAttribute("data-scene-index") || 0)
+        );
+      const offsets = elements.map((el) => el.offsetTop);
+      const heights = elements.map((el) => el.offsetHeight);
+      setSectionOffsets(offsets);
+      setSectionHeights(heights);
     };
 
-    onResize();
+    updateLayoutMetrics();
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", updateLayoutMetrics);
 
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", updateLayoutMetrics);
     };
-  }, []);
+  }, [scenes.length, playItems.length]);
+
+  useEffect(() => {
+    if (sectionOffsets.length === 0) return;
+    const viewportAnchor = scrollY + viewportHeight * 0.5;
+    let nextIndex = 0;
+
+    for (let idx = 0; idx < sectionOffsets.length; idx += 1) {
+      const top = sectionOffsets[idx] ?? 0;
+      const height = sectionHeights[idx] ?? viewportHeight;
+      const bottom = top + height;
+      if (viewportAnchor >= top && viewportAnchor < bottom) {
+        nextIndex = idx;
+        break;
+      }
+      if (viewportAnchor >= bottom) {
+        nextIndex = idx;
+      }
+    }
+
+    if (nextIndex !== activeIndex) {
+      setActiveIndex(nextIndex);
+    }
+  }, [scrollY, viewportHeight, sectionOffsets, sectionHeights, activeIndex]);
 
   const parallaxSlowY = scrollY * 0.08;
   const parallaxMidY = scrollY * 0.14;
   const parallaxFastY = scrollY * 0.2;
+  const activePlayItem = playItems[safeActivePlayIndex];
+  const scrollToScene = (idx: number) => {
+    const top = sectionOffsets[idx];
+    if (typeof top !== "number") {
+      document
+        .querySelector<HTMLElement>(`[data-scene-index='${idx}']`)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    window.scrollTo({ top, behavior: "smooth" });
+  };
 
   return (
     <main className="relative snap-y snap-mandatory overflow-x-clip bg-[#f5f5f7] text-slate-900">
@@ -279,17 +486,122 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
           <button
             key={scene.id}
             aria-label={`跳转到第${idx + 1}幕`}
-            onClick={() => {
-              document
-                .querySelector<HTMLElement>(`[data-scene-index='${idx}']`)
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
+            onClick={() => scrollToScene(idx)}
             className={`h-2.5 w-2.5 rounded-full transition-all ${
               idx === activeIndex ? "w-8 bg-sky-600" : "bg-slate-300"
             }`}
           />
         ))}
       </div>
+
+      <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
+        {isChatOpen ? (
+          <div className="w-[min(calc(100vw-2.5rem),380px)] overflow-hidden rounded-[2rem] border border-white/80 bg-white/85 shadow-[0_24px_80px_rgba(15,23,42,0.22)] backdrop-blur-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200/80 px-5 py-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-sky-500">Cloud AI</p>
+                <h2 className="mt-1 text-lg font-black text-slate-950">个人主页助手</h2>
+              </div>
+              <button
+                type="button"
+                aria-label="关闭 AI 聊天窗口"
+                onClick={() => setIsChatOpen(false)}
+                className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-slate-500 shadow-sm transition hover:text-slate-950"
+              >
+                ×
+              </button>
+            </div>
+            <div className="max-h-[360px] space-y-3 overflow-y-auto px-5 py-4">
+              {chatMessages.map((message, messageIdx) => (
+                <div
+                  key={`${message.role}-${messageIdx}`}
+                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[82%] rounded-3xl px-4 py-3 text-sm leading-6 shadow-sm ${
+                      message.role === "user"
+                        ? "bg-slate-950 text-white"
+                        : "border border-slate-200 bg-white text-slate-700"
+                    }`}
+                  >
+                    {message.content}
+                  </div>
+                </div>
+              ))}
+              <div ref={chatBottomRef} />
+            </div>
+            <div className="border-t border-slate-200/80 p-4">
+              <form onSubmit={handleChatSubmit} className="flex items-center gap-2">
+                <input
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="问问我的个人信息、项目或兴趣..."
+                  disabled={isChatLoading}
+                  className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-sky-300 focus:ring-4 focus:ring-sky-100 disabled:opacity-50"
+                />
+                <button
+                  type="submit"
+                  disabled={isChatLoading}
+                  className="rounded-full bg-slate-950 px-4 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 disabled:opacity-50"
+                >
+                  {isChatLoading ? "…" : "发送"}
+                </button>
+              </form>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            aria-label="打开 AI 聊天助手"
+            onClick={() => setIsChatOpen(true)}
+            className="group relative h-24 w-24 transition-transform duration-700 ease-in-out md:h-28 md:w-28"
+            style={{
+              transform: `translate3d(${cloudOffset.x}px, ${cloudOffset.y}px, 0) rotate(${cloudOffset.rotate}deg)`,
+            }}
+          >
+            <span className="absolute inset-0 rounded-full bg-pink-200/70 blur-2xl transition duration-700 group-hover:scale-125 group-hover:bg-pink-300/60" />
+            <span className="absolute inset-1.5 rounded-full border border-white/90 bg-gradient-to-br from-pink-50/80 to-rose-50/60 shadow-[0_16px_48px_rgba(251,113,133,0.22)] backdrop-blur-3xl transition duration-500 group-hover:scale-105" />
+            <span className="absolute inset-[0.9rem] rounded-full bg-gradient-to-br from-white via-pink-50 to-rose-100/70 shadow-[inset_0_2px_12px_rgba(251,113,133,0.12)]" />
+            <span className="absolute left-1/2 top-1/2 h-[4.6rem] w-[4.6rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-pink-100 via-white to-rose-100/80 shadow-[0_8px_32px_rgba(251,113,133,0.18),inset_0_1px_0_rgba(255,255,255,0.95)] transition duration-500 group-hover:rotate-6 md:h-[5.2rem] md:w-[5.2rem]" />
+            <span className="absolute left-1/2 top-1/2 h-[6rem] w-[6rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-pink-300/50 animate-[spin_18s_linear_infinite] md:h-[7rem] md:w-[7rem]" />
+            <span className="absolute left-1/2 top-1/2 h-[6.6rem] w-[6.6rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-rose-200/60 animate-[spin_28s_linear_infinite_reverse] md:h-[7.8rem] md:w-[7.8rem]" />
+            <span className="absolute right-3 top-3.5 h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,1),0_0_24px_rgba(251,113,133,0.5)]" />
+            <span className="absolute bottom-4 left-3.5 h-2 w-2 rounded-full bg-pink-100 shadow-[0_0_10px_rgba(251,113,133,0.45)]" />
+            <span className="absolute -right-0.5 top-[42%] h-1.5 w-1.5 rounded-full bg-rose-200/90 shadow-[0_0_8px_rgba(251,113,133,0.4)]" />
+            <span className="absolute inset-x-0 top-7 text-center text-sm font-black tracking-tight text-slate-900 md:top-8">
+              AI
+            </span>
+            <span className="absolute inset-x-0 bottom-7 text-center text-sm font-black tracking-tight text-slate-900 md:bottom-8">
+              Chat
+            </span>
+          </button>
+        )}
+      </div>
+
+      {eggParticles.length > 0 && (
+        <div className="pointer-events-none fixed inset-0 z-[9998] overflow-hidden">
+          {eggParticles.map((p) => (
+            <span
+              key={p.id}
+              className="absolute top-0 select-none font-black"
+              style={{
+                left: `${p.x}%`,
+                color: p.color,
+                fontSize: `${p.size}px`,
+                textShadow: `0 0 10px ${p.color}88`,
+                animationName: "fall",
+                animationDuration: `${p.dur}s`,
+                animationDelay: `${p.delay}s`,
+                animationTimingFunction: "linear",
+                animationFillMode: "both",
+                ["--r" as string]: `${p.rot}deg`,
+              }}
+            >
+              {p.text}
+            </span>
+          ))}
+        </div>
+      )}
 
       {scenes.map((scene, idx) => (
         (() => {
@@ -299,7 +611,8 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
           const bodyReveal = isIntroScene ? clamp((introReveal - 0.4) / 0.6, 0, 1) : 1;
           const accentReveal = (delay: number) =>
             isIntroScene ? clamp((introReveal - delay) / (1 - delay), 0, 1) : 1;
-          const normalizedOffset = (scrollY - idx * viewportHeight) / viewportHeight;
+          const sectionTop = sectionOffsets[idx] ?? idx * viewportHeight;
+          const normalizedOffset = (scrollY - sectionTop) / viewportHeight;
           const absOffset = Math.abs(normalizedOffset);
           const titleScale = 1 - clamp(absOffset, 0, 1.2) * 0.12;
           const subtitleScale = 1 - clamp(absOffset, 0, 1.2) * 0.07;
@@ -367,7 +680,7 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
             }`}
             style={{ opacity: clamp(cardOpacity, 0.25, 1) }}
           >
-            {scene.id === "contact" ? (
+            {scene.mode === "contact" ? (
               <div className="relative flex min-h-[560px] flex-col items-center justify-center py-8">
                 <div className="pointer-events-none absolute inset-3 overflow-hidden rounded-[2rem]">
                   {contactWatermarks.map((wm) => (
@@ -488,6 +801,117 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
 
                 </div>
               </div>
+            ) : scene.mode === "play" ? (
+              <div
+                className="relative grid w-full max-w-6xl items-center gap-10 py-2 md:grid-cols-[0.95fr_1.05fr] md:gap-16 md:py-6"
+                onWheel={handlePlayWheel}
+                onTouchStart={handlePlayTouchStart}
+                onTouchEnd={handlePlayTouchEnd}
+                onPointerDown={handlePlayPointerDown}
+                onPointerUp={handlePlayPointerUp}
+              >
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.26em] text-slate-500 md:text-sm">
+                    {scene.kicker}
+                  </p>
+                  <h2 className="mt-4 text-6xl font-black leading-[0.88] tracking-[-0.08em] text-slate-800 md:text-[7.5rem]">
+                    我正在
+                    <br />
+                    玩
+                  </h2>
+                  <p className="mt-6 max-w-md text-sm leading-7 text-slate-500 md:text-base">
+                    点击箭头，切换我最近在玩的内容。
+                  </p>
+                </div>
+
+                {playItems.length > 0 ? (
+                  <div className="relative">
+                    <div className="pointer-events-none absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-slate-200/70 via-transparent to-white blur-2xl" />
+                    <article className="relative min-h-[280px] rounded-[1.6rem] border border-slate-200/80 bg-white/86 p-8 shadow-[0_24px_60px_rgba(15,23,42,0.14)] backdrop-blur-xl transition-all duration-500 md:min-h-[340px] md:p-10">
+                      <div className="flex h-full flex-col justify-between gap-12">
+                        <div>
+                          <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-500">
+                            Play Project
+                          </p>
+                          <h3 className="mt-5 text-4xl font-black leading-none tracking-tight text-slate-950 md:text-5xl">
+                            {activePlayItem?.name}
+                          </h3>
+                          <p className="mt-5 max-w-lg whitespace-pre-line break-words text-base leading-7 text-slate-600">
+                            {activePlayItem?.description}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          {activePlayItem && isHereLink(activePlayItem.link) ? (
+                            <span className="inline-flex items-center gap-2 text-sm font-bold text-blue-500">
+                              来自这里
+                            </span>
+                          ) : activePlayItem ? (
+                            <a
+                              href={normalizeExternalHref(activePlayItem.link)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-2 text-sm font-bold text-blue-500 transition-transform hover:translate-x-1"
+                            >
+                              Explore Project
+                              <span aria-hidden>→</span>
+                            </a>
+                          ) : null}
+                          <div className="flex items-center gap-4">
+                            {playItems.length > 1 ? (
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  aria-label="上一个 play 项目"
+                                  onClick={() => goToPlay(-1)}
+                                  className="rounded-full border border-slate-200 bg-white p-2 text-slate-500 shadow-sm transition hover:-translate-x-0.5 hover:text-slate-900"
+                                >
+                                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                                    <polyline points="15 18 9 12 15 6" />
+                                  </svg>
+                                </button>
+                                <button
+                                  type="button"
+                                  aria-label="下一个 play 项目"
+                                  onClick={() => goToPlay(1)}
+                                  className="rounded-full border border-slate-200 bg-white p-2 text-slate-500 shadow-sm transition hover:translate-x-0.5 hover:text-slate-900"
+                                >
+                                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                                    <polyline points="9 18 15 12 9 6" />
+                                  </svg>
+                                </button>
+                              </div>
+                            ) : null}
+                            <span className="text-xs font-bold tracking-[0.18em] text-slate-400">
+                              {String(safeActivePlayIndex + 1).padStart(2, "0")}/{String(playItems.length).padStart(2, "0")}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+
+                    {playItems.length > 1 ? (
+                      <div className="mt-6 flex justify-end gap-2">
+                        {playItems.map((item, playIdx) => (
+                          <button
+                            type="button"
+                            key={`play-dot-${item.name}-${playIdx}`}
+                            aria-label={`切换到第 ${playIdx + 1} 个 play 项目`}
+                            onClick={() => setActivePlayIndex(playIdx)}
+                            className={`h-1.5 rounded-full transition-all ${
+                              playIdx === safeActivePlayIndex ? "w-10 bg-slate-800" : "w-4 bg-slate-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
+                  <div className="flex min-h-[260px] items-center justify-center rounded-[1.6rem] border border-dashed border-slate-300 bg-white/60 text-slate-500">
+                    暂无 play 内容
+                  </div>
+                )}
+              </div>
             ) : (
               <>
                 <p
@@ -542,15 +966,21 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
                 </p>
 
                 {scene.link ? (
-                  <a
-                    href={normalizeExternalHref(scene.link)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-10 inline-flex items-center gap-2 rounded-full bg-slate-900 px-7 py-3 text-sm font-semibold text-white transition-transform hover:translate-x-1"
-                  >
-                    打开链接
-                    <span aria-hidden>↗</span>
-                  </a>
+                  isHereLink(scene.link) ? (
+                    <span className="mt-10 inline-flex items-center gap-2 rounded-full border border-slate-300 px-7 py-3 text-sm font-semibold text-slate-700">
+                      来自这里
+                    </span>
+                  ) : (
+                    <a
+                      href={normalizeExternalHref(scene.link)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-10 inline-flex items-center gap-2 rounded-full bg-slate-900 px-7 py-3 text-sm font-semibold text-white transition-transform hover:translate-x-1"
+                    >
+                      打开链接
+                      <span aria-hidden>↗</span>
+                    </a>
+                  )
                 ) : null}
               </>
             )}

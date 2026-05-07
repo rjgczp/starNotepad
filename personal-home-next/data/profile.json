@@ -38,5 +38,17 @@
       "description": "基于 Next.js 构建，作为个人主页与内容展示入口。"
     }
   ],
+  "play": [
+    {
+      "link": "https://github.com/rjgczp/starNotepad",
+      "name": "我的极限模式存档",
+      "description": "我的Minecraft极限模式存档，记录了我的冒险历程。"
+    },
+    {
+      "link": "https://github.com/rjgczp/starNotepad",
+      "name": "我的极限模式存档",
+      "description": "我的Minecraft极限模式存档，记录了我的冒险历程。"
+    }
+  ],
   "siteLabel": "Personal Homepage"
 }

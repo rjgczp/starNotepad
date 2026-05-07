@@ -7,6 +7,12 @@ type Project = {
   link: string;
 };
 
+type PlayItem = {
+  name: string;
+  description: string;
+  link: string;
+};
+
 type ProfileData = {
   siteLabel: string;
   name: string;
@@ -15,11 +21,13 @@ type ProfileData = {
   hobby: string[];
   tags: string[];
   projects: Project[];
+  play: PlayItem[];
   contact: Record<string, string>;
 };
 
 type GvaResponse = {
   code?: number;
+  msg?: string;
   data?: {
     blog_config?: unknown;
   };
@@ -73,6 +81,24 @@ function normalizeProfileData(value: unknown): ProfileData | null {
       link: project.link,
     }));
 
+  const play = Array.isArray(data.play)
+    ? data.play
+        .filter((item): item is PlayItem => {
+          if (!item || typeof item !== "object") return false;
+          const p = item as Partial<PlayItem>;
+          return (
+            typeof p.name === "string" &&
+            typeof p.description === "string" &&
+            typeof p.link === "string"
+          );
+        })
+        .map((item) => ({
+          name: item.name,
+          description: item.description,
+          link: item.link,
+        }))
+    : [];
+
   return {
     siteLabel: data.siteLabel,
     name: data.name,
@@ -83,8 +109,17 @@ function normalizeProfileData(value: unknown): ProfileData | null {
       : [],
     tags: data.tags.filter((tag): tag is string => typeof tag === "string"),
     projects,
+    play,
     contact: Object.fromEntries(contactEntries),
   };
+}
+
+function parseBlogConfig(raw: unknown): ProfileData | null {
+  if (raw === undefined || raw === null || raw === "") return null;
+  if (typeof raw === "string") {
+    return normalizeProfileData(JSON.parse(raw));
+  }
+  return normalizeProfileData(raw);
 }
 
 async function getProfileData(): Promise<ProfileData> {
@@ -92,17 +127,37 @@ async function getProfileData(): Promise<ProfileData> {
     process.env.BLOG_PROFILE_API_URL ||
     "http://127.0.0.1:8888/api/bc/getUserBlog_configPublic";
 
+  console.log("[getProfileData] API_URL:", apiUrl);
+
   try {
     const res = await fetch(apiUrl, { cache: "no-store" });
-    if (!res.ok) return fallbackData;
+    console.log("[getProfileData] fetch status:", res.status, res.statusText);
+    if (!res.ok) {
+      console.error("[getProfileData] fetch failed, fallback to local");
+      return fallbackData;
+    }
 
     const payload = (await res.json()) as GvaResponse;
+    console.log("[getProfileData] payload keys:", Object.keys(payload || {}));
     const raw = payload?.data?.blog_config;
-    const parsed =
-      typeof raw === "string" ? normalizeProfileData(JSON.parse(raw)) : normalizeProfileData(raw);
+    console.log("[getProfileData] raw blog_config type:", typeof raw);
 
-    return parsed || fallbackData;
-  } catch {
+    if (raw === undefined || raw === null || raw === "") {
+      console.warn("[getProfileData] empty blog_config, fallback to local:", payload?.msg);
+      return fallbackData;
+    }
+
+    const parsed = parseBlogConfig(raw);
+
+    if (!parsed) {
+      console.warn("[getProfileData] invalid blog_config shape, fallback to local");
+      return fallbackData;
+    }
+
+    console.log("[getProfileData] using cloud data");
+    return parsed;
+  } catch (err) {
+    console.error("[getProfileData] exception:", err);
     return fallbackData;
   }
 }

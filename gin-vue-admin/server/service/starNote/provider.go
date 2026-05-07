@@ -355,6 +355,61 @@ func (aiProviderService *ProviderService) InvokeActiveProvider(ctx context.Conte
 	return result, nil
 }
 
+func (aiProviderService *ProviderService) PublicChatWithAI(ctx context.Context, messages []map[string]string) (string, error) {
+	activeProvider, err := getActiveProvider(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	model := ""
+	if activeProvider.ProviderName != nil {
+		model = strings.TrimSpace(*activeProvider.ProviderName)
+	}
+	if model == "" && activeProvider.ConfigJson != nil {
+		model = getProviderModel(*activeProvider.ConfigJson)
+	}
+	if model == "" {
+		model = "gpt-4o-mini"
+	}
+
+	invokeReq := starNoteReq.ProviderInvokeReq{
+		Path:   "/chat/completions",
+		Method: http.MethodPost,
+		Body: map[string]interface{}{
+			"model":    model,
+			"messages": messages,
+		},
+	}
+
+	result, err := aiProviderService.InvokeActiveProvider(ctx, invokeReq)
+	if err != nil {
+		return "", err
+	}
+
+	if statusCode, ok := result["statusCode"].(int); ok && statusCode >= http.StatusBadRequest {
+		if data, ok := result["data"].(map[string]interface{}); ok {
+			if errObj, ok := data["error"].(map[string]interface{}); ok {
+				if msg, ok := errObj["message"].(string); ok && strings.TrimSpace(msg) != "" {
+					return "", errors.New(msg)
+				}
+			}
+		}
+		if raw, ok := result["raw"].(string); ok && strings.TrimSpace(raw) != "" {
+			return "", errors.New(raw)
+		}
+		return "", errors.New("AI服务调用失败")
+	}
+
+	if data, ok := result["data"]; ok {
+		if content := extractOpenAIContent(data); content != "" {
+			return content, nil
+		}
+	}
+
+	raw, _ := result["raw"].(string)
+	return strings.TrimSpace(raw), nil
+}
+
 func parsePolishResult(raw string) map[string]string {
 	result := map[string]string{
 		"title":   "",

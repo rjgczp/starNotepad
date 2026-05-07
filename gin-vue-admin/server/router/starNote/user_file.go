@@ -18,5 +18,7 @@ func (s *UserFileRouter) InitUserFileRouter(Router *gin.RouterGroup, PublicRoute
 	}
 	{
 		ufilePublicRouter.GET("minecraft/preview", ufApi.MinecraftPreview) // Minecraft 世界预览数据
+		ufilePublicRouter.GET("minecraft/active", ufApi.GetActiveWorld)    // 获取当前活跃世界配置
+		ufileRouter.POST("minecraft/active", ufApi.SetActiveWorld)         // 设置当前活跃世界配置
 	}
 }

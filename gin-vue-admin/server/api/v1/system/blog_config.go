@@ -1,7 +1,10 @@
 package system
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
@@ -169,6 +172,113 @@ func (bcApi *UserBlog_configApi) GetUserBlog_configList(c *gin.Context) {
 		Page:     pageInfo.Page,
 		PageSize: pageInfo.PageSize,
 	}, "获取成功", c)
+}
+
+// buildChatSystemPrompt 从 blog_config 数据构建 AI 系统提示
+func buildChatSystemPrompt(bc system.UserBlog_config) string {
+	base := "你是该个人主页的 AI 助手，负责向访客介绍站主的个人信息、项目经历和兴趣爱好。请用中文友好地回复，回答要简洁、自然。"
+	if bc.Blog_config == nil {
+		return base
+	}
+
+	var raw interface{}
+	if err := json.Unmarshal(bc.Blog_config, &raw); err != nil {
+		return base
+	}
+
+	// blog_config 可能是嵌套的 JSON 字符串，也可能直接是对象
+	var profile map[string]interface{}
+	switch v := raw.(type) {
+	case map[string]interface{}:
+		profile = v
+	case string:
+		if err := json.Unmarshal([]byte(v), &profile); err != nil {
+			return base
+		}
+	}
+	if profile == nil {
+		return base
+	}
+
+	var sb strings.Builder
+	sb.WriteString(base)
+	sb.WriteString("\n\n以下是站主的个人资料，请以此作为回答依据：")
+
+	if name, ok := profile["name"].(string); ok && name != "" {
+		sb.WriteString(fmt.Sprintf("\n- 姓名：%s", name))
+	}
+	if title, ok := profile["title"].(string); ok && title != "" {
+		sb.WriteString(fmt.Sprintf("\n- 头衔：%s", title))
+	}
+	if bio, ok := profile["bio"].(string); ok && bio != "" {
+		sb.WriteString(fmt.Sprintf("\n- 个人简介：%s", bio))
+	}
+	if tags, ok := profile["tags"].([]interface{}); ok && len(tags) > 0 {
+		var tagStrs []string
+		for _, t := range tags {
+			if s, ok := t.(string); ok {
+				tagStrs = append(tagStrs, s)
+			}
+		}
+		if len(tagStrs) > 0 {
+			sb.WriteString(fmt.Sprintf("\n- 技术方向：%s", strings.Join(tagStrs, "、")))
+		}
+	}
+	if projects, ok := profile["projects"].([]interface{}); ok && len(projects) > 0 {
+		sb.WriteString("\n- 主要项目：")
+		for _, p := range projects {
+			if pm, ok := p.(map[string]interface{}); ok {
+				name, _ := pm["name"].(string)
+				desc, _ := pm["description"].(string)
+				if name != "" {
+					sb.WriteString(fmt.Sprintf("\n  · %s：%s", name, desc))
+				}
+			}
+		}
+	}
+
+	return sb.String()
+}
+
+// PublicAIChat 不需要鉴权的 AI 聊天接口
+// @Tags UserBlog_config
+// @Summary 个人主页 AI 聊天（公开接口，无需鉴权）
+// @Accept application/json
+// @Produce application/json
+// @Param data body systemReq.PublicChatReq true "消息列表"
+// @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
+// @Router /bc/chat [post]
+func (bcApi *UserBlog_configApi) PublicAIChat(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	var req systemReq.PublicChatReq
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.FailWithMessage("参数错误:"+err.Error(), c)
+		return
+	}
+
+	// 获取个人资料，构建系统提示
+	bc, _ := bcService.GetUserBlog_configPublic(ctx)
+	systemPrompt := buildChatSystemPrompt(bc)
+
+	// 组装消息：系统提示放首位，之后是用户对话
+	messages := make([]map[string]string, 0, len(req.Messages)+1)
+	messages = append(messages, map[string]string{"role": "system", "content": systemPrompt})
+	for _, m := range req.Messages {
+		if strings.TrimSpace(m.Role) == "" || strings.TrimSpace(m.Content) == "" {
+			continue
+		}
+		messages = append(messages, map[string]string{"role": m.Role, "content": m.Content})
+	}
+
+	reply, err := aiProviderService.PublicChatWithAI(ctx, messages)
+	if err != nil {
+		global.GVA_LOG.Error("AI聊天失败!", zap.Error(err))
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	response.OkWithDetailed(gin.H{"reply": reply}, "获取成功", c)
 }
 
 // GetUserBlog_configPublic 不需要鉴权的个人主页接口

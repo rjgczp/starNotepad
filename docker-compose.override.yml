@@ -1,0 +1,7 @@
+# 本地开发覆盖配置
+  # 这个文件会自动覆盖 docker-compose.yml 的配置
+  # 使用方法: docker-compose up (会自动读取此文件)
+
+version: "3.8"
+
+services: {}

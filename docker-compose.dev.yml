@@ -1,0 +1,98 @@
+services:
+  mysql:
+    image: mysql:8.0.45
+    container_name: gva-mysql-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-starNotepad}
+      TZ: ${TZ:-Asia/Shanghai}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    command:
+      [
+        "--default-authentication-plugin=mysql_native_password",
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_general_ci"
+      ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p123123"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  gva-server:
+    image: golang:1.24-alpine
+    container_name: gva-server-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "apk add --no-cache build-base git && go mod download && go run . -c config.docker.yaml"
+    environment:
+      CGO_ENABLED: "0"
+      GOPROXY: https://goproxy.cn,direct
+    ports:
+      - "${GVA_SERVER_PORT:-8888}:8888"
+    volumes:
+      - ./gin-vue-admin/server:/app
+      - ./uploads:/app/uploads
+      - ./logs:/app/log
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  home-web:
+    image: node:20-alpine
+    container_name: home-web-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --hostname 0.0.0.0 --port 3000"
+    environment:
+      BLOG_PROFILE_API_URL: http://gva-server:8888/api/bc/getUserBlog_configPublic
+      BACKEND_URL: http://gva-server:8888
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "${HOME_WEB_PORT:-3000}:3000"
+    depends_on:
+      - gva-server
+    volumes:
+      - ./personal-home-next:/app
+      - /app/node_modules
+
+  admin-web:
+    image: node:20-alpine
+    container_name: admin-web-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "rm -f .env.development.local && ([ -d node_modules/vite ] || npm ci) && npm run dev -- --host 0.0.0.0 --port 5173"
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "${ADMIN_WEB_DEV_PORT:-5173}:5173"
+    depends_on:
+      - gva-server
+    volumes:
+      - ./gin-vue-admin/web:/app
+      - /app/node_modules
+
+  bluemap:
+    image: eclipse-temurin:25-jre
+    container_name: bluemap-dev
+    restart: unless-stopped
+    environment:
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,gva-server}
+    working_dir: /app
+    command: ["java", "-jar", "/opt/bluemap-cli.jar", "-r", "-u", "-w"]
+    ports:
+      - "${BLUEMAP_PORT:-8100}:8100"
+    volumes:
+      - ./bluemap/cli.jar:/opt/bluemap-cli.jar:ro
+      - ./bluemap/config:/app/config
+      - ./bluemap/data:/app/data
+      - ./bluemap/web:/app/webroot
+      - ./bluemap/active-world:/app/world

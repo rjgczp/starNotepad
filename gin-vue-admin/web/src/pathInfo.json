@@ -43,6 +43,8 @@
   "/src/view/layout/setting/modules/layout/index.vue": "LayoutSettings",
   "/src/view/layout/tabs/index.vue": "HistoryComponent",
   "/src/view/login/index.vue": "Login",
+  "/src/view/mc/mcWorld/mcWorld.vue": "McWorld",
+  "/src/view/mc/mcWorld/mcWorldForm.vue": "McWorldForm",
   "/src/view/person/person.vue": "Person",
   "/src/view/routerHolder.vue": "RouterHolder",
   "/src/view/starNote/historyDay/historyDay.vue": "HistoryDay",

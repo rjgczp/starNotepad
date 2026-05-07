@@ -345,3 +345,109 @@ func (ufa *UserFileApi) MinecraftPreview(c *gin.Context) {
 		"message": "获取成功",
 	})
 }
+
+// ActiveWorldResponse represents the current active world configuration
+type ActiveWorldResponse struct {
+	WorldPath string `json:"worldPath"`
+	MapURL    string `json:"mapUrl"`
+	IsActive  bool   `json:"isActive"`
+}
+
+// SetActiveWorldRequest represents the request to set active world
+type SetActiveWorldRequest struct {
+	WorldPath string `json:"worldPath" binding:"required"`
+	MapURL    string `json:"mapUrl"`
+}
+
+// GetActiveWorld returns the current active world configuration
+func (ufa *UserFileApi) GetActiveWorld(c *gin.Context) {
+	// For now, return environment variable or default configuration
+	// In a real implementation, this would query the database
+	worldPath := os.Getenv("MINECRAFT_ACTIVE_WORLD_PATH")
+	if worldPath == "" {
+		worldPath = "/Users/charles/Documents/notepad/gin-vue-admin/server/uploads/file/5dc8ac4829e99f6b5d333881a92c7f24_20260429141901/新的世界"
+	}
+
+	mapURL := os.Getenv("MINECRAFT_MAP_URL")
+	if mapURL == "" {
+		mapURL = "http://localhost:8100"
+	}
+
+	response := ActiveWorldResponse{
+		WorldPath: worldPath,
+		MapURL:    mapURL,
+		IsActive:  worldPath != "",
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"data":    response,
+		"message": "获取成功",
+	})
+}
+
+// SetActiveWorld sets the current active world configuration
+func (ufa *UserFileApi) SetActiveWorld(c *gin.Context) {
+	var req SetActiveWorldRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "请求参数错误: " + err.Error(),
+		})
+		return
+	}
+
+	// Validate world path
+	absPath, _, err := normalizeMinecraftWorldPath(req.WorldPath)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "世界路径无效: " + err.Error(),
+		})
+		return
+	}
+
+	// Check if world directory exists and contains level.dat
+	levelDatPath := filepath.Join(absPath, "level.dat")
+	if _, err := os.Stat(levelDatPath); os.IsNotExist(err) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "指定路径不是有效的Minecraft世界目录（缺少level.dat文件）",
+		})
+		return
+	}
+
+	// Create active world symlink for BlueMap
+	activeWorldDir := "/Users/charles/Documents/notepad/bluemap/active-world"
+
+	// Remove existing symlink if it exists
+	os.RemoveAll(activeWorldDir)
+
+	// Create new symlink
+	if err := os.Symlink(absPath, activeWorldDir); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": "创建活跃世界链接失败: " + err.Error(),
+		})
+		return
+	}
+
+	// Set default map URL if not provided
+	if req.MapURL == "" {
+		req.MapURL = "http://localhost:8100"
+	}
+
+	// In a real implementation, this would save to database
+	// For now, we'll just return success
+	response := ActiveWorldResponse{
+		WorldPath: req.WorldPath,
+		MapURL:    req.MapURL,
+		IsActive:  true,
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"data":    response,
+		"message": "活跃世界设置成功",
+	})
+}

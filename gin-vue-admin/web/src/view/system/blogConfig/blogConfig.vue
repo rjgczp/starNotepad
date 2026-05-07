@@ -140,6 +140,27 @@
                 </div>
 
                 <div>
+                  <div class="mb-2 font-medium">玩过/在玩（play）</div>
+                  <div
+                    v-for="(item, idx) in profileEditor.play"
+                    :key="`play-${idx}`"
+                    class="mb-3 rounded border p-3"
+                  >
+                    <el-input v-model="item.name" class="mb-2" placeholder="内容名称" />
+                    <el-input v-model="item.description" class="mb-2" type="textarea" :rows="2" placeholder="内容描述" />
+                    <el-input v-model="item.link" placeholder="内容链接" />
+                    <el-button class="mt-2" @click="removeRow(profileEditor.play, idx)">删除条目</el-button>
+                  </div>
+                  <el-button
+                    type="primary"
+                    link
+                    @click="profileEditor.play.push({ name: '', description: '', link: '' })"
+                  >
+                    添加 play 条目
+                  </el-button>
+                </div>
+
+                <div>
                   <div class="mb-2 font-medium">联系方式（contact）</div>
                   <div v-for="(item, idx) in profileEditor.contact" :key="`contact-${idx}`" class="mb-2 flex gap-2">
                     <el-input v-model="item.key" placeholder="键名（对应图标文件名）" />
@@ -220,6 +241,7 @@ const createEditorState = () => ({
   hobby: [],
   tags: [],
   projects: [],
+  play: [],
   contact: [],
   extra: [],
 })
@@ -276,9 +298,18 @@ const toObject = (value) => {
 
 const toEditorState = (value) => {
   const cfg = toObject(value)
-  const baseKeys = ['siteLabel', 'name', 'title', 'bio', 'hobby', 'tags', 'projects', 'contact']
+  const baseKeys = ['siteLabel', 'name', 'title', 'bio', 'hobby', 'tags', 'projects', 'play', 'contact']
   const projects = Array.isArray(cfg.projects)
     ? cfg.projects
+      .filter(item => item && typeof item === 'object')
+      .map(item => ({
+        name: String(item.name || ''),
+        description: String(item.description || ''),
+        link: String(item.link || ''),
+      }))
+    : []
+  const play = Array.isArray(cfg.play)
+    ? cfg.play
       .filter(item => item && typeof item === 'object')
       .map(item => ({
         name: String(item.name || ''),
@@ -304,6 +335,7 @@ const toEditorState = (value) => {
     hobby: Array.isArray(cfg.hobby) ? cfg.hobby.map(v => String(v || '')) : [],
     tags: Array.isArray(cfg.tags) ? cfg.tags.map(v => String(v || '')) : [],
     projects,
+    play,
     contact,
     extra,
   }
@@ -323,6 +355,13 @@ const syncFormFromEditor = () => {
     hobby: editor.hobby.map(v => v.trim()).filter(Boolean),
     tags: editor.tags.map(v => v.trim()).filter(Boolean),
     projects: editor.projects
+      .map(item => ({
+        name: String(item.name || '').trim(),
+        description: String(item.description || '').trim(),
+        link: String(item.link || '').trim(),
+      }))
+      .filter(item => item.name || item.description || item.link),
+    play: editor.play
       .map(item => ({
         name: String(item.name || '').trim(),
         description: String(item.description || '').trim(),

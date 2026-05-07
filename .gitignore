@@ -1,0 +1,21 @@
+.DS_Store
+.env
+.env.local
+
+# Runtime data
+logs/
+mysql_data/
+uploads/
+bluemap/data/logs/
+bluemap/active-world/
+
+# Build and dependency outputs
+node_modules/
+.next/
+dist/
+build/
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
