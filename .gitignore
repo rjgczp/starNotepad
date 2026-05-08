@@ -1,21 +1,39 @@
+# --- 系统与基础配置 ---
 .DS_Store
 .env
 .env.local
+.gitattributes
 
-# Runtime data
+# --- 运行时与数据 (Runtime Data) ---
 logs/
+*.log
 mysql_data/
 uploads/
 bluemap/data/logs/
 bluemap/active-world/
 
-# Build and dependency outputs
+# --- 构建与依赖产物 (Build & Dependencies) ---
 node_modules/
 .next/
 dist/
 build/
+bin/
+# 针对你报错中提到的 Go 编译二进制文件
+gin-vue-admin/server/tmp/
+# 忽略所有可执行二进制文件（尤其是无后缀的二进制文件）
+**/server/tmp/main
 
-# Archives
+# --- 压缩包与大文件 (Archives) ---
 *.zip
 *.tar
 *.tar.gz
+*.rar
+*.7z
+
+# --- 编辑器配置 (IDE) ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
