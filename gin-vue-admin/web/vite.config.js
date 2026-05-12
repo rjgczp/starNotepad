@@ -36,7 +36,7 @@ export default ({ mode }) => {
     }
   }
 
-  const base = '/'
+  const base = env.VITE_PUBLIC_PATH || '/'
   const root = './'
   const outDir = 'dist'
 

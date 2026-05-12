@@ -171,11 +171,11 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
     const phrases = [
       [22909,21487,29233],   // 好可爱
       [30495,26834],         // 真棒
-      [20320,26368,24069],   // 你最帅
-      [22826,37239,20102],   // 太酷了
-      [24320,24515],         // 开心
+      [27704, 36828, 22312, 19968, 36215],   // 永远在一起
+      [20840, 19990, 30028, 26368, 24184, 31103], // 全世界最幸福
+      [22312, 19968, 36215, 24456, 24320, 24515],  // 在一起很开心
       [38378,38378,21457,20809], // 闪闪发光
-      [23431,23449,26080,25932,21487,29233], // 宇宙无敌
+      [23431,23449,26080,25932,21487,29233], // 宇宙无敌可爱
     ].map((c) => _cp(...c));
     const items = [_cp(..._L1), _cp(..._L2), ...hearts, ...phrases];
     const ps: EggParticle[] = Array.from({ length: 72 }, (_, i) => ({
@@ -528,7 +528,7 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
                   </div>
                 </div>
               ))}
-              <div ref={chatBottomRef} />
+              <div ref={chatBottomRef} /> 
             </div>
             <div className="border-t border-slate-200/80 p-4">
               <form onSubmit={handleChatSubmit} className="flex items-center gap-2">
@@ -759,6 +759,7 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
                       src="/api/profile-img/profile_photo.jpg"
                       alt="profile"
                       fill
+                      unoptimized
                       className="object-cover"
                       sizes="240px"
                     />
@@ -791,6 +792,7 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
                               alt={key}
                               width={32}
                               height={32}
+                              unoptimized
                               className="h-8 w-8 object-contain"
                             />
                           </a>
