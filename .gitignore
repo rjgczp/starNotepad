@@ -25,6 +25,14 @@ bin/
 gin-vue-admin/server/tmp/
 # 忽略所有可执行二进制文件（尤其是无后缀的二进制文件）
 **/server/tmp/main
+# 后端编译产物（go build -o server 生成，可重新编译）
+gin-vue-admin/server/server
+
+# --- BlueMap 可重新下载的数据 ---
+bluemap/data/minecraft-client-*.jar
+bluemap/data/resourceExtensions.zip
+bluemap/data/logs/
+bluemap/web/
 
 # --- 压缩包与大文件 (Archives) ---
 *.zip
