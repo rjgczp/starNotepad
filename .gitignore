@@ -2,6 +2,9 @@
 .DS_Store
 .env
 .env.local
+.env.production
+# 保留环境变量模板
+!.env.example
 .gitattributes
 
 # --- 运行时与数据 (Runtime Data) ---
