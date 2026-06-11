@@ -9,7 +9,15 @@ import 'package:startnotepad_flutter/features/note/presentation/note_create_page
 import 'package:startnotepad_flutter/features/note/presentation/note_detail_page.dart';
 import 'package:startnotepad_flutter/public/publicWidget.dart';
 
+// ── 「素白留白」设计令牌 ──
+const Color _kCanvas = Color(0xFFFAFAF8); // 暖白画布
+const Color _kCard = Colors.white;
+const Color _kInk = Color(0xFF1C1C1E); // 主文字（近黑）
+const Color _kInkSub = Color(0xFF8A8A8E); // 辅助文字（中灰）
+const Color _kHairline = Color(0xFFEDEDE9); // 极淡分隔/描边
+
 class NoteListPage extends StatefulWidget {
+
   const NoteListPage({super.key, this.onOpenDrawer, this.categoryId});
 
   final VoidCallback? onOpenDrawer;
@@ -456,21 +464,13 @@ class _NoteListPageState extends State<NoteListPage>
     final primary = colorScheme.primary;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 80),
-        child: FloatingActionButton.extended(
-          onPressed: _openCreate,
-          icon: const Icon(Icons.edit_note_rounded),
-          label: const Text('写笔记'),
-          backgroundColor: primary.withValues(alpha: 0.88),
-          foregroundColor: Colors.white,
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
+      backgroundColor: _kCanvas,
+      floatingActionButton: _BreathingFab(
+        primary: primary,
+        onPressed: _openCreate,
       ),
+
+
       body: FutureBuilder<PageResult>(
         future: _future,
         builder: (context, snapshot) {
@@ -694,7 +694,7 @@ class _NoteListPageState extends State<NoteListPage>
     );
   }
 
-  // ── Sliver App Bar with greeting ──
+  // ── Sliver App Bar with expressive hero header ──
   Widget _buildSliverAppBar(
     BuildContext context,
     Color primary,
@@ -702,141 +702,260 @@ class _NoteListPageState extends State<NoteListPage>
   ) {
     final count = data?.total ?? 0;
     return SliverAppBar(
-      expandedHeight: 120,
+      expandedHeight: 178,
       floating: false,
       pinned: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: _kCanvas,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
+      leadingWidth: 64,
       leading:
           widget.onOpenDrawer != null
-              ? IconButton(
-                onPressed: widget.onOpenDrawer,
-                icon: const Icon(Icons.menu_rounded, color: Colors.black),
+              ? Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: _RoundIconButton(
+                  icon: Icons.menu_rounded,
+                  onTap: widget.onOpenDrawer!,
+                ),
               )
               : null,
       actions: [
-        IconButton(
-          onPressed: () => _showThemeColorPicker(context),
-          tooltip: '切换主题色',
-          icon: const Icon(Icons.palette_outlined, color: Colors.black),
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: _RoundIconButton(
+            icon: Icons.palette_outlined,
+            tooltip: '切换主题色',
+            accent: primary,
+            onTap: () => _showThemeColorPicker(context),
+          ),
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          color: Theme.of(context).colorScheme.surface,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 40, 20, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    _greeting(),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+        background: Stack(
+          children: [
+            // 顶部一抹极淡的主题色光晕，呼应「星空」意境
+            Positioned(
+              top: -90,
+              right: -60,
+              child: Container(
+                width: 240,
+                height: 240,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      primary.withValues(alpha: 0.14),
+                      primary.withValues(alpha: 0.0),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    count > 0 ? '共 $count 条笔记' : '还没有笔记，开始记录吧',
-                    style: TextStyle(
-                      color: Colors.black.withValues(alpha: 0.7),
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(22, 56, 22, 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // 日期 + 星标点缀
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.auto_awesome_rounded,
+                          size: 13,
+                          color: primary.withValues(alpha: 0.7),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          _todayLine(),
+                          style: TextStyle(
+                            color: primary.withValues(alpha: 0.85),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _greeting(),
+                      style: const TextStyle(
+                        color: _kInk,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.6,
+                        height: 1.05,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // 记录条数信息条
+                    Row(
+                      children: [
+                        Text(
+                          count > 0 ? '$count' : '0',
+                          style: TextStyle(
+                            color: primary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        const Text(
+                          '条记录',
+                          style: TextStyle(
+                            color: _kInkSub,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 3,
+                          height: 3,
+                          decoration: const BoxDecoration(
+                            color: _kInkSub,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Expanded(
+                          child: Text(
+                            '安静地写下此刻',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: _kInkSub,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
         collapseMode: CollapseMode.parallax,
       ),
     );
   }
 
-  // ── Search Bar ──
+  // ── 顶部日期行，例：6月10日 星期二 ──
+  String _todayLine() {
+    final now = DateTime.now();
+    const weekday = <int, String>{
+      DateTime.monday: '星期一',
+      DateTime.tuesday: '星期二',
+      DateTime.wednesday: '星期三',
+      DateTime.thursday: '星期四',
+      DateTime.friday: '星期五',
+      DateTime.saturday: '星期六',
+      DateTime.sunday: '星期日',
+    };
+    return '${now.month}月${now.day}日 ${weekday[now.weekday] ?? ''}';
+  }
+
+
+
+  // ── Search Bar：胶囊搜索 + 视图切换 ──
   Widget _buildSearchBar(Color primary) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 6),
       child: Row(
         children: [
           // Search field
           Expanded(
             child: Container(
-              height: 46,
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: _kHairline, width: 1),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (v) => setState(() => _query = v),
-                style: const TextStyle(fontSize: 14),
-                decoration: InputDecoration(
-                  hintText: '搜索笔记…',
-                  hintStyle: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 14,
-                  ),
-                  prefixIcon: Icon(
+              child: Row(
+                children: [
+                  Icon(
                     Icons.search_rounded,
-                    color: Colors.grey.shade400,
+                    color: _kInkSub,
                     size: 20,
                   ),
-                  suffixIcon:
-                      _query.isNotEmpty
-                          ? IconButton(
-                            icon: Icon(
-                              Icons.close_rounded,
-                              color: Colors.grey.shade400,
-                              size: 18,
-                            ),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() => _query = '');
-                            },
-                          )
-                          : null,
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 0,
-                    vertical: 12,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (v) => setState(() => _query = v),
+                      style: const TextStyle(
+                        fontSize: 14.5,
+                        color: _kInk,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      decoration: const InputDecoration(
+                        isCollapsed: true,
+                        hintText: '搜索你的记录…',
+                        hintStyle: TextStyle(
+                          color: _kInkSub,
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    ),
                   ),
-                ),
+                  if (_query.isNotEmpty)
+                    GestureDetector(
+                      onTap: () {
+                        _searchController.clear();
+                        setState(() => _query = '');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          color: _kHairline,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          color: _kInkSub,
+                          size: 14,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           // Grid toggle
-          Container(
-            height: 46,
-            width: 46,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: IconButton(
-              onPressed: _toggleColumns,
-              tooltip: _gridColumns == 1 ? '两列模式' : '单列模式',
-              icon: AnimatedSwitcher(
+          GestureDetector(
+            onTap: _toggleColumns,
+            child: Container(
+              height: 52,
+              width: 52,
+              decoration: BoxDecoration(
+                color: primary,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: primary.withValues(alpha: 0.28),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
                 transitionBuilder:
                     (child, anim) => ScaleTransition(scale: anim, child: child),
@@ -845,8 +964,8 @@ class _NoteListPageState extends State<NoteListPage>
                       ? Icons.grid_view_rounded
                       : Icons.view_agenda_rounded,
                   key: ValueKey(_gridColumns),
-                  color: primary,
-                  size: 20,
+                  color: Colors.white,
+                  size: 22,
                 ),
               ),
             ),
@@ -856,21 +975,77 @@ class _NoteListPageState extends State<NoteListPage>
     );
   }
 
+
   // ── Loading Skeleton ──
   SliverToBoxAdapter _buildLoadingSliver() {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
         child: Column(
           children: List.generate(
-            3,
+            4,
             (i) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 14),
               child: Container(
-                height: 100,
+                height: 96,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: _kHairline, width: 1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: _kHairline,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 120,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: _kHairline,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        width: double.infinity,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: _kHairline,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: 180,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: _kHairline,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -879,6 +1054,7 @@ class _NoteListPageState extends State<NoteListPage>
       ),
     );
   }
+
 
   // ── Error State ──
   SliverToBoxAdapter _buildErrorSliver(BuildContext context, Object? error) {
@@ -1001,37 +1177,25 @@ class _NoteListPageState extends State<NoteListPage>
             padding: const EdgeInsets.only(bottom: 10),
             child: Row(
               children: [
-                Text(
+                const Text(
                   '全部笔记',
                   style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: _kInk,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${totalCount ?? items.length}',
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade600,
+                    color: _kInkSub,
                   ),
                 ),
-                const SizedBox(width: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '${totalCount ?? items.length}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.78),
-                    ),
-                  ),
-                ),
+
               ],
             ),
           ),
@@ -1100,15 +1264,7 @@ class _NoteListPageState extends State<NoteListPage>
           item['BackgroundColor'],
     );
     final baseColor = backendColor ?? _palette[index % _palette.length];
-    // If highlighted, deepen the shadow color
-    final cardBgColor = Colors.white; // Always white background
-    final lighterColor = Color.lerp(baseColor, Colors.white, 0.35)!;
-    final textColor = Colors.grey.shade700;
-    // Shadow color based on highlight state
-    final shadowColor =
-        isHighlight
-            ? baseColor.withValues(alpha: 0.4)
-            : Colors.grey.withValues(alpha: 0.15);
+    final isSingle = _gridColumns == 1;
 
     final dt = _parseDate(
       item['updatedAt'] ??
@@ -1121,170 +1277,125 @@ class _NoteListPageState extends State<NoteListPage>
 
     return Container(
       decoration: BoxDecoration(
-        color: cardBgColor,
-        borderRadius: BorderRadius.circular(18),
+        color: _kCard,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isHighlight ? baseColor.withValues(alpha: 0.35) : _kHairline,
+          width: 1,
+        ),
         boxShadow: [
+          // 极柔弥散阴影，靠层级而非线条分隔
           BoxShadow(
-            color: shadowColor,
-            blurRadius: isHighlight ? 22 : 16,
-            offset: Offset(0, isHighlight ? 8 : 6),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.035),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(20),
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(20),
+          splashColor: baseColor.withValues(alpha: 0.06),
+          highlightColor: baseColor.withValues(alpha: 0.03),
           onTap: () {
             Navigator.of(context).push<void>(
               PageTransition(
                 type: PageTransitionType.rightToLeft,
-                duration: const Duration(milliseconds: 280),
+                duration: const Duration(milliseconds: 320),
                 curve: Curves.easeOutCubic,
                 child: NoteDetailPage(note: item),
               ),
             );
           },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(18),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(18, 16, 18, isSingle ? 14 : 16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // ── Gradient header ──
-                Container(
-                  height: 44,
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [baseColor, lighterColor],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                // ── Title row：彩色小圆点作为唯一强调 ──
+                Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: baseColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      // Note icon (if any)
-                      if (noteIcon != null)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Icon(
-                              noteIcon,
-                              color: Colors.white,
-                              size: 13,
-                            ),
-                          ),
-                        ),
-                      // Reminder icon (if any)
-                      if (isReminder)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_rounded,
-                              color: Colors.white,
-                              size: 13,
-                            ),
-                          ),
-                        ),
-                      // Top pin icon (if any)
-                      if (isTop)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Icon(
-                              Icons.push_pin_rounded,
-                              color: Colors.white,
-                              size: 13,
-                            ),
-                          ),
-                        ),
-                      Expanded(
-                        child: Text(
-                          (title != null && title.isNotEmpty) ? title : '无标题',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.3,
-                          ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        (title != null && title.isNotEmpty) ? title : '无标题',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: _kInk,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.2,
+                          height: 1.2,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    if (noteIcon != null)
+                      Icon(noteIcon, size: 15, color: _kInkSub),
+                    if (isReminder)
+                      const Padding(
+                        padding: EdgeInsets.only(left: 6),
+                        child: Icon(
+                          Icons.notifications_none_rounded,
+                          size: 15,
+                          color: _kInkSub,
+                        ),
+                      ),
+                    if (isTop)
+                      const Padding(
+                        padding: EdgeInsets.only(left: 6),
+                        child: Icon(
+                          Icons.push_pin_outlined,
+                          size: 15,
+                          color: _kInkSub,
+                        ),
+                      ),
+                  ],
                 ),
+                const SizedBox(height: 10),
 
                 // ── Content body ──
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
-                    child: Text.rich(
-                      _htmlToSpan(
-                        content,
-                        TextStyle(
-                          height: 1.45,
-                          fontSize: 12.5,
-                          color: textColor,
-                        ),
+                Flexible(
+                  child: Text.rich(
+                    _htmlToSpan(
+                      content,
+                      const TextStyle(
+                        height: 1.55,
+                        fontSize: 13.5,
+                        color: Color(0xFF55555A),
+                        fontWeight: FontWeight.w400,
                       ),
-                      maxLines: _gridColumns == 1 ? 3 : 4,
-                      overflow: TextOverflow.ellipsis,
                     ),
+                    maxLines: isSingle ? 2 : 5,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
 
-                // ── Footer with date chip ──
-                if (footer.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 4, 14, 10),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.access_time_rounded,
-                          size: 12,
-                          color: Colors.grey.shade400,
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            footer,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade400,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
+                if (footer.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    footer,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      color: _kInkSub,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.2,
                     ),
-                  )
-                else
-                  const SizedBox(height: 10),
+                  ),
+                ],
               ],
             ),
           ),
@@ -1294,9 +1405,124 @@ class _NoteListPageState extends State<NoteListPage>
   }
 }
 
+// ── 呼吸光晕的写笔记按钮 ──
+class _BreathingFab extends StatefulWidget {
+  const _BreathingFab({required this.primary, required this.onPressed});
+
+  final Color primary;
+  final VoidCallback onPressed;
+
+  @override
+  State<_BreathingFab> createState() => _BreathingFabState();
+}
+
+class _BreathingFabState extends State<_BreathingFab>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ac = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 2),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _ac.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _ac,
+      builder: (context, child) {
+        final glow = 0.18 + _ac.value * 0.16;
+        final spread = 1.0 + _ac.value * 3.0;
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: widget.primary.withValues(alpha: glow),
+                blurRadius: 22,
+                spreadRadius: spread,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: child,
+        );
+      },
+      child: FloatingActionButton.extended(
+        onPressed: widget.onPressed,
+        icon: const Icon(Icons.edit_note_rounded),
+        label: const Text(
+          '写笔记',
+          style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 0.3),
+        ),
+        backgroundColor: widget.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        highlightElevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+      ),
+    );
+  }
+}
+
+
+// ── 圆形玻璃质感图标按钮（顶栏用） ──
+class _RoundIconButton extends StatelessWidget {
+  const _RoundIconButton({
+    required this.icon,
+    required this.onTap,
+    this.tooltip,
+    this.accent,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+  final String? tooltip;
+  final Color? accent;
+
+  @override
+  Widget build(BuildContext context) {
+    final button = Material(
+      color: Colors.white,
+      shape: const CircleBorder(),
+      elevation: 0,
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: _kHairline, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Icon(icon, size: 20, color: accent ?? _kInk),
+        ),
+      ),
+    );
+    if (tooltip != null) {
+      return Tooltip(message: tooltip!, child: button);
+    }
+    return button;
+  }
+}
+
 class _HtmlStyleItem {
   const _HtmlStyleItem(this.name, this.style);
 
   final String name;
   final TextStyle style;
 }
+

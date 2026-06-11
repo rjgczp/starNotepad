@@ -2,7 +2,11 @@
     <!-- Calendar permissions -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    
+    <!-- 语音输入(AI 助手) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:label="startNotepad"
         android:name="${applicationName}"

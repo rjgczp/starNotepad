@@ -50,6 +50,9 @@ dependencies:
   image_picker: ^1.1.2
   image_cropper: ^8.1.0
   flutter_html: ^3.0.0
+  speech_to_text: ^7.0.0 #语音转文字
+  share_plus: ^10.1.4 #导出分享
+
   flutter_localizations:
     sdk: flutter
   flutter:

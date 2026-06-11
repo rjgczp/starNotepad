@@ -911,36 +911,49 @@ class _UserDrawerHeaderState extends State<_UserDrawerHeader> {
     final token = LocalData.getString(ApiClient.tokenKey);
     final isLoggedIn = token.isNotEmpty;
 
+    const ink = Color(0xFF1C1C1E);
+    const inkSub = Color(0xFF8A8A8E);
+    const hairline = Color(0xFFEDEDE9);
+
     final titleStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
       fontWeight: FontWeight.w800,
-      color: Colors.black,
+      color: ink,
+      letterSpacing: -0.3,
     );
     final subtitleStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
-      color: Colors.black54,
-      fontWeight: FontWeight.w600,
+      color: inkSub,
+      fontWeight: FontWeight.w500,
     );
 
     return InkWell(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(20),
       onTap: isLoggedIn ? widget.onProfileTap : widget.onGuestTap,
       child: Container(
         margin: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-        padding: const EdgeInsets.fromLTRB(14, 16, 14, 16),
+        padding: const EdgeInsets.fromLTRB(16, 18, 14, 18),
         decoration: BoxDecoration(
-          color: widget.primary.withValues(alpha: 0.14),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: widget.primary.withValues(alpha: 0.18)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: hairline, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.035),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         child: Row(
           children: [
             Container(
-              width: 56,
-              height: 56,
+              width: 54,
+              height: 54,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: widget.primary.withValues(alpha: 0.10),
+                color: widget.primary.withValues(alpha: 0.08),
                 border: Border.all(
-                  color: widget.primary.withValues(alpha: 0.22),
+                  color: widget.primary.withValues(alpha: 0.18),
+                  width: 1.5,
                 ),
               ),
               child: ClipOval(
@@ -951,15 +964,23 @@ class _UserDrawerHeaderState extends State<_UserDrawerHeader> {
                           headers: token.isNotEmpty ? {'x-token': token} : null,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(Icons.person_rounded),
+                            return Center(
+                              child: Icon(
+                                Icons.person_rounded,
+                                color: widget.primary,
+                              ),
                             );
                           },
                         )
-                        : const Center(child: Icon(Icons.person_rounded)),
+                        : Center(
+                          child: Icon(
+                            Icons.person_rounded,
+                            color: widget.primary,
+                          ),
+                        ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -971,7 +992,7 @@ class _UserDrawerHeaderState extends State<_UserDrawerHeader> {
                     overflow: TextOverflow.ellipsis,
                     style: titleStyle,
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 3),
                   Text(
                     _signature.isNotEmpty
                         ? _signature
@@ -983,26 +1004,24 @@ class _UserDrawerHeaderState extends State<_UserDrawerHeader> {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             Material(
-              color: Colors.white.withValues(alpha: 0.72),
-              borderRadius: BorderRadius.circular(14),
+              color: const Color(0xFFFAFAF8),
+              borderRadius: BorderRadius.circular(13),
               child: InkWell(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(13),
                 onTap: widget.onSettingsTap,
                 child: Container(
-                  width: 40,
-                  height: 40,
+                  width: 38,
+                  height: 38,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: widget.primary.withValues(alpha: 0.12),
-                    ),
+                    borderRadius: BorderRadius.circular(13),
+                    border: Border.all(color: hairline, width: 1),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.settings_outlined,
-                    color: widget.primary,
-                    size: 20,
+                    color: inkSub,
+                    size: 19,
                   ),
                 ),
               ),
@@ -1013,6 +1032,7 @@ class _UserDrawerHeaderState extends State<_UserDrawerHeader> {
     );
   }
 }
+
 
 class _SettingsPage extends StatelessWidget {
   const _SettingsPage();
@@ -1572,24 +1592,35 @@ class _CategorySelectorState extends State<_CategorySelector> {
 
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFEDEDE9), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
             child: Text(
               '分类',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Colors.black54,
-                fontWeight: FontWeight.w600,
+              style: TextStyle(
+                color: const Color(0xFF8A8A8E),
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.6,
               ),
             ),
           ),
+
           // 全部按钮
           _buildCategoryButton(
             id: null,
@@ -1762,60 +1793,48 @@ class _HomeNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scale = MediaQuery.textScalerOf(context).scale(1);
-    final iconColor = selected ? primary : Colors.black54;
-    final base = Theme.of(context).textTheme.labelSmall;
-    final textStyle = base
-        ?.copyWith(
-          fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-          color: selected ? primary : Colors.black54,
-        )
-        .copyWith(
-          fontSize: ((base.fontSize ?? 11) / scale).clamp(10, 12),
-          height: 1.0,
-        );
+    const inkSub = Color(0xFF8A8A8E);
+    final iconColor = selected ? primary : inkSub;
 
     return InkWell(
       onTap: onTap,
+      splashColor: primary.withValues(alpha: 0.06),
+      highlightColor: Colors.transparent,
       child: SizedBox(
-        height: 72,
+        height: 64,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // 选中态：药丸形主题色底；未选中：透明
             AnimatedContainer(
-              duration: const Duration(milliseconds: 220),
-              curve: Curves.easeOut,
-              width: 40,
-              height: 40,
+              duration: const Duration(milliseconds: 240),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient:
+                color:
                     selected
-                        ? LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            primary.withValues(alpha: 0.20),
-                            primary.withValues(alpha: 0.08),
-                          ],
-                        )
-                        : null,
+                        ? primary.withValues(alpha: 0.12)
+                        : Colors.transparent,
+                borderRadius: BorderRadius.circular(16),
               ),
               child: AnimatedScale(
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOut,
-                scale: selected ? 1.05 : 1.0,
-                child: Icon(icon, color: iconColor, size: 24),
+                duration: const Duration(milliseconds: 240),
+                curve: Curves.easeOutBack,
+                scale: selected ? 1.0 : 0.92,
+                child: Icon(icon, color: iconColor, size: 23),
               ),
             ),
-            const SizedBox(height: 3),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Text(
-                label,
-                style: textStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            const SizedBox(height: 4),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 11,
+                height: 1.0,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected ? primary : inkSub,
+                letterSpacing: 0.1,
               ),
             ),
           ],
@@ -1824,6 +1843,7 @@ class _HomeNavItem extends StatelessWidget {
     );
   }
 }
+
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
@@ -1951,8 +1971,9 @@ class _HomeState extends State<Home> {
       _HomeNavItemData(label: '记事本', icon: Icons.note_alt_outlined),
       _HomeNavItemData(label: '日记', icon: Icons.book_outlined),
       _HomeNavItemData(label: '回响', icon: Icons.hourglass_empty_rounded),
-      _HomeNavItemData(label: '更多', icon: Icons.more_horiz_rounded),
+      _HomeNavItemData(label: 'AI 助手', icon: Icons.auto_awesome_rounded),
     ];
+
 
     return Scaffold(
       key: _scaffoldKey,
@@ -2036,72 +2057,64 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            children: _pages,
+      backgroundColor: const Color(0xFFFAFAF8),
+      // 贴底导航栏
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: const Border(
+            top: BorderSide(color: Color(0xFFEDEDE9), width: 1),
           ),
-          // Floating bottom navigation
-          Positioned(
-            left: 12,
-            right: 12,
-            bottom: 12,
-            child: SafeArea(
-              top: false,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x14000000),
-                      blurRadius: 24,
-                      offset: Offset(0, 12),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(28),
-                  child: SizedBox(
-                    height: 72,
-                    child: Row(
-                      children: List.generate(items.length, (index) {
-                        final item = items[index];
-                        final selected = index == _currentIndex;
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 24,
+              offset: const Offset(0, -6),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 64,
+            child: Row(
+              children: List.generate(items.length, (index) {
+                final item = items[index];
+                final selected = index == _currentIndex;
 
-                        return Expanded(
-                          child: _HomeNavItem(
-                            label: item.label,
-                            icon: item.icon,
-                            selected: selected,
-                            primary: colorScheme.primary,
-                            onTap: () {
-                              if (_currentIndex == index) return;
-                              _pageController.animateToPage(
-                                index,
-                                duration: const Duration(milliseconds: 260),
-                                curve: Curves.easeOut,
-                              );
-                            },
-                          ),
-                        );
-                      }),
-                    ),
+                return Expanded(
+                  child: _HomeNavItem(
+                    label: item.label,
+                    icon: item.icon,
+                    selected: selected,
+                    primary: colorScheme.primary,
+                    onTap: () {
+                      if (_currentIndex == index) return;
+                      _pageController.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 260),
+                        curve: Curves.easeOut,
+                      );
+                    },
                   ),
-                ),
-              ),
+                );
+              }),
             ),
           ),
-        ],
+        ),
+      ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        children: _pages,
       ),
     );
   }
+
 
   Widget _buildDrawerActionButton({
     required IconData icon,

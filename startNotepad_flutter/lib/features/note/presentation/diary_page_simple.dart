@@ -16,7 +16,14 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 
+// ── 「素白留白」设计令牌 ──
+const Color _kCanvas = Color(0xFFFAFAF8);
+const Color _kInk = Color(0xFF1C1C1E);
+const Color _kInkSub = Color(0xFF8A8A8E);
+const Color _kHairline = Color(0xFFEDEDE9);
+
 class DiaryPage extends StatefulWidget {
+
   const DiaryPage({super.key});
 
   @override
@@ -361,32 +368,31 @@ class _DiaryPageState extends State<DiaryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final primaryColor = Theme.of(context).primaryColor;
     final bottomSafeArea = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: _kCanvas,
       body: SafeArea(
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
           children: [
+            // ── Hero 头部 ──
+            _buildHeader(primaryColor),
+            const SizedBox(height: 18),
+            // ── 日历卡片 ──
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(28),
-                  topRight: Radius.circular(28),
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: _kHairline, width: 1),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
+                    color: Colors.black.withValues(alpha: 0.035),
                     blurRadius: 24,
-                    offset: const Offset(0, 8),
+                    offset: const Offset(0, 10),
                   ),
                 ],
               ),
@@ -399,18 +405,19 @@ class _DiaryPageState extends State<DiaryPage> {
                           DateFormat('yyyy年MM月', 'zh_CN').format(_currentMonth),
                           style: const TextStyle(
                             fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF181818),
+                            fontWeight: FontWeight.w800,
+                            color: _kInk,
+                            letterSpacing: -0.3,
                           ),
                         ),
                       ),
                       _buildMonthAction(
-                        icon: Icons.chevron_left,
+                        icon: Icons.chevron_left_rounded,
                         onTap: _previousMonth,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 8),
                       _buildMonthAction(
-                        icon: Icons.chevron_right,
+                        icon: Icons.chevron_right_rounded,
                         onTap: _nextMonth,
                       ),
                     ],
@@ -426,15 +433,66 @@ class _DiaryPageState extends State<DiaryPage> {
                     )
                   else
                     _buildCalendarGrid(),
-                  const SizedBox(height: 6),
-                  _buildTimelineSection(colorScheme, primaryColor),
-                  SizedBox(height: 72 + bottomSafeArea),
                 ],
+              ),
+            ),
+            const SizedBox(height: 18),
+            // ── 时间线 ──
+            _buildTimelineSection(primaryColor),
+            SizedBox(height: 24 + bottomSafeArea),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Hero 头部：日期行 + 大标题 ──
+  Widget _buildHeader(Color primaryColor) {
+    final now = DateTime.now();
+    final todayLine = DateFormat('M月d日 EEEE', 'zh_CN').format(now);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.auto_awesome_rounded,
+              size: 13,
+              color: primaryColor.withValues(alpha: 0.7),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              todayLine,
+              style: TextStyle(
+                color: primaryColor.withValues(alpha: 0.85),
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.8,
               ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: 8),
+        const Text(
+          '我的日记',
+          style: TextStyle(
+            color: _kInk,
+            fontSize: 30,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.6,
+            height: 1.05,
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          '在时间里，写下点滴',
+          style: TextStyle(
+            color: _kInkSub,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 
@@ -443,18 +501,19 @@ class _DiaryPageState extends State<DiaryPage> {
     required VoidCallback onTap,
   }) {
     return Material(
-      color: Colors.transparent,
+      color: const Color(0xFFFAFAF8),
+      borderRadius: BorderRadius.circular(13),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(13),
         child: Container(
-          width: 34,
-          height: 34,
+          width: 36,
+          height: 36,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.88),
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(13),
+            border: Border.all(color: _kHairline, width: 1),
           ),
-          child: Icon(icon, size: 20, color: const Color(0xFF8F867D)),
+          child: Icon(icon, size: 20, color: _kInkSub),
         ),
       ),
     );
@@ -473,9 +532,9 @@ class _DiaryPageState extends State<DiaryPage> {
                       child: Text(
                         day,
                         style: const TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF55504B),
-                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: _kInkSub,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -485,6 +544,7 @@ class _DiaryPageState extends State<DiaryPage> {
       ),
     );
   }
+
 
   Widget _buildCalendarGrid() {
     final daysInMonth = _getDaysInMonth(_currentMonth);
@@ -630,17 +690,24 @@ class _DiaryPageState extends State<DiaryPage> {
     return colors[day.day % colors.length];
   }
 
-  Widget _buildTimelineSection(ColorScheme colorScheme, Color primaryColor) {
+  Widget _buildTimelineSection(Color primaryColor) {
     final dateLabel = DateFormat('MM月dd日', 'zh_CN').format(_selectedDay);
     final hasNotes = _selectedDayNotes.isNotEmpty;
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.04)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: _kHairline, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.035),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -652,24 +719,27 @@ class _DiaryPageState extends State<DiaryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '$dateLabel ',
+                      dateLabel,
                       style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF181818),
+                        fontWeight: FontWeight.w800,
+                        color: _kInk,
+                        letterSpacing: -0.2,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 3),
                     Text(
                       hasNotes ? '按时间排序' : '当天还没有记事',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
-                        color: Colors.grey.shade600,
+                        color: _kInkSub,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
               ),
+
               FilledButton.icon(
                 onPressed: _openCreateForSelectedDay,
                 style: FilledButton.styleFrom(

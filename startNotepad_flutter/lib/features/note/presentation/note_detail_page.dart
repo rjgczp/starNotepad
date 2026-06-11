@@ -5,6 +5,13 @@ import '../../../core/icons/iconfont_icons.dart';
 import '../../../core/sync/sync_offline_repository.dart';
 import '../../../public/publicWidget.dart';
 
+// ── 「素白留白」设计令牌 ──
+const Color _kCanvas = Color(0xFFFAFAF8);
+const Color _kInk = Color(0xFF1C1C1E);
+const Color _kInkSub = Color(0xFF8A8A8E);
+const Color _kHairline = Color(0xFFEDEDE9);
+
+
 class NoteDetailPage extends StatefulWidget {
   const NoteDetailPage({super.key, required this.note});
 
@@ -707,7 +714,6 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final primary = _parseColor();
     final title = _note['title']?.toString().trim() ?? '';
     final content = _note['content']?.toString() ?? '';
@@ -717,37 +723,33 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
       child: Scaffold(
-        backgroundColor: colorScheme.surface,
+        backgroundColor: _kCanvas,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ── 顶栏：圆形玻璃按钮 ──
                 Row(
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.arrow_back_rounded,
-                        color: Colors.black,
-                      ),
+                    _circleButton(
+                      icon: Icons.arrow_back_rounded,
+                      onTap: () => Navigator.pop(context),
                     ),
                     const Spacer(),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.edit_outlined,
-                        color: Colors.black,
-                      ),
-                      tooltip: '编辑',
-                      onPressed: _editNote,
+                    _circleButton(
+                      icon: Icons.edit_outlined,
+                      accent: primary,
+                      onTap: _editNote,
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 18),
+                // ── 标签 ──
                 if (_isTop || _isHighlight || _isReminder)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 14),
                     child: Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -765,109 +767,110 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                       ],
                     ),
                   ),
+                // ── 标题区：彩色圆点 + 图标 + 大标题 ──
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (noteIcon != null)
                       Container(
-                        width: 40,
-                        height: 40,
-                        margin: const EdgeInsets.only(top: 2, right: 12),
+                        width: 44,
+                        height: 44,
+                        margin: const EdgeInsets.only(top: 4, right: 14),
                         decoration: BoxDecoration(
-                          color: primary.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(14),
+                          color: primary.withValues(alpha: 0.10),
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: primary.withValues(alpha: 0.18),
+                          ),
                         ),
-                        child: Icon(noteIcon, size: 20, color: primary),
+                        child: Icon(noteIcon, size: 22, color: primary),
                       ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            title.isNotEmpty ? title : '(无标题)',
+                            title.isNotEmpty ? title : '无标题',
                             style: const TextStyle(
-                              fontSize: 26,
+                              fontSize: 27,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF111111),
-                              height: 1.25,
+                              color: _kInk,
+                              height: 1.2,
+                              letterSpacing: -0.5,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '${_dateLabel()}  ${_timeLabel()}',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black.withValues(alpha: 0.6),
-                              fontWeight: FontWeight.w500,
-                            ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Container(
+                                width: 7,
+                                height: 7,
+                                decoration: BoxDecoration(
+                                  color: primary,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${_dateLabel()}  ${_timeLabel()}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: _kInkSub,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(28),
-                      topRight: Radius.circular(28),
-                      bottomLeft: Radius.circular(24),
-                      bottomRight: Radius.circular(24),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
+                const SizedBox(height: 20),
+                // ── 极细分隔线 ──
+                Container(height: 1, color: _kHairline),
+                const SizedBox(height: 22),
+                // ── 正文：直接铺在画布上，靠留白呼吸 ──
+                plainContent.isNotEmpty
+                    ? SelectableText.rich(
+                      _htmlToSpan(
+                        content,
+                        const TextStyle(
+                          fontSize: 16.5,
+                          height: 1.9,
+                          color: Color(0xFF33333A),
+                          letterSpacing: 0.2,
+                        ),
                       ),
-                    ],
-                  ),
-                  child:
-                      plainContent.isNotEmpty
-                          ? SelectableText.rich(
-                            _htmlToSpan(
-                              content,
-                              TextStyle(
-                                fontSize: 16,
-                                height: 1.8,
-                                color: Colors.grey.shade800,
-                                letterSpacing: 0.2,
+                      style: const TextStyle(
+                        fontSize: 16.5,
+                        height: 1.9,
+                        color: Color(0xFF33333A),
+                        letterSpacing: 0.2,
+                      ),
+                    )
+                    : Padding(
+                      padding: const EdgeInsets.only(top: 60),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.note_outlined,
+                              size: 48,
+                              color: _kHairline,
+                            ),
+                            const SizedBox(height: 12),
+                            const Text(
+                              '暂无内容',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: _kInkSub,
                               ),
                             ),
-                            style: TextStyle(
-                              fontSize: 16,
-                              height: 1.8,
-                              color: Colors.grey.shade800,
-                              letterSpacing: 0.2,
-                            ),
-                          )
-                          : Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 60),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.note_outlined,
-                                    size: 48,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    '暂无内容',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                ),
+                          ],
+                        ),
+                      ),
+                    ),
               ],
             ),
           ),
@@ -876,24 +879,57 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     );
   }
 
+  // ── 圆形玻璃质感按钮 ──
+  Widget _circleButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    Color? accent,
+  }) {
+    return Material(
+      color: Colors.white,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: _kHairline, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Icon(icon, size: 20, color: accent ?? _kInk),
+        ),
+      ),
+    );
+  }
+
   Widget _headerTag(IconData icon, String label, Color primary) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: BoxDecoration(
-        color: primary.withValues(alpha: 0.12),
+        color: primary.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: primary.withValues(alpha: 0.18)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 13, color: primary),
-          const SizedBox(width: 4),
+          const SizedBox(width: 5),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
               color: primary,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],
@@ -901,6 +937,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     );
   }
 }
+
 
 class _HtmlStyleItem {
   const _HtmlStyleItem(this.name, this.style);
