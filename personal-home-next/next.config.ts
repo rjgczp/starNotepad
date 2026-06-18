@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     const backendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8888";
     return [
       {
+        source: "/api/profile-img/:path*",
+        destination: "/api/profile-img/:path*",
+      },
+      {
         source: "/api/:path*",
         destination: `${backendUrl}/api/:path*`,
       },

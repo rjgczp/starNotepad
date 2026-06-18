@@ -18,6 +18,7 @@ type ProfileData = {
   name: string;
   title: string;
   bio: string;
+  hint?: string;
   hobby: string[];
   tags: string[];
   projects: Project[];
@@ -25,12 +26,16 @@ type ProfileData = {
   contact: Record<string, string>;
 };
 
-type GvaResponse = {
+type JsonConfigResponse = {
   code?: number;
   msg?: string;
   data?: {
-    blog_config?: unknown;
-  };
+    id: number;
+    key: string;
+    name: string;
+    content: string;
+    isActive: boolean;
+  } | null;
 };
 
 const fallbackProfile = profile as unknown as Record<string, unknown>;
@@ -39,6 +44,7 @@ const fallbackData: ProfileData = {
   hobby: Array.isArray(fallbackProfile.hobby)
     ? fallbackProfile.hobby.filter((item): item is string => typeof item === "string")
     : [],
+  hint: typeof fallbackProfile.hint === "string" ? fallbackProfile.hint : undefined,
 };
 
 function normalizeProfileData(value: unknown): ProfileData | null {
@@ -104,6 +110,7 @@ function normalizeProfileData(value: unknown): ProfileData | null {
     name: data.name,
     title: data.title,
     bio: data.bio,
+    hint: typeof data.hint === "string" ? data.hint : undefined,
     hobby: Array.isArray(data.hobby)
       ? data.hobby.filter((item): item is string => typeof item === "string")
       : [],
@@ -125,7 +132,7 @@ function parseBlogConfig(raw: unknown): ProfileData | null {
 async function getProfileData(): Promise<ProfileData> {
   const apiUrl =
     process.env.BLOG_PROFILE_API_URL ||
-    "http://127.0.0.1:8888/api/bc/getUserBlog_configPublic";
+    "http://127.0.0.1:9999/api/v1/public/json-config/profile";
 
   console.log("[getProfileData] API_URL:", apiUrl);
 
@@ -137,13 +144,13 @@ async function getProfileData(): Promise<ProfileData> {
       return fallbackData;
     }
 
-    const payload = (await res.json()) as GvaResponse;
+    const payload = (await res.json()) as JsonConfigResponse;
     console.log("[getProfileData] payload keys:", Object.keys(payload || {}));
-    const raw = payload?.data?.blog_config;
-    console.log("[getProfileData] raw blog_config type:", typeof raw);
+    const raw = payload?.data?.content;
+    console.log("[getProfileData] raw content type:", typeof raw);
 
     if (raw === undefined || raw === null || raw === "") {
-      console.warn("[getProfileData] empty blog_config, fallback to local:", payload?.msg);
+      console.warn("[getProfileData] empty content, fallback to local:", payload?.msg);
       return fallbackData;
     }
 

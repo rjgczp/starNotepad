@@ -1,6 +1,6 @@
 {
-  "bio": "你好，我是 查理斯，来自山西，目前大三在校生，主要研究全栈开发以及人工智能方向，对好用的开源框架，AI agent有浓厚兴趣，很高兴认识你！",
-  "name": "查理斯",
+  "bio": "你好，我是 小雨，来自山西，目前大三在校生，主要研究全栈开发以及人工智能方向，对好用的开源框架，AI agent有浓厚兴趣，很高兴认识你！",
+  "name": "小雨",
   "tags": [
     "Next.js",
     "TypeScript",
@@ -50,5 +50,6 @@
       "description": "我的Minecraft极限模式存档，记录了我的冒险历程。"
     }
   ],
-  "siteLabel": "Personal Homepage"
+  "siteLabel": "Personal Homepage",
+  "hint":"星河大王是我的女朋友郝雨诗，我和爱她。"
 }
