@@ -1,23 +1,27 @@
-FROM node:20-alpine AS deps
+# Stage 1: install dependencies (cached unless lockfile changes)
+FROM crpi-nxt6ib76b78qk7wc.cn-beijing.personal.cr.aliyuncs.com/charles1337/charles:base-node-20-alpine-20260710 AS deps
+RUN corepack enable && corepack prepare pnpm@9 --activate
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
+RUN pnpm install --frozen-lockfile
 
-FROM node:20-alpine AS builder
+# Stage 2: build
+FROM deps AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN pnpm build
 
-FROM node:20-alpine AS runner
+# Stage 3: production runtime
+FROM crpi-nxt6ib76b78qk7wc.cn-beijing.personal.cr.aliyuncs.com/charles1337/charles:base-node-20-alpine-20260710 AS runner
+RUN corepack enable && corepack prepare pnpm@9 --activate
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
-COPY package.json package-lock.json ./
-COPY --from=deps /app/node_modules ./node_modules
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
+RUN pnpm install --frozen-lockfile --prod
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/data ./data
 COPY --from=builder /app/next.config.ts ./next.config.ts
 EXPOSE 3000
-CMD ["npm", "run", "start", "--", "-p", "3000"]
+CMD ["pnpm", "start"]

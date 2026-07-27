@@ -1,0 +1,12 @@
+# Production defaults. Credentials and external IP are passed by docker-compose.
+listening-port=3478
+fingerprint
+lt-cred-mech
+realm=turn.xiaoyu.ski
+min-port=49152
+max-port=49200
+no-multicast-peers
+no-loopback-peers
+stale-nonce=600
+log-file=stdout
+simple-log

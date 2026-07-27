@@ -34,7 +34,7 @@ type ProfileData = {
   play: PlayItem[];
   contact: Record<string, string>;
 };
-type AnimatedProfileProps = { profile: ProfileData };
+type AnimatedProfileProps = { profile: ProfileData; eggImages: string[] };
 type ChatMessage = { role: "assistant" | "user"; content: string };
 type FireworkImage = {
   id: number;
@@ -139,7 +139,7 @@ const ACCENT_COLORS = [
 
 /* ── 主组件 ──────────────────────────────────── */
 
-export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
+export default function AnimatedProfile({ profile, eggImages }: AnimatedProfileProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(1);
@@ -152,6 +152,7 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInitialized, setChatInitialized] = useState(false);
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const [fireworks, setFireworks] = useState<FireworkImage[]>([]);
   const [eggActive, setEggActive] = useState(false);
   const [orbitAngle, setOrbitAngle] = useState(0);
@@ -196,8 +197,8 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
   /* 彩蛋相关 */
   const _cp = (...codes: number[]) => String.fromCodePoint(...codes);
   const _T = [26143, 27827, 22823, 29579, 54, 54, 54] as const;
-  const _L1 = [26143, 27827, 22823, 29579] as const;
-  const _L2 = [54, 54, 54] as const;
+  const _L1 = [90, 80,32, 72, 89,83] as const;
+  const _L2 = [27704, 36828] as const;
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -205,16 +206,17 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
 
   /* 烟花彩蛋触发 — 图片从中心向四周爆发 */
   const triggerEgg = useCallback(() => {
-    const imgCount = 12;
+    const imgCount = eggImages.length;
+    if (imgCount === 0) return;
     const fws: FireworkImage[] = [];
 
-    // 分 3 波发射，每波 12 张
+    // 分 3 波发射，每波展示后台启用的全部图片
     for (let wave = 0; wave < 3; wave += 1) {
       for (let i = 0; i < imgCount; i += 1) {
         const angle = (Math.PI * 2 / imgCount) * i + Math.random() * 0.3 - 0.15;
         fws.push({
           id: wave * imgCount + i,
-          src: `/api/profile-img/t${i + 1}.jpg`,
+          src: eggImages[i],
           angle,
           distance: 30 + Math.random() * 50,
           delay: wave * 0.6 + Math.random() * 0.4,
@@ -232,7 +234,7 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
       setFireworks([]);
       setEggActive(false);
     }, 8000);
-  }, []);
+  }, [eggImages]);
 
   /* 联系方式 */
   const contactEntries = useMemo(
@@ -369,6 +371,10 @@ export default function AnimatedProfile({ profile }: AnimatedProfileProps) {
       setIsChatLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => abortControllerRef.current?.abort();
+  }, []);
 
   /* 轨道动画 */
   useEffect(() => {

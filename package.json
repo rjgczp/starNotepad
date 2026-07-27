@@ -1,0 +1,23 @@
+{
+  "name": "omniproject",
+  "version": "1.0.0",
+  "description": "“星记事”是一款基于 Flutter 的跨平台移动端笔记应用，搭配 Gin-Vue-Admin 后端，提供轻量、高效、支持 AI 辅助的个人笔记与日记管理工具。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjgczp/starNotepad.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rjgczp/starNotepad/issues"
+  },
+  "homepage": "https://github.com/rjgczp/starNotepad#readme",
+  "devDependencies": {
+    "@fission-ai/openspec": "^1.5.0"
+  }
+}

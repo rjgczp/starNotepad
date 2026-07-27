@@ -26,16 +26,16 @@ type ProfileData = {
   contact: Record<string, string>;
 };
 
-type JsonConfigResponse = {
+type BlogConfigResponse = {
   code?: number;
-  msg?: string;
   data?: {
-    id: number;
-    key: string;
-    name: string;
-    content: string;
-    isActive: boolean;
+    blog_config?: unknown;
   } | null;
+};
+
+type MainImageResponse = {
+  code?: number;
+  data?: Array<{ url?: unknown; enabled?: unknown }>;
 };
 
 const fallbackProfile = profile as unknown as Record<string, unknown>;
@@ -129,10 +129,19 @@ function parseBlogConfig(raw: unknown): ProfileData | null {
   return normalizeProfileData(raw);
 }
 
+function unwrapBlogConfigResponse(raw: unknown): unknown {
+  if (!raw || typeof raw !== "object") return raw;
+  const payload = raw as BlogConfigResponse;
+  if (payload.data && typeof payload.data === "object" && "blog_config" in payload.data) {
+    return payload.data.blog_config;
+  }
+  return raw;
+}
+
 async function getProfileData(): Promise<ProfileData> {
   const apiUrl =
     process.env.BLOG_PROFILE_API_URL ||
-    "http://127.0.0.1:9999/api/v1/public/json-config/profile";
+    "http://localhost:8000/api/v1/public/profile/active";
 
   console.log("[getProfileData] API_URL:", apiUrl);
 
@@ -144,13 +153,10 @@ async function getProfileData(): Promise<ProfileData> {
       return fallbackData;
     }
 
-    const payload = (await res.json()) as JsonConfigResponse;
-    console.log("[getProfileData] payload keys:", Object.keys(payload || {}));
-    const raw = payload?.data?.content;
-    console.log("[getProfileData] raw content type:", typeof raw);
+    const raw = unwrapBlogConfigResponse(await res.json());
 
-    if (raw === undefined || raw === null || raw === "") {
-      console.warn("[getProfileData] empty content, fallback to local:", payload?.msg);
+    if (!raw || (typeof raw === "object" && Object.keys(raw).length === 0)) {
+      console.warn("[getProfileData] empty content, fallback to local");
       return fallbackData;
     }
 
@@ -161,7 +167,7 @@ async function getProfileData(): Promise<ProfileData> {
       return fallbackData;
     }
 
-    console.log("[getProfileData] using cloud data");
+    console.log("[getProfileData] using cloud data from home-backend");
     return parsed;
   } catch (err) {
     console.error("[getProfileData] exception:", err);
@@ -169,7 +175,31 @@ async function getProfileData(): Promise<ProfileData> {
   }
 }
 
+async function getMainImages(): Promise<string[]> {
+  const profileApiUrl = process.env.BLOG_PROFILE_API_URL;
+  const apiUrl = process.env.MAIN_IMAGE_API_URL ||
+    (profileApiUrl
+      ? profileApiUrl.replace(/\/bc\/getUserBlog_configPublic(?:\?.*)?$/, "/mainImage/public")
+      : "http://127.0.0.1:8888/api/mainImage/public");
+
+  try {
+    const res = await fetch(apiUrl, { cache: "no-store" });
+    if (!res.ok) return [];
+    const payload = await res.json() as MainImageResponse;
+    if (payload.code !== 0 || !Array.isArray(payload.data)) return [];
+    return payload.data
+      .filter((item) => item.enabled !== false && typeof item.url === "string" && item.url.trim() !== "")
+      .map((item) => {
+        const url = (item.url as string).trim();
+        return url.startsWith("/") || url.includes("://") || url.startsWith("data:") ? url : `/${url}`;
+      });
+  } catch (err) {
+    console.error("[getMainImages] exception:", err);
+    return [];
+  }
+}
+
 export default async function Home() {
-  const pageData = await getProfileData();
-  return <AnimatedProfile profile={pageData} />;
+  const [pageData, eggImages] = await Promise.all([getProfileData(), getMainImages()]);
+  return <AnimatedProfile profile={pageData} eggImages={eggImages} />;
 }

@@ -1,0 +1,6 @@
+- [ ] Audit the current admin frontend shell and identify the exact sidebar menus, footer controls, shared icon usages, and CRUD pages included in the simplification scope.
+- [ ] Remove the bottom Vue selection control and prune unused GVA sidebar navigation entries from the frontend layout/navigation source of truth.
+- [ ] Fix icon rendering issues in shared layout and affected admin pages by normalizing icon imports and usage patterns.
+- [ ] Refactor crowded table/list action areas on the targeted CRUD pages into a readable, consistent presentation.
+- [ ] Remove redundant or low-value frontend controls and actions that are clearly out of scope for this deployment.
+- [ ] Run the frontend, exercise the retained operator flows, and verify that navigation, icons, and table actions behave correctly after the cleanup.
