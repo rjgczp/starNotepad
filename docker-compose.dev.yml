@@ -4,7 +4,7 @@ services:
     container_name: gva-mysql-dev
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123123}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-starNotepad}
       TZ: ${TZ:-Asia/Shanghai}
     ports:
@@ -18,7 +18,7 @@ services:
         "--collation-server=utf8mb4_general_ci"
       ]
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p123123"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -28,16 +28,24 @@ services:
     container_name: gva-server-dev
     restart: unless-stopped
     working_dir: /app
-    command: sh -c "apk add --no-cache build-base git && go mod download && go run . -c config.docker.yaml"
+    command: sh -c "go env -w GOPROXY=https://goproxy.cn,direct GOSUMDB=sum.golang.google.cn && go run -mod=mod . -c config.docker.yaml"
     environment:
       CGO_ENABLED: "0"
       GOPROXY: https://goproxy.cn,direct
+      GOSUMDB: sum.golang.google.cn
+      GOTOOLCHAIN: local
+      DB_PATH: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
+      GVA_JWT_SIGNING_KEY: ${GVA_JWT_SIGNING_KEY:?GVA_JWT_SIGNING_KEY is required}
+      GVA_EMAIL_SECRET: ${GVA_EMAIL_SECRET:-}
     ports:
       - "${GVA_SERVER_PORT:-8888}:8888"
     volumes:
       - ./gin-vue-admin/server:/app
       - ./uploads:/app/uploads
       - ./logs:/app/log
+      - /Users/sansea/go/pkg/mod:/go/pkg/mod
+      - /Users/sansea/Library/Caches/go-build:/root/.cache/go-build
     depends_on:
       mysql:
         condition: service_healthy
@@ -47,9 +55,10 @@ services:
     container_name: home-web-dev
     restart: unless-stopped
     working_dir: /app
-    command: sh -c "npm ci && npm run dev -- --hostname 0.0.0.0 --port 3000"
+    command: sh -c "npm config set registry https://registry.npmmirror.com && npm ci && npm run dev -- --hostname 0.0.0.0 --port 3000"
     environment:
       BLOG_PROFILE_API_URL: http://gva-server:8888/api/bc/getUserBlog_configPublic
+      MAIN_IMAGE_API_URL: http://gva-server:8888/api/mainImage/public
       BACKEND_URL: http://gva-server:8888
       NODE_ENV: development
       CHOKIDAR_USEPOLLING: "true"
@@ -66,7 +75,7 @@ services:
     container_name: admin-web-dev
     restart: unless-stopped
     working_dir: /app
-    command: sh -c "rm -f .env.development.local && ([ -d node_modules/vite ] || npm ci) && npm run dev -- --host 0.0.0.0 --port 5173"
+    command: sh -c "rm -f .env.development.local && npm config set registry https://registry.npmmirror.com && ([ -d node_modules/vite ] || npm ci) && npm run dev -- --host 0.0.0.0 --port 5173"
     environment:
       NODE_ENV: development
       CHOKIDAR_USEPOLLING: "true"
@@ -77,6 +86,47 @@ services:
     volumes:
       - ./gin-vue-admin/web:/app
       - /app/node_modules
+
+  # ---- blog-frontend Next.js 博客前端 ----
+  blog-frontend:
+    image: node:22-alpine
+    container_name: blog-frontend-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm config set registry https://registry.npmmirror.com && npm ci && npm run dev -- --port 3001 --hostname 0.0.0.0 --webpack"
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+      BACKEND_URL: http://gva-server:8888
+    ports:
+      - "${BLOG_FRONTEND_PORT:-3001}:3001"
+    volumes:
+      - ./blog-frontend:/app
+      - /app/node_modules
+
+  duo-call-web:
+    image: node:22-alpine
+    container_name: duo-call-web-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0 --port 3002"
+    environment:
+      VITE_DUO_API_URL: /api
+      DUO_API_PROXY: http://gva-server:8888
+    ports:
+      - "${DUO_CALL_WEB_PORT:-3002}:3002"
+    volumes:
+      - ./duo-call-web:/app
+      - /app/node_modules
+
+  coturn:
+    image: coturn/coturn:4.6.2
+    container_name: duo-call-turn-dev
+    profiles: ["turn"]
+    network_mode: host
+    volumes:
+      - ./deploy/coturn/turnserver.conf.example:/etc/coturn/turnserver.conf:ro
+    command: ["-c", "/etc/coturn/turnserver.conf"]
 
   bluemap:
     image: eclipse-temurin:25-jre
@@ -96,3 +146,7 @@ services:
       - ./bluemap/data:/app/data
       - ./bluemap/web:/app/webroot
       - ./bluemap/active-world:/app/world
+
+volumes:
+  gva-go-mod-cache:
+  gva-go-build-cache:

@@ -3,8 +3,10 @@
 .env
 .env.local
 .env.production
+.env.*
 # 保留环境变量模板
 !.env.example
+!.env.*.example
 .gitattributes
 
 # --- 运行时与数据 (Runtime Data) ---
@@ -17,16 +19,24 @@ bluemap/active-world/
 
 # --- 构建与依赖产物 (Build & Dependencies) ---
 node_modules/
+.pnpm-store/
+.npm/
+.yarn/cache/
 .next/
 dist/
 build/
 bin/
+coverage/
+.cache/
+.turbo/
 # 针对你报错中提到的 Go 编译二进制文件
 gin-vue-admin/server/tmp/
 # 忽略所有可执行二进制文件（尤其是无后缀的二进制文件）
 **/server/tmp/main
 # 后端编译产物（go build -o server 生成，可重新编译）
 gin-vue-admin/server/server
+# gin-vue-admin 自动代码工具的删除备份目录
+gin-vue-admin/rm_file/
 
 # --- BlueMap 可重新下载的数据 ---
 bluemap/data/minecraft-client-*.jar
@@ -41,9 +51,22 @@ bluemap/web/
 *.rar
 *.7z
 
+# --- 本地密钥与证书（模板文件除外）---
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.credentials.json
+*.secrets.json
+!*.example.pem
+!*.example.key
+
 # --- 编辑器配置 (IDE) ---
 .vscode/
 .idea/
+.claude/settings.local.json
 *.suo
 *.ntvs*
 *.njsproj

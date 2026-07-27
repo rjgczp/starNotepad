@@ -4,11 +4,9 @@ services:
     container_name: gva-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123123}     # 要和 server/config.yaml 里的 mysql.password 一致
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-starNotepad}
       TZ: ${TZ:-Asia/Shanghai}
-    ports:
-      - "${MYSQL_PORT:-3306}:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
     command:
@@ -38,11 +36,20 @@ services:
         condition: service_healthy
     environment:
       GVA_CONFIG: /app/config.yaml
-      DB_PATH: mysql                  # 关键：容器内应连服务名，不是 127.0.0.1
+      GIN_MODE: release
+      DB_PATH: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
+      GVA_JWT_SIGNING_KEY: ${GVA_JWT_SIGNING_KEY:?GVA_JWT_SIGNING_KEY is required}
+      GVA_EMAIL_SECRET: ${GVA_EMAIL_SECRET:-}
+      DUO_CALL_JWT_SECRET: ${DUO_CALL_JWT_SECRET:?DUO_CALL_JWT_SECRET is required}
+      DUO_CALL_KEY_ENCRYPTION_KEY: ${DUO_CALL_KEY_ENCRYPTION_KEY:?DUO_CALL_KEY_ENCRYPTION_KEY is required}
+      DUO_TURN_HOST: ${DUO_TURN_HOST:-turn.xiaoyu.ski}
+      DUO_TURN_USERNAME: ${DUO_TURN_USERNAME:?DUO_TURN_USERNAME is required}
+      DUO_TURN_PASSWORD: ${DUO_TURN_PASSWORD:?DUO_TURN_PASSWORD is required}
     volumes:
       - ./gin-vue-admin/server/config.yaml:/app/config.yaml
-      - ./uploads:/app/uploads
-      - ./logs:/app/log
+      - ./uploads:/go/src/github.com/flipped-aurora/gin-vue-admin/server/uploads
+      - ./logs:/go/src/github.com/flipped-aurora/gin-vue-admin/server/log
 
   home-web:
     image: ${HOME_WEB_IMAGE:-crpi-nxt6ib76b78qk7wc.cn-beijing.personal.cr.aliyuncs.com/charles1337/charles:home-web-latest}
@@ -52,7 +59,34 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       BLOG_PROFILE_API_URL: http://gva-server:8888/api/bc/getUserBlog_configPublic
+      MAIN_IMAGE_API_URL: http://gva-server:8888/api/mainImage/public
+      BACKEND_URL: http://gva-server:8888
       NODE_ENV: production
+    depends_on:
+      - gva-server
+
+  blog-frontend:
+    image: ${BLOG_FRONTEND_IMAGE:-crpi-nxt6ib76b78qk7wc.cn-beijing.personal.cr.aliyuncs.com/charles1337/charles:blog-frontend-latest}
+    container_name: blog-frontend
+    restart: always
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    environment:
+      NODE_ENV: production
+      BACKEND_URL: http://gva-server:8888
+    expose:
+      - "3000"
+    depends_on:
+      - gva-server
+
+  duo-call-web:
+    image: ${DUO_CALL_WEB_IMAGE:-crpi-nxt6ib76b78qk7wc.cn-beijing.personal.cr.aliyuncs.com/charles1337/charles:duo-call-web-latest}
+    container_name: duo-call-web
+    restart: always
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    expose:
+      - "80"
     depends_on:
       - gva-server
 
@@ -71,12 +105,32 @@ services:
     restart: always
     ports:
       - "${WEB_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /home/ubuntu/opt/data/ssl/xiaoyu.ski.pem:/etc/nginx/ssl/xiaoyu.ski.pem:ro
+      - /home/ubuntu/opt/data/ssl/xiaoyu.ski.key:/etc/nginx/ssl/xiaoyu.ski.key:ro
     depends_on:
       - gva-server
       - home-web
       - admin-web
+      - blog-frontend
+      - duo-call-web
+      - bluemap
+
+  coturn:
+    image: coturn/coturn:4.6.2
+    container_name: coturn
+    restart: always
+    network_mode: host
+    volumes:
+      - ./deploy/coturn/turnserver.conf.example:/etc/coturn/turnserver.conf:ro
+    command:
+      - -c
+      - /etc/coturn/turnserver.conf
+      - --realm=${DUO_TURN_HOST:-turn.xiaoyu.ski}
+      - --external-ip=${TURN_EXTERNAL_IP:?TURN_EXTERNAL_IP is required}
+      - --user=${DUO_TURN_USERNAME:?DUO_TURN_USERNAME is required}:${DUO_TURN_PASSWORD:?DUO_TURN_PASSWORD is required}
 
   bluemap:
     image: ${BLUEMAP_IMAGE:-eclipse-temurin:25-jre}
