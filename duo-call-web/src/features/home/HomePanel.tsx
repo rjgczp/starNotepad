@@ -3,6 +3,7 @@ import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { displayNameForSlot, treeEventLabel, treeLeafIcon } from "../../preferences";
 import { mediaUrl, type AlbumItem, type Anniversary, type DailyState, type GrowthEvent, type Identity, type LoveNote, type TreeState, type WeeklyMemory } from "../../domain";
 import { ProfileAvatar } from "../../components/ProfileAvatar";
+import { ZoomableImage } from "../../components/ImageViewer";
 
 export function SharedMemoryTree({
   tree,
@@ -273,7 +274,12 @@ export function SharedMemoryTree({
             {selected
               ? (
                 <>
-                  {selected.imageUrl && <img src={mediaUrl(selected.imageUrl)} alt="这片叶子收藏的照片" />}
+                  {selected.imageUrl && (
+                    <ZoomableImage
+                      src={mediaUrl(selected.imageUrl)}
+                      alt="这片叶子收藏的照片"
+                    />
+                  )}
                   <span><Icon icon={treeLeafIcon(selected.eventType)} />{treeEventLabel(selected.eventType)}</span>
                   <h3>{selected.title}</h3>
                   <p>{selected.summary}</p>
@@ -361,7 +367,12 @@ export function HomePanel({
         <article className="home-moment deck-carousel">
           <div className="moment-art" key={albums[slide]?.ID || "empty"}>
             {albums.length
-              ? <img src={mediaUrl(albums[slide].imageUrl)} alt="我们的相册照片" />
+              ? (
+                <ZoomableImage
+                  src={mediaUrl(albums[slide].imageUrl)}
+                  alt="我们的相册照片"
+                />
+              )
               : (
                 <>
                   <Icon icon="solar:gallery-wide-bold-duotone" />

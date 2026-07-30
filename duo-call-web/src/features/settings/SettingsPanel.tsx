@@ -15,6 +15,7 @@ export function SettingsPanel({
   saveProfile,
   uploadAvatar,
   leave,
+  notify,
 }: {
   theme: Theme;
   preferences: DuoPreferences;
@@ -27,7 +28,8 @@ export function SettingsPanel({
     statusId: number | null,
   ) => Promise<Identity>;
   uploadAvatar: (file: File) => Promise<Identity>;
-  leave: () => void;
+  leave: () => void | Promise<void>;
+  notify: (message: string, title?: string) => void;
 }) {
   const [profileName, setProfileName] = useState(identity?.displayName || "");
   const [profileStatus, setProfileStatus] = useState(identity?.statusId || 0);
@@ -43,7 +45,7 @@ export function SettingsPanel({
   const update = (values: Partial<DuoPreferences>) =>
     setPreferences((current) => ({ ...current, ...values }));
   const future = (label: string) =>
-    alert(`${label}正在规划中，入口已经为后续功能预留。`);
+    notify(`${label}正在规划中，入口已经为后续功能预留。`, "功能预告");
   const setDefaultTheme = (value: LightTheme) => {
     update({
       defaultLightTheme: value,

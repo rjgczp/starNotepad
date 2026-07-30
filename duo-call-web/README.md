@@ -104,6 +104,22 @@ VITE_DUO_API_URL=https://ai.xiaoyu.ski/api
 因此新增 Capacitor hostname、Tauri scheme 或其他受信任客户端不需要重新部署
 CORS 白名单。情侣客户端不得改用 Cookie 作为跨域身份凭据。
 
+## 系统视频悬浮窗与品牌资源
+
+通话控制中的“悬浮窗”会优先调用浏览器/桌面 WebView 的视频
+Picture-in-Picture；不支持该接口的 Tauri 环境会退化为可恢复尺寸的系统置顶视频
+窗。Android 8.0 及以上通过应用内 Capacitor 插件进入原生 Activity 画中画，清单
+必须保留 `android:supportsPictureInPicture="true"`。
+
+统一 Logo 母版位于 `assets/brand/logo-master.png`。修改母版后应重新运行：
+
+```bash
+npm exec tauri icon -- assets/brand/logo-master.png
+```
+
+并同步更新 Android `mipmap-*`、Web `public/` 图标和品牌启动图。不要恢复
+Capacitor/Tauri 默认占位图标。
+
 ## Windows 自动构建
 
 `.github/workflows/duo-windows-desktop.yml` 在真实 Windows runner 上构建 Tauri

@@ -35,9 +35,18 @@ import {
 } from "../../lib/api";
 import { webSocketUrl } from "../../runtime";
 import {
+  enterSystemPictureInPicture,
+  listenForNativePictureInPicture,
+  type SystemPictureInPictureMode,
+} from "../../systemPictureInPicture";
+import {
   ThemeDecorations,
   ThemePicker,
 } from "../../components/ThemeControls";
+import {
+  AppDialog,
+  type AppDialogTone,
+} from "../../components/AppDialog";
 import {
   ChatMessage,
 } from "../../components/ProfileAvatar";
@@ -75,6 +84,7 @@ export function Room(
   const [draft, setDraft] = useState("");
   const [me, setMe] = useState(() => slotFromSession(token));
   const [emojiOpen, setEmojiOpen] = useState(false);
+  const [chatHistoryVisible, setChatHistoryVisible] = useState(true);
   const [camera, setCamera] = useState(false);
   const [mute, setMute] = useState(true);
   const [unread, setUnread] = useState(0);
@@ -83,6 +93,8 @@ export function Room(
   const [socketConnected, setSocketConnected] = useState(false);
   const [partnerOnline, setPartnerOnline] = useState(false);
   const [callFullscreen, setCallFullscreen] = useState(false);
+  const [systemPictureInPicture, setSystemPictureInPicture] =
+    useState<SystemPictureInPictureMode | null>(null);
   const [localMedia, setLocalMedia] = useState<MediaStream | null>(null);
   const [remoteMedia, setRemoteMedia] = useState<MediaStream | null>(null);
   const [connectionState, setConnectionState] =
@@ -116,6 +128,14 @@ export function Room(
   const [identities, setIdentities] = useState<Identity[]>([]);
   const [statuses, setStatuses] = useState<DuoStatus[]>([]);
   const [tree, setTree] = useState<TreeState | null>(null);
+  const [dialog, setDialog] = useState<{
+    title: string;
+    message: string;
+    confirmLabel: string;
+    cancelLabel?: string;
+    tone?: AppDialogTone;
+  } | null>(null);
+  const dialogResolver = useRef<((confirmed: boolean) => void) | null>(null);
   const socket = useRef<WebSocket | null>(null);
   const peer = useRef<RTCPeerConnection | null>(null);
   const stream = useRef<MediaStream | null>(null);
@@ -128,12 +148,52 @@ export function Room(
   const identitiesRef = useRef<Identity[]>([]);
   const toneContext = useRef<AudioContext | null>(null);
   const remoteVideos = useRef(new Set<HTMLVideoElement>());
+  const exitSystemFloatingWindow = useRef<(() => Promise<void>) | null>(null);
   const messagesEnd = useRef<HTMLDivElement>(null);
   const messagesScroller = useRef<HTMLDivElement>(null);
   const shouldStickMessagesToBottom = useRef(true);
   const chatImageInput = useRef<HTMLInputElement>(null);
   const albumInput = useRef<HTMLInputElement>(null);
   const headers = { Authorization: `Bearer ${token}` };
+  const dismissDialog = useCallback((confirmed: boolean) => {
+    const resolve = dialogResolver.current;
+    dialogResolver.current = null;
+    setDialog(null);
+    resolve?.(confirmed);
+  }, []);
+  const showNotice = useCallback((message: string, title = "提示") => {
+    dialogResolver.current?.(false);
+    dialogResolver.current = null;
+    setDialog({
+      title,
+      message,
+      confirmLabel: "知道了",
+    });
+  }, []);
+  const askConfirmation = useCallback((
+    message: string,
+    {
+      title = "请确认",
+      confirmLabel = "确认",
+      cancelLabel = "取消",
+      tone = "default",
+    }: {
+      title?: string;
+      confirmLabel?: string;
+      cancelLabel?: string;
+      tone?: AppDialogTone;
+    } = {},
+  ) => new Promise<boolean>((resolve) => {
+    dialogResolver.current?.(false);
+    dialogResolver.current = resolve;
+    setDialog({
+      title,
+      message,
+      confirmLabel,
+      cancelLabel,
+      tone,
+    });
+  }), []);
   const sendEvent = (event: object) => {
     if (socket.current?.readyState === WebSocket.OPEN) {
       socket.current.send(JSON.stringify(event));
@@ -678,9 +738,9 @@ export function Room(
       setCamera(true);
       await negotiateCall();
     } catch (error) {
-      alert(error instanceof Error && error.message.includes("信令")
+      showNotice(error instanceof Error && error.message.includes("信令")
         ? `${error.message}，请刷新页面后重试`
-        : "请允许摄像头权限后重试");
+        : "请允许摄像头权限后重试", "摄像头暂不可用");
     }
   }
   async function send(event: FormEvent) {
@@ -703,7 +763,10 @@ export function Room(
       sendEvent({ type: "chat", message: payload.data });
     } catch (error) {
       setDraft(content);
-      alert(error instanceof Error ? error.message : "消息发送失败，请稍后重试");
+      showNotice(
+        error instanceof Error ? error.message : "消息发送失败，请稍后重试",
+        "消息发送失败",
+      );
     }
   }
   async function uploadChatImage(file: File) {
@@ -720,7 +783,10 @@ export function Room(
       setMessages((old) => [...old, payload.data]);
       sendEvent({ type: "chat", message: payload.data });
     } catch (error) {
-      alert(error instanceof Error ? error.message : "图片上传失败");
+      showNotice(
+        error instanceof Error ? error.message : "图片上传失败",
+        "图片发送失败",
+      );
     }
   }
   async function uploadAlbum(file: File) {
@@ -737,21 +803,40 @@ export function Room(
       await Promise.all([loadHome(), loadAlbumPage(1)]);
       sendEvent({ type: "album" });
     } catch (error) {
-      alert(error instanceof Error ? error.message : "上传失败");
+      showNotice(
+        error instanceof Error ? error.message : "上传失败",
+        "相册上传失败",
+      );
     } finally {
       setBusy(false);
     }
   }
   async function removeAlbum(id: number) {
-    if (!confirm("要从我们的相册里移除这张照片吗？")) return;
-    const response = await fetch(`${api}/duoCall/album?ID=${id}`, {
-      method: "DELETE",
-      headers,
-    });
-    const payload = await response.json();
-    if (payload.code === 0) {
+    const confirmed = await askConfirmation(
+      "移除后这张照片将不再出现在你们的共同相册中。",
+      {
+        title: "移除这张照片？",
+        confirmLabel: "确认移除",
+        tone: "danger",
+      },
+    );
+    if (!confirmed) return;
+    try {
+      const response = await fetch(`${api}/duoCall/album?ID=${id}`, {
+        method: "DELETE",
+        headers,
+      });
+      const payload = await response.json();
+      if (!response.ok || payload.code !== 0) {
+        throw new Error(payload.msg || "照片移除失败");
+      }
       await Promise.all([loadHome(), loadAlbumPage(albumPage)]);
       sendEvent({ type: "album" });
+    } catch (error) {
+      showNotice(
+        error instanceof Error ? error.message : "照片移除失败",
+        "暂时无法移除",
+      );
     }
   }
   async function sendNote(event: FormEvent) {
@@ -775,7 +860,10 @@ export function Room(
       setNoteDraft("");
       setNoteOpen(false);
     } catch (error) {
-      alert(error instanceof Error ? error.message : "留言保存失败");
+      showNotice(
+        error instanceof Error ? error.message : "留言保存失败",
+        "留言保存失败",
+      );
     } finally {
       setBusy(false);
     }
@@ -803,7 +891,10 @@ export function Room(
         await loadDaily();
       }
     } catch (error) {
-      alert(error instanceof Error ? error.message : "回信保存失败");
+      showNotice(
+        error instanceof Error ? error.message : "回信保存失败",
+        "回信保存失败",
+      );
     } finally {
       setDailyBusy(false);
     }
@@ -823,9 +914,9 @@ export function Room(
       setMute(false);
       await negotiateCall();
     } catch (error) {
-      alert(error instanceof Error && error.message.includes("信令")
+      showNotice(error instanceof Error && error.message.includes("信令")
         ? `${error.message}，请刷新页面后重试`
-        : "请允许麦克风权限后重试");
+        : "请允许麦克风权限后重试", "麦克风暂不可用");
     }
   }
   const registerRemoteVideo = useCallback((
@@ -846,12 +937,87 @@ export function Room(
       results.some((result) => result.status === "rejected"),
     );
   }, []);
+  const closeSystemFloatingWindow = useCallback(async () => {
+    const exit = exitSystemFloatingWindow.current;
+    exitSystemFloatingWindow.current = null;
+    try {
+      await exit?.();
+    } finally {
+      setSystemPictureInPicture(null);
+    }
+  }, []);
+  const openSystemPictureInPicture = useCallback(async () => {
+    if (systemPictureInPicture === "tauri-window") {
+      await closeSystemFloatingWindow();
+      return;
+    }
+    const video = [...remoteVideos.current].find((candidate) => {
+      const media = candidate.srcObject;
+      return media instanceof MediaStream &&
+        media.getVideoTracks().some((track) => track.readyState === "live");
+    });
+    if (!video) {
+      showNotice("收到对方视频后才能开启系统悬浮窗。", "暂时无法悬浮");
+      return;
+    }
+    try {
+      setView("call");
+      setCallFullscreen(false);
+      const session = await enterSystemPictureInPicture(video);
+      exitSystemFloatingWindow.current = session.exit || null;
+      if (session.mode !== "video") {
+        setSystemPictureInPicture(session.mode);
+      }
+    } catch (error) {
+      setSystemPictureInPicture(null);
+      showNotice(
+        error instanceof Error ? error.message : "系统视频悬浮窗开启失败",
+        "悬浮窗开启失败",
+      );
+    }
+  }, [
+    closeSystemFloatingWindow,
+    showNotice,
+    systemPictureInPicture,
+  ]);
+  useEffect(() => {
+    let disposed = false;
+    let listener: { remove: () => Promise<void> } | null = null;
+    void listenForNativePictureInPicture((active) => {
+      if (!disposed) {
+        setSystemPictureInPicture(active ? "android" : null);
+      }
+    }).then((handle) => {
+      if (disposed) {
+        void handle?.remove();
+      } else {
+        listener = handle;
+      }
+    });
+    return () => {
+      disposed = true;
+      void listener?.remove();
+      void exitSystemFloatingWindow.current?.();
+      exitSystemFloatingWindow.current = null;
+    };
+  }, []);
   const openCallFullscreen = () => {
     setView("call");
     setCallFullscreen(true);
   };
-  const logout = () => {
-    if (!confirm("确认退出爱情小屋？当前连线会同时结束。")) return;
+  const toggleChatHistory = useCallback(() => {
+    setChatHistoryVisible((visible) => !visible);
+  }, []);
+  const logout = async () => {
+    const confirmed = await askConfirmation(
+      "当前连线会同时结束，并清除这台设备上的登录状态。",
+      {
+        title: "退出爱情小屋？",
+        confirmLabel: "确认退出",
+        tone: "danger",
+      },
+    );
+    if (!confirmed) return;
     closeCall();
     socket.current?.close();
     leave();
@@ -886,7 +1052,9 @@ export function Room(
   };
   const pages = Math.max(1, Math.ceil(albumTotal / 20));
   return (
-    <div className={`cottage-shell ${view === "call" ? "is-call-view" : ""}`}>
+    <div className={`cottage-shell ${
+      view === "call" ? "is-call-view" : ""
+    } ${systemPictureInPicture ? "is-system-floating" : ""}`}>
       <ThemeDecorations theme={theme} />
       <aside className="cottage-nav">
         <div className="nav-logo">
@@ -985,6 +1153,7 @@ export function Room(
             saveProfile={saveProfile}
             uploadAvatar={uploadAvatar}
             leave={logout}
+            notify={showNotice}
           />
         )
         : (
@@ -1026,13 +1195,23 @@ export function Room(
                 remotePlaybackBlocked={remotePlaybackBlocked}
                 onMute={toggleMute}
                 onCamera={toggleCamera}
+                onPictureInPicture={() => void openSystemPictureInPicture()}
                 onFullscreen={() => setCallFullscreen(true)}
+                onBackgroundActivate={toggleChatHistory}
+                systemFloating={systemPictureInPicture !== null}
+                onExitSystemFloating={systemPictureInPicture === "tauri-window"
+                  ? () => void closeSystemFloatingWindow()
+                  : undefined}
                 onResumeAudio={resumeRemoteAudio}
                 onPlaybackBlocked={setRemotePlaybackBlocked}
                 registerRemoteVideo={registerRemoteVideo}
                 remoteMuted={callFullscreen}
               />
-              <section className="chat immersive-chat">
+              <section
+                className={`chat immersive-chat ${
+                  chatHistoryVisible ? "" : "is-history-hidden"
+                }`}
+              >
                 <div className="chat-title">
                   <span>
                     悄悄话 {unread ? <b className="badge">{unread}</b> : null}
@@ -1050,7 +1229,16 @@ export function Room(
                     </small>
                   </div>
                 </div>
-                <div className="messages" ref={messagesScroller} onScroll={onMessagesScroll}>
+                <div
+                  className="messages"
+                  ref={messagesScroller}
+                  onScroll={onMessagesScroll}
+                  onClick={(event) => {
+                    if (event.target === event.currentTarget) {
+                      toggleChatHistory();
+                    }
+                  }}
+                >
                   {loadingOlderMessages && <small className="chat-history-loading">正在加载更早消息…</small>}
                   {messages.length
                     ? messages.map((message, index) => <Fragment key={message.ID}>
@@ -1079,6 +1267,7 @@ export function Room(
                     calling={calling}
                     onMute={toggleMute}
                     onCamera={toggleCamera}
+                    onPictureInPicture={() => void openSystemPictureInPicture()}
                     onFullscreen={() => setCallFullscreen(true)}
                   />
                   <div className="emoji-control">
@@ -1177,6 +1366,7 @@ export function Room(
           remotePlaybackBlocked={remotePlaybackBlocked}
           onMute={toggleMute}
           onCamera={toggleCamera}
+          onPictureInPicture={() => void openSystemPictureInPicture()}
           onExit={() => setCallFullscreen(false)}
           onResumeAudio={resumeRemoteAudio}
           onPlaybackBlocked={setRemotePlaybackBlocked}
@@ -1191,6 +1381,13 @@ export function Room(
         close={() => setNoteOpen(false)}
         submit={sendNote}
       />
+      {dialog && (
+        <AppDialog
+          {...dialog}
+          onConfirm={() => dismissDialog(true)}
+          onCancel={() => dismissDialog(false)}
+        />
+      )}
     </div>
   );
 }

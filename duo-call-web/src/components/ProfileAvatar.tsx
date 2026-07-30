@@ -5,6 +5,7 @@ import {
   resolveProfileAvatar,
 } from "../preferences";
 import { mediaUrl, type Identity, type Message } from "../domain";
+import { ZoomableImage } from "./ImageViewer";
 
 export function ProfileAvatar({
   identity,
@@ -22,7 +23,7 @@ export function ProfileAvatar({
     <span className={`profile-avatar ${className}`}>
       {image && !failed
         ? (
-          <img
+          <ZoomableImage
             src={image}
             alt={`${identity?.displayName || "成员"}的头像`}
             onError={() => setFailed(true)}
@@ -51,7 +52,7 @@ export function ChatMessage({
       <ProfileAvatar identity={identity} />
       <div className="message">
         {message.kind === "image"
-          ? <img src={mediaUrl(message.imageUrl)} alt="聊天图片" onLoad={onImageLoad} />
+          ? <ZoomableImage src={mediaUrl(message.imageUrl)} alt="聊天图片" onLoad={onImageLoad} />
           : message.content}
       </div>
     </article>

@@ -13,6 +13,7 @@ export type CallVisualProps = {
   remotePlaybackBlocked: boolean;
   onMute: () => void;
   onCamera: () => void;
+  onPictureInPicture: () => void;
   onResumeAudio: () => void;
   onPlaybackBlocked: (blocked: boolean) => void;
   registerRemoteVideo: (element: HTMLVideoElement, mounted: boolean) => void;
@@ -93,11 +94,18 @@ export function CallControls({
   calling,
   onMute,
   onCamera,
+  onPictureInPicture,
   onFullscreen,
   fullscreen,
 }: Pick<
   CallVisualProps,
-  "camera" | "mute" | "micLevel" | "calling" | "onMute" | "onCamera"
+  | "camera"
+  | "mute"
+  | "micLevel"
+  | "calling"
+  | "onMute"
+  | "onCamera"
+  | "onPictureInPicture"
 > & {
   onFullscreen: () => void;
   fullscreen?: boolean;
@@ -125,6 +133,14 @@ export function CallControls({
         <Icon icon={fullscreen ? "solar:minimize-square-3-bold" : "solar:maximize-square-3-bold"} />
         <span>{fullscreen ? "退出全屏" : "全屏"}</span>
       </button>
+      <button
+        className="media-control"
+        onClick={onPictureInPicture}
+        title="打开系统视频悬浮窗"
+      >
+        <Icon icon="solar:window-frame-bold-duotone" />
+        <span>悬浮窗</span>
+      </button>
     </div>
   );
 }
@@ -136,10 +152,17 @@ export function MobileCallMenu({
   calling,
   onMute,
   onCamera,
+  onPictureInPicture,
   onFullscreen,
 }: Pick<
   CallVisualProps,
-  "camera" | "mute" | "micLevel" | "calling" | "onMute" | "onCamera"
+  | "camera"
+  | "mute"
+  | "micLevel"
+  | "calling"
+  | "onMute"
+  | "onCamera"
+  | "onPictureInPicture"
 > & {
   onFullscreen: () => void;
 }) {
@@ -185,6 +208,13 @@ export function MobileCallMenu({
           >
             <Icon icon="solar:maximize-square-3-bold" />
           </button>
+          <button
+            type="button"
+            onClick={() => run(onPictureInPicture)}
+            aria-label="打开系统视频悬浮窗"
+          >
+            <Icon icon="solar:window-frame-bold-duotone" />
+          </button>
         </div>
       )}
     </div>
@@ -194,20 +224,26 @@ export function MobileCallMenu({
 export function CallStage({
   remoteConnected,
   onFullscreen,
+  onBackgroundActivate,
+  systemFloating = false,
+  onExitSystemFloating,
   remoteMuted,
   ...props
 }: CallVisualProps & {
   remoteConnected: boolean;
   onFullscreen: () => void;
+  onBackgroundActivate?: () => void;
+  systemFloating?: boolean;
+  onExitSystemFloating?: () => void;
   remoteMuted: boolean;
 }) {
   const localMode = callVisualMode(props.camera, props.mute);
   return (
-    <section className="call-stage">
+    <section className={`call-stage ${systemFloating ? "is-system-floating" : ""}`}>
       <VideoCard
         label="对方"
         kind="remote"
-        onActivate={onFullscreen}
+        onActivate={onBackgroundActivate || onFullscreen}
         stream={props.remoteMedia}
         active={remoteConnected}
         muted={remoteMuted}
@@ -227,6 +263,16 @@ export function CallStage({
         {...props}
         onFullscreen={onFullscreen}
       />
+      {systemFloating && onExitSystemFloating && (
+        <button
+          type="button"
+          className="system-floating-exit"
+          onClick={onExitSystemFloating}
+        >
+          <Icon icon="solar:quit-full-screen-square-bold" />
+          退出悬浮
+        </button>
+      )}
     </section>
   );
 }
@@ -462,7 +508,16 @@ export function VideoCard({
       className={`video-card ${kind} ${
         active ? "has-video" : ""
       }`}
+      role="button"
+      tabIndex={0}
+      aria-label={`${label}视频背景，点击隐藏或显示聊天记录`}
       onClick={onActivate}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onActivate();
+        }
+      }}
     >
       <MediaVideo
         stream={stream || null}

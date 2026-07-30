@@ -133,6 +133,7 @@ function ExperiencePreview({
 }) {
   const noop = () => {};
   const register = () => {};
+  const [previewChatVisible, setPreviewChatVisible] = useState(true);
   const previewIdentity: Identity = {
     slot: 1,
     displayName: "小海",
@@ -158,6 +159,7 @@ function ExperiencePreview({
           saveProfile={async () => previewIdentity}
           uploadAvatar={async () => previewIdentity}
           leave={noop}
+          notify={noop}
         />
       </div>
     );
@@ -242,6 +244,7 @@ function ExperiencePreview({
     remotePlaybackBlocked: false,
     onMute: noop,
     onCamera: noop,
+    onPictureInPicture: noop,
     onResumeAudio: noop,
     onPlaybackBlocked: noop,
     registerRemoteVideo: register,
@@ -273,11 +276,24 @@ function ExperiencePreview({
             {...visualProps}
             remoteConnected={false}
             onFullscreen={noop}
+            onBackgroundActivate={() =>
+              setPreviewChatVisible((visible) => !visible)}
             remoteMuted={false}
           />
-          <section className="chat immersive-chat">
+          <section
+            className={`chat immersive-chat ${
+              previewChatVisible ? "" : "is-history-hidden"
+            }`}
+          >
             <div className="chat-title"><span>悄悄话</span><small>界面预览</small></div>
-            <div className="messages">
+            <div
+              className="messages"
+              onClick={(event) => {
+                if (event.target === event.currentTarget) {
+                  setPreviewChatVisible((visible) => !visible);
+                }
+              }}
+            >
               <article className="message-row theirs">
                 <ProfileAvatar identity={{ displayName: "小月", avatarUrl: "" }} />
                 <div className="message">等你上线，一起说说今天。</div>

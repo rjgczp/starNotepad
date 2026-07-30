@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { displayNameForSlot } from "../../preferences";
 import { mediaUrl, type AlbumItem, type Identity } from "../../domain";
+import { ZoomableImage } from "../../components/ImageViewer";
 
 export function AlbumPanel({
   albums,
@@ -61,7 +62,10 @@ export function AlbumPanel({
         {albums.length
           ? albums.map((album) => (
             <article className="album-photo" key={album.ID}>
-              <img src={mediaUrl(album.imageUrl)} alt={`相册照片 ${album.ID}`} />
+              <ZoomableImage
+                src={mediaUrl(album.imageUrl)}
+                alt={`相册照片 ${album.ID}`}
+              />
               <div>
                 <span>
                   {displayNameForSlot(identities, album.uploaderSlot, me)} ·{" "}
