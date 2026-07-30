@@ -60,10 +60,14 @@ jobs:
       - name: Run frontend tests
         run: npm test
 
-      - name: Build Windows installers
-        run: npm run desktop:build -- --bundles nsis,msi
+      - name: Build Windows executable installer
+        run: npm run desktop:build -- --bundles nsis
+
+      - name: Build Windows MSI installer
+        run: npm run desktop:build -- --bundles msi
 
       - name: Upload Windows installers
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: duo-cottage-windows-${{ github.sha }}

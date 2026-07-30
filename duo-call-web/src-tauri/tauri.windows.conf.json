@@ -1,0 +1,11 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Duo Cottage",
+  "bundle": {
+    "windows": {
+      "wix": {
+        "upgradeCode": "425850F1-FAF3-459B-9237-310C5CA8206D"
+      }
+    }
+  }
+}
