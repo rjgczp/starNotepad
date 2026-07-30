@@ -5,7 +5,7 @@ import {
   normalizeApiBase,
   resolveHostedMediaUrl,
   webSocketUrl,
-} from "/tmp/duo-runtime-test.mjs";
+} from "./.generated/duo-runtime-test.mjs";
 
 test("hosted web keeps the same-origin API prefix", () => {
   assert.equal(normalizeApiBase(undefined), "/api");

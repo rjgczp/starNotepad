@@ -14,7 +14,7 @@
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
     "lint": "eslint .",
-    "test": "esbuild src/preferences.ts --bundle --platform=node --format=esm --outfile=/tmp/duo-preferences-test.mjs && esbuild src/runtime.ts --bundle --platform=node --format=esm --outfile=/tmp/duo-runtime-test.mjs && node --test tests/*.test.mjs",
+    "test": "esbuild src/preferences.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-preferences-test.mjs && esbuild src/runtime.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-runtime-test.mjs && node --test tests/*.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

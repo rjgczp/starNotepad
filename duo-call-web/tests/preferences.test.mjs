@@ -16,7 +16,7 @@ import {
   chatDeliveryRoute,
   treeEventLabel,
   treeLeafIcon,
-} from "/tmp/duo-preferences-test.mjs";
+} from "./.generated/duo-preferences-test.mjs";
 
 function storage(values = {}) {
   return {
