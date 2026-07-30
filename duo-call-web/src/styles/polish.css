@@ -1,0 +1,660 @@
+/* Cottage visual storytelling: mirrored speech, living notes, rooted memories. */
+.message-row {
+  --bubble-bg: color-mix(in srgb, var(--surface) 90%, var(--accent-soft));
+  --bubble-ink: var(--ink);
+}
+.message-row.mine {
+  --bubble-bg: color-mix(in srgb, var(--accent) 82%, var(--surface));
+  --bubble-ink: #fff;
+}
+.message-row .message,
+.message-row.mine .message,
+.message-row.theirs .message {
+  position: relative;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
+  background: var(--bubble-bg);
+  color: var(--bubble-ink);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ink-strong) 8%, transparent);
+}
+.message-row.theirs .message { border-radius: 24px 24px 24px 8px; }
+.message-row.mine .message { border-radius: 24px 24px 8px 24px; }
+.message-row .message::after {
+  display: none;
+  content: none;
+}
+.message-row.theirs .message::after {
+  display: none;
+}
+.message-row.mine .message::after {
+  display: none;
+}
+.immersive-chat .message-row.theirs {
+  --bubble-bg: color-mix(in srgb, var(--accent-dark) 68%, #263a37);
+  --bubble-ink: #fff;
+}
+.immersive-chat .message-row.mine {
+  --bubble-bg: color-mix(in srgb, var(--accent) 88%, #493e44);
+  --bubble-ink: #fff;
+}
+.immersive-chat .message-row .message,
+.immersive-chat .message-row.mine .message,
+.immersive-chat .message-row.theirs .message {
+  background: var(--bubble-bg);
+  color: var(--bubble-ink);
+  border-color: rgba(255,255,255,.16);
+}
+.immersive-chat .message-row.mine .message::after,
+.immersive-chat .message-row.theirs .message::after {
+  display: none;
+}
+
+.memory-tree .tree-canvas {
+  overflow: visible;
+}
+.memory-tree .tree-canvas .tree-art {
+  overflow: visible;
+}
+.tree-shadow {
+  fill: color-mix(in srgb, var(--tree-leaf) 12%, transparent);
+  filter: blur(7px);
+}
+.tree-stage-art {
+  transform-origin: 260px 355px;
+  animation: tree-arrive .75s cubic-bezier(.2,.8,.2,1) both;
+}
+.tree-bark {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-trunk-dark) 50%, transparent);
+  stroke-linecap: round;
+  stroke-width: 4;
+  opacity: .45;
+}
+.tree-foliage .foliage {
+  fill: url("#leaf-light");
+  stroke: color-mix(in srgb, var(--tree-leaf) 70%, var(--surface));
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: none;
+}
+.tree-foliage .foliage:nth-child(2n) {
+  fill: color-mix(in srgb, var(--tree-leaf-light) 82%, var(--surface));
+}
+.tree-canopy-masses .canopy-mass {
+  fill: color-mix(in srgb, var(--tree-leaf-light) 72%, var(--surface));
+  stroke: color-mix(in srgb, var(--tree-leaf) 58%, var(--surface));
+  stroke-width: 2;
+}
+.tree-canopy-masses .canopy-mass:nth-child(2n) {
+  fill: color-mix(in srgb, var(--tree-leaf) 72%, var(--surface));
+}
+.tree-canopy-masses .canopy-mass:nth-child(3n) {
+  fill: color-mix(in srgb, var(--tree-leaf-light) 52%, var(--accent-soft));
+}
+.tree-bloom .tree-canopy-masses,
+.tree-canopy .tree-canopy-masses {
+  opacity: .34;
+}
+.tree-sapling .tree-canopy-masses {
+  opacity: .88;
+}
+.tree-sapling .canopy-mass-1,
+.tree-sapling .canopy-mass-4 {
+  transform: scale(.9);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.memory-tree.stage-sapling .tree-sapling {
+  animation: none;
+  transform: translateY(48px) scale(.8);
+  transform-origin: 260px 355px;
+}
+.sapling-leaves .sapling-leaf > path:first-child {
+  fill: url("#leaf-light");
+  stroke: color-mix(in srgb, var(--tree-leaf) 72%, var(--surface));
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+.sapling-leaves .sapling-leaf:nth-child(3n+2) > path:first-child {
+  fill: color-mix(in srgb, var(--tree-leaf-light) 82%, var(--surface));
+}
+.sapling-leaves .sapling-leaf:nth-child(3n) > path:first-child {
+  fill: color-mix(in srgb, var(--tree-leaf) 82%, var(--surface));
+}
+.sapling-leaves .leaf-vein {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-leaf) 45%, var(--surface));
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+.tree-sapling .tree-branch.branch-left-high,
+.tree-sapling .tree-branch.branch-right-high,
+.tree-sapling .tree-branch.branch-top { opacity: .78; }
+.tree-sapling .tree-blooms { display: none; }
+.tree-bloom .foliage-7,
+.tree-bloom .foliage-8 { opacity: .62; }
+.tree-canopy .tree-foliage { filter: drop-shadow(0 16px 18px color-mix(in srgb, var(--tree-leaf) 18%, transparent)); }
+.tree-blooms > g circle {
+  fill: #fff1f3;
+  stroke: color-mix(in srgb, var(--accent) 62%, #d78391);
+  stroke-width: 1.5;
+}
+.tree-blooms > g .bloom-heart {
+  fill: #e5a56e;
+  stroke: none;
+}
+.tree-canopy .tree-blooms { opacity: .36; }
+.tree-sprout .sprout-stem {
+  fill: none;
+  stroke: url("#tree-trunk");
+  stroke-linecap: round;
+  stroke-width: 11;
+}
+.memory-tree.stage-sprout .tree-sprout {
+  animation: none;
+  transform: scale(1.2);
+  transform-origin: 260px 346px;
+}
+.tree-sprout .sprout-leaf,
+.tree-seed .seed-leaf {
+  fill: url("#leaf-light");
+  stroke: color-mix(in srgb, var(--tree-leaf) 75%, #fff);
+  stroke-width: 2;
+}
+.tree-sprout .sprout-vein {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-leaf) 56%, var(--surface));
+  stroke-linecap: round;
+  stroke-width: 2;
+  opacity: .72;
+}
+
+.memory-leaves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.memory-tree .memory-leaf {
+  width: 54px;
+  height: 54px;
+  grid-template-columns: 1fr;
+  gap: 0;
+  place-items: center;
+  padding: 0;
+  border: 3px solid color-mix(in srgb, var(--surface) 90%, transparent);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, color-mix(in srgb, #fff 26%, transparent), transparent 34%),
+    color-mix(in srgb, var(--tree-leaf) 88%, var(--surface));
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--tree-leaf) 28%, transparent);
+  transform: none;
+  pointer-events: auto;
+}
+.memory-tree .memory-leaf::before {
+  position: absolute;
+  right: calc(100% - 4px);
+  bottom: 11px;
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tree-trunk-light) 88%, var(--tree-leaf));
+  content: "";
+  transform: rotate(-20deg);
+  transform-origin: right center;
+}
+.memory-tree .memory-leaf > i {
+  display: none;
+}
+.memory-tree .memory-leaf svg {
+  position: relative;
+  z-index: 1;
+  font-size: 18px;
+}
+.memory-tree .memory-leaf b {
+  display: none;
+}
+.memory-tree .memory-leaf span {
+  right: -3px;
+  bottom: -5px;
+  min-width: 22px;
+  height: 22px;
+  font-size: 8px;
+}
+.memory-tree .leaf-1 { top: 36%; right: auto; left: 29%; }
+.memory-tree .leaf-2 { top: 24%; right: auto; left: 45%; }
+.memory-tree .leaf-3 { top: 37%; right: 28%; left: auto; }
+.memory-tree .leaf-4 { top: 50%; right: auto; left: 37%; }
+.memory-tree .leaf-5 { top: 48%; right: 37%; left: auto; }
+.stage-sapling .memory-leaf {
+  width: 54px;
+  height: 54px;
+  grid-template-columns: 1fr;
+  padding: 0;
+  border-width: 3px;
+  border-radius: 50%;
+  box-shadow: 0 7px 20px color-mix(in srgb, var(--tree-leaf) 25%, transparent);
+  transform: none;
+}
+.stage-sapling .memory-leaf::before {
+  right: 91%;
+  bottom: 7px;
+  width: 17px;
+  height: 2px;
+  background: color-mix(in srgb, var(--tree-trunk-light) 72%, var(--tree-leaf));
+}
+.stage-sapling .memory-leaf b { display: none; }
+.stage-sapling .memory-leaf > i { display: none; }
+.stage-sapling .memory-leaf svg { font-size: 15px; }
+.memory-tree.stage-sprout .memory-leaf.leaf-1 {
+  top: 60%;
+  right: auto;
+  bottom: auto;
+  left: 55%;
+  width: 37px;
+  height: 37px;
+  grid-template-columns: 1fr;
+  padding: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tree-leaf) 82%, var(--accent));
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--tree-leaf) 25%, transparent);
+  transform: rotate(0);
+}
+.memory-tree.stage-sprout .memory-leaf.leaf-1::before {
+  right: 88%;
+  bottom: 7px;
+  width: 16px;
+  transform: rotate(28deg);
+}
+.memory-tree.stage-sprout .memory-leaf b,
+.memory-tree.stage-sprout .memory-leaf > i {
+  display: none;
+}
+.memory-tree.stage-sprout .memory-leaf svg { font-size: 14px; }
+.memory-tree.stage-sprout .memory-leaf span {
+  right: -5px;
+  bottom: -6px;
+  min-width: 19px;
+  height: 19px;
+  font-size: 7px;
+}
+.memory-tree.stage-sapling .leaf-1 { top: 43%; right: auto; left: 31%; }
+.memory-tree.stage-sapling .leaf-2 { top: 33%; right: auto; left: 48%; }
+.memory-tree.stage-sapling .leaf-3 { top: 47%; right: 28%; left: auto; }
+
+.memory-tree .tree-note-stream {
+  position: absolute;
+  right: auto;
+  bottom: calc(100% + 10px);
+  left: 30px;
+  width: min(230px, 28vw);
+  height: 86px;
+  pointer-events: none;
+}
+.memory-tree .member-right .tree-note-stream {
+  right: 30px;
+  left: auto;
+}
+.memory-tree .tree-note-stream .tree-note-bubble {
+  position: absolute;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  opacity: 0;
+  animation: note-rise-cycle 16s ease-in-out infinite;
+  animation-delay: calc(var(--note-index) * -4s);
+}
+.memory-tree .member-right .tree-note-stream .tree-note-bubble {
+  right: 0;
+  left: auto;
+}
+.memory-tree .tree-note-stream .tree-note-bubble::after { display: none; }
+.memory-tree .tree-note-stream .tree-note-bubble span {
+  -webkit-line-clamp: 2;
+}
+@keyframes note-rise-cycle {
+  0%, 8% { opacity: 0; transform: translateY(12px) scale(.96); }
+  14%, 31% { opacity: 1; transform: translateY(0) scale(1); }
+  40%, 100% { opacity: 0; transform: translateY(-42px) scale(.98); }
+}
+@keyframes tree-arrive {
+  from { opacity: 0; transform: translateY(12px) scale(.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.mobile-call-menu {
+  position: relative;
+  display: none;
+}
+.floating-call-placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  background:
+    radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 38%),
+    var(--surface-soft);
+  color: var(--accent-dark);
+}
+.floating-call-placeholder svg { font-size: 34px; }
+.floating-call-placeholder small { font-size: 10px; font-weight: 700; }
+.floating-call > span i { background: #c2a25e; }
+.floating-call > span i.online { background: #63d69a; }
+.room > header { justify-content: space-between; gap: 12px; }
+.notification-permission {
+  position: relative;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+}
+.notification-permission > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid var(--ring);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent-dark);
+  box-shadow: var(--shadow-soft);
+  font-size: 9px;
+  font-weight: 700;
+}
+.notification-permission.permission-denied > button {
+  border-color: color-mix(in srgb, #d1656f 38%, var(--ring));
+  color: #bd505d;
+}
+.notification-permission > p {
+  position: absolute;
+  z-index: 15;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(290px, 78vw);
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--ring);
+  border-radius: 13px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  font-size: 9px;
+  line-height: 1.55;
+}
+.message-route-label svg { color: var(--accent); font-size: 13px; }
+
+@media (max-width: 760px) {
+  .memory-tree .tree-canvas { width: min(450px, 96%); }
+  .memory-tree .memory-leaf {
+    width: 44px;
+    height: 44px;
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  .memory-tree .memory-leaf b { display: none; }
+  .memory-tree .memory-leaf::before { width: 15px; }
+  .memory-tree .leaf-1 { top: 36%; right: auto; left: 27%; }
+  .memory-tree .leaf-2 { top: 24%; right: auto; left: 44%; }
+  .memory-tree .leaf-3 { top: 38%; right: 25%; left: auto; }
+  .memory-tree .leaf-4 { top: 50%; right: auto; left: 36%; }
+  .memory-tree .leaf-5 { display: none; }
+  .memory-tree .tree-note-stream {
+    left: 20px;
+    width: 42vw;
+    height: 74px;
+  }
+  .memory-tree .member-right .tree-note-stream {
+    right: 20px;
+    left: auto;
+  }
+  .memory-tree .tree-note-stream .tree-note-bubble {
+    max-width: 42vw;
+    animation-duration: 14s;
+  }
+
+  .cottage-shell.is-call-view {
+    --mobile-nav-offset: calc(76px + env(safe-area-inset-bottom));
+    width: 100%;
+    min-height: 100dvh;
+    padding: 0;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .cottage-shell.is-call-view .cottage-nav {
+    z-index: 30;
+    display: block;
+  }
+  .cottage-shell.is-call-view .room {
+    position: relative;
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    padding: 0;
+    overflow: hidden;
+  }
+  .cottage-shell.is-call-view .room > header {
+    position: absolute;
+    z-index: 12;
+    top: max(16px, env(safe-area-inset-top));
+    right: 14px;
+    left: 14px;
+    height: 46px;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+  .cottage-shell.is-call-view .notification-permission {
+    margin-left: auto;
+  }
+  .cottage-shell.is-call-view .notification-permission > button {
+    width: 35px;
+    height: 35px;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0;
+  }
+  .cottage-shell.is-call-view .notification-permission > button svg {
+    font-size: 17px;
+  }
+  .cottage-shell.is-call-view .brand {
+    color: var(--ink-strong);
+    text-shadow: none;
+  }
+  .cottage-shell.is-call-view .room > header .brand b {
+    color: var(--ink-strong);
+  }
+  .cottage-shell.is-call-view .brand em {
+    background: color-mix(in srgb, var(--surface) 76%, transparent);
+    color: var(--accent-dark);
+    backdrop-filter: blur(12px);
+  }
+  .cottage-shell.is-call-view .room-grid {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .cottage-shell.is-call-view .call-stage {
+    position: absolute;
+    z-index: 1;
+    border: 0;
+    border-radius: 0;
+    background:
+      radial-gradient(circle at 54% 23%, color-mix(in srgb, var(--accent-soft) 70%, transparent), transparent 38%),
+      linear-gradient(160deg, var(--surface), var(--bg-deep));
+    box-shadow: none;
+    inset: 0;
+  }
+  .cottage-shell.is-call-view .video-card.remote {
+    border-radius: 0;
+    background:
+      radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 37%),
+      var(--surface-soft);
+    inset: 0;
+  }
+  .cottage-shell.is-call-view .video-card .video-placeholder {
+    color: var(--muted);
+  }
+  .cottage-shell.is-call-view .video-card > p {
+    background: color-mix(in srgb, var(--surface) 72%, transparent);
+    color: var(--ink-strong);
+  }
+  .cottage-shell.is-call-view .video-card.local {
+    top: max(78px, calc(env(safe-area-inset-top) + 68px));
+    right: 14px;
+    width: min(31vw, 126px);
+    height: min(35vw, 150px);
+    border-color: color-mix(in srgb, var(--surface) 85%, var(--accent));
+    border-radius: 18px;
+    background: var(--surface-soft);
+    box-shadow: 0 14px 36px color-mix(in srgb, var(--ink-strong) 18%, transparent);
+  }
+  .cottage-shell.is-call-view .call-stage .call-controls { display: none; }
+  .cottage-shell.is-call-view .call-stage .audio-diagnostics {
+    top: max(78px, calc(env(safe-area-inset-top) + 68px));
+    left: 14px;
+    max-width: min(58%, 250px);
+  }
+  .cottage-shell.is-call-view .call-stage .audio-diagnostics span,
+  .cottage-shell.is-call-view .call-stage .audio-diagnostics button {
+    border-color: color-mix(in srgb, var(--ring) 80%, transparent);
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    color: var(--ink);
+  }
+  .cottage-shell.is-call-view .immersive-chat {
+    z-index: 6;
+    border-radius: 0;
+    inset: 0;
+  }
+  .cottage-shell.is-call-view .immersive-chat .messages {
+    top: max(184px, 31dvh);
+    right: 0;
+    bottom: calc(var(--mobile-nav-offset) + 68px);
+    left: 0;
+    height: auto;
+    padding: 70px 14px 16px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0,
+      color-mix(in srgb, var(--surface) 28%, transparent) 62px,
+      color-mix(in srgb, var(--surface) 86%, transparent) 132px,
+      color-mix(in srgb, var(--surface) 92%, transparent) 100%
+    );
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 58px, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 58px, #000 100%);
+  }
+  .cottage-shell.is-call-view .immersive-chat .message-row.theirs {
+    --bubble-bg: color-mix(in srgb, var(--surface) 84%, var(--accent-soft));
+    --bubble-ink: var(--ink);
+  }
+  .cottage-shell.is-call-view .immersive-chat .message-row.mine {
+    --bubble-bg: color-mix(in srgb, var(--accent) 82%, var(--surface));
+    --bubble-ink: #fff;
+  }
+  .cottage-shell.is-call-view .immersive-chat .message-row .profile-avatar {
+    border-color: color-mix(in srgb, var(--surface) 88%, var(--accent-soft));
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer {
+    right: 0;
+    bottom: var(--mobile-nav-offset);
+    left: 0;
+    min-height: 68px;
+    padding: 9px 10px;
+    border: 0;
+    border-top: 1px solid var(--ring);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    box-shadow: none;
+    backdrop-filter: blur(20px);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer > input:not([type="file"]) {
+    background: var(--surface-soft);
+    color: var(--ink);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer > input::placeholder {
+    color: var(--muted);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer > button,
+  .cottage-shell.is-call-view .immersive-chat .emoji-control > button,
+  .cottage-shell.is-call-view .mobile-call-trigger {
+    color: var(--muted);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer .send {
+    background: var(--accent);
+    color: #fff;
+  }
+  .mobile-call-menu {
+    display: flex;
+    align-items: center;
+  }
+  .mobile-call-trigger {
+    display: grid;
+    width: 34px;
+    min-width: 34px;
+    height: 38px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    font-size: 19px;
+  }
+  .mobile-call-trigger.is-on {
+    background: var(--accent-soft);
+    color: var(--accent-dark) !important;
+  }
+  .mobile-call-popover {
+    position: absolute;
+    z-index: 14;
+    bottom: calc(100% + 12px);
+    left: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 7px;
+    padding: 7px;
+    border: 1px solid var(--ring);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+  }
+  .mobile-call-popover button {
+    position: relative;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 13px;
+    background: var(--surface-soft);
+    color: var(--ink);
+    font-size: 19px;
+  }
+  .mobile-call-popover button.is-on {
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+  }
+  .mobile-call-popover button.is-off {
+    background: color-mix(in srgb, var(--accent-soft) 64%, var(--surface));
+    color: var(--accent-dark);
+  }
+  .mobile-call-popover .mic-meter { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memory-tree .tree-note-stream .tree-note-bubble {
+    display: none;
+    animation: none;
+  }
+  .memory-tree .tree-note-stream .tree-note-bubble:first-child {
+    display: block;
+    opacity: 1;
+  }
+}

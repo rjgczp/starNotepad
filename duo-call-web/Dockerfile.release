@@ -1,0 +1,3 @@
+FROM crpi-nxt6ib76b78qk7wc.cn-beijing.personal.cr.aliyuncs.com/charles1337/charles:duo-call-web-20260727-experience-v2
+
+COPY dist /usr/share/nginx/html
