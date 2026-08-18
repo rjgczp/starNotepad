@@ -7,7 +7,6 @@
 !.env.example
 !.env.native.example
 node_modules
-dist
 tests/.generated
 coverage
 android

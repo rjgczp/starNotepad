@@ -1,0 +1,209 @@
+.qixi-invitation-backdrop {
+  position: fixed;
+  z-index: 95;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow: clip;
+  background: rgba(30, 18, 24, 0.54);
+  backdrop-filter: blur(12px) saturate(0.86);
+}
+
+.qixi-invitation-dialog {
+  position: relative;
+  width: min(100%, 440px);
+  padding: 34px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--ring));
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--accent-soft) 72%, transparent), transparent 42%),
+    var(--surface);
+  box-shadow: 0 36px 110px rgba(19, 7, 12, 0.35);
+  animation: qixi-invitation-enter 420ms cubic-bezier(0.2, 0.82, 0.25, 1) both;
+}
+
+.qixi-invitation-icon {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 23px;
+  color: #fff;
+  border-radius: 20px;
+  background: linear-gradient(145deg, var(--accent), var(--accent-dark));
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--accent) 30%, transparent);
+  font-size: 29px;
+}
+
+.qixi-invitation-eyebrow {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 10px;
+  color: var(--accent-dark);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+}
+
+.qixi-invitation-dialog h1 {
+  position: relative;
+  z-index: 1;
+  max-width: 330px;
+  margin: 0 0 12px;
+  color: var(--ink-strong);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.35;
+}
+
+.qixi-invitation-dialog > p:not(.qixi-invitation-eyebrow) {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.qixi-invitation-dismiss {
+  position: relative;
+  z-index: 1;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.qixi-invitation-dismiss input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.qixi-invitation-dismiss > span {
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  color: transparent;
+  border: 1px solid color-mix(in srgb, var(--muted) 50%, transparent);
+  border-radius: 6px;
+  background: var(--surface-soft);
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.qixi-invitation-dismiss input:checked + span {
+  color: #fff;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.qixi-invitation-dismiss input:focus-visible + span {
+  outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  outline-offset: 2px;
+}
+
+.qixi-invitation-dialog footer {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.qixi-invitation-dialog footer button {
+  min-height: 47px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 750;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.qixi-invitation-dialog footer button:hover {
+  transform: translateY(-2px);
+}
+
+.qixi-invitation-dialog footer .secondary {
+  color: var(--muted);
+  background: var(--surface-soft);
+}
+
+.qixi-invitation-dialog footer .primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--accent) 23%, transparent);
+}
+
+.qixi-invitation-orbit {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: -55px;
+  top: -55px;
+  border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.qixi-invitation-orbit::before,
+.qixi-invitation-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: inherit;
+  border-radius: inherit;
+}
+
+.qixi-invitation-orbit::after {
+  inset: 48px;
+}
+
+.qixi-invitation-orbit i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 48%, transparent);
+}
+
+.qixi-invitation-orbit i:nth-child(1) { left: 13px; top: 80px; }
+.qixi-invitation-orbit i:nth-child(2) { right: 36px; bottom: 17px; width: 5px; height: 5px; }
+.qixi-invitation-orbit i:nth-child(3) { left: 75px; bottom: 45px; width: 4px; height: 4px; }
+
+@keyframes qixi-invitation-enter {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 520px) {
+  .qixi-invitation-backdrop { padding: 16px; }
+  .qixi-invitation-dialog { padding: 28px 24px 24px; border-radius: 25px; }
+  .qixi-invitation-icon { width: 52px; height: 52px; margin-bottom: 20px; border-radius: 17px; font-size: 26px; }
+  .qixi-invitation-dialog h1 { font-size: 24px; }
+  .qixi-invitation-dialog footer { grid-template-columns: 1fr; }
+  .qixi-invitation-dialog footer .primary { grid-row: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qixi-invitation-dialog { animation: none; }
+}

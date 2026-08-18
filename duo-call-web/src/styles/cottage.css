@@ -143,6 +143,7 @@
 .memory-tree {
   --tree-leaf: color-mix(in srgb, var(--accent) 72%, #4f9e67);
   --tree-leaf-light: color-mix(in srgb, var(--accent-soft) 60%, #a6d69b);
+  --tree-leaf-deep: color-mix(in srgb, var(--accent-dark) 64%, #36734c);
   --tree-trunk-dark: #765744;
   --tree-trunk-light: #a98363;
   position: relative;

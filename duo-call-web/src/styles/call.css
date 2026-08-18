@@ -23,7 +23,13 @@
   background: var(--surface);
   box-shadow: var(--shadow-soft);
 }
-.call-stage { position: relative; padding: 10px; background: var(--ink-strong); }
+.call-stage {
+  position: relative;
+  padding: 10px;
+  background: var(--ink-strong);
+  container-name: call-surface;
+  container-type: inline-size;
+}
 .video-card {
   position: absolute;
   display: grid;
@@ -71,7 +77,11 @@
   font-size: 17px;
   backdrop-filter: blur(10px);
 }
-.call-controls .media-control span { font-size: 10px; font-weight: 700; }
+.call-controls .media-control .control-label {
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
 .call-controls .media-control.is-on { color: #337d5c; }
 .call-controls .media-control.is-off { background: #fff0f2; color: #c85665; }
 .call-controls .media-control.hangup { background: #d8535f; color: #fff; }
@@ -135,6 +145,8 @@
   overflow: hidden;
   background: #111;
   color: #fff;
+  container-name: call-surface;
+  container-type: inline-size;
 }
 .call-fullscreen > video { width: 100%; height: 100%; object-fit: cover; }
 .call-fullscreen::after { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.48), transparent 28%, transparent 66%, rgba(0,0,0,.56)); pointer-events: none; content: ""; }
@@ -224,7 +236,7 @@
 }
 
 @media (max-width: 760px) {
-  .cottage-shell { min-height: 100svh; padding: 10px 10px calc(80px + env(safe-area-inset-bottom)); overflow: visible; }
+  .cottage-shell { min-height: 100svh; padding: max(10px, env(safe-area-inset-top)) 10px calc(80px + env(safe-area-inset-bottom)); overflow: visible; }
   .cottage-nav {
     position: fixed;
     z-index: 10;

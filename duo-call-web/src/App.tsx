@@ -32,6 +32,19 @@ import {
   ThemeDecorations,
   ThemePicker,
 } from "./components/ThemeControls";
+import {
+  checkForAppUpdate,
+  clientPlatform,
+  type AppRelease,
+} from "./appUpdate";
+import { AppUpdateDialog } from "./components/AppUpdateDialog";
+import { IS_NATIVE_BUILD } from "./domain";
+import { QixiInvitationDialog } from "./components/QixiInvitationDialog";
+import {
+  dismissQixiInvitationForToday,
+  shouldShowQixiInvitation,
+} from "./qixiInvitationPolicy";
+import { openQixiInvitation } from "./qixiExternalNavigation";
 
 export function App() {
   const [preferences, setPreferences] = useState<DuoPreferences>(() =>
@@ -44,6 +57,8 @@ export function App() {
   const [token, setToken] = useState(() =>
     localStorage.getItem("duo-session") || ""
   );
+  const [appUpdate, setAppUpdate] = useState<AppRelease | null>(null);
+  const [qixiInvitationVisible, setQixiInvitationVisible] = useState(false);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem("duo-theme", theme);
@@ -60,6 +75,40 @@ export function App() {
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
+  useEffect(() => {
+    let controller: AbortController | null = null;
+    let lastCheckedAt = 0;
+    const check = () => {
+      if (document.visibilityState === "hidden" || Date.now() - lastCheckedAt < 60_000) {
+        return;
+      }
+      lastCheckedAt = Date.now();
+      controller?.abort();
+      controller = new AbortController();
+      checkForAppUpdate(api, clientPlatform(IS_NATIVE_BUILD), undefined, controller.signal)
+        .then((release) => {
+          if (!release) return;
+          const dismissed = sessionStorage.getItem(
+            `duo-update-dismissed-${release.ID}`,
+          ) === "true";
+          if (release.forceUpdate || !dismissed) setAppUpdate(release);
+        })
+        .catch(() => {
+          // A temporary update-feed outage must never prevent access to the room.
+        });
+    };
+    const checkWhenVisible = () => {
+      if (document.visibilityState === "visible") check();
+    };
+    check();
+    document.addEventListener("visibilitychange", checkWhenVisible);
+    window.addEventListener("focus", check);
+    return () => {
+      controller?.abort();
+      document.removeEventListener("visibilitychange", checkWhenVisible);
+      window.removeEventListener("focus", check);
+    };
+  }, []);
   const selectTheme = (value: Theme) => {
     setPreferences((current) => ({
       ...current,
@@ -75,6 +124,14 @@ export function App() {
     : null;
   if (preview?.startsWith("daily")) {
     return <DailyPreview theme={theme} setTheme={selectTheme} revealed={preview === "daily-revealed"} />;
+  }
+  if (preview === "qixi") {
+    return (
+      <main className="login-shell">
+        <ThemeDecorations theme={theme} />
+        <QixiInvitationDialog onLater={() => undefined} onOpen={() => undefined} />
+      </main>
+    );
   }
   if (preview === "home" || preview === "settings" || preview === "call" || preview === "fullscreen") {
     return (
@@ -101,7 +158,7 @@ export function App() {
       </main>
     );
   }
-  return token
+  const content = token
     ? (
       <Room
         theme={theme}
@@ -111,11 +168,50 @@ export function App() {
         token={token}
         leave={() => {
           localStorage.removeItem("duo-session");
+          setQixiInvitationVisible(false);
           setToken("");
         }}
       />
     )
-    : <Login theme={theme} setTheme={selectTheme} onLogin={setToken} />;
+    : (
+      <Login
+        theme={theme}
+        setTheme={selectTheme}
+        onLogin={(nextToken, hasQixiInvitation) => {
+          setToken(nextToken);
+          setQixiInvitationVisible(
+            hasQixiInvitation && shouldShowQixiInvitation(localStorage),
+          );
+        }}
+      />
+    );
+  const closeQixiInvitation = (dismissToday: boolean) => {
+    if (dismissToday) dismissQixiInvitationForToday(localStorage);
+    setQixiInvitationVisible(false);
+  };
+  return (
+    <>
+      {content}
+      {appUpdate && (
+        <AppUpdateDialog
+          release={appUpdate}
+          onLater={() => {
+            sessionStorage.setItem(`duo-update-dismissed-${appUpdate.ID}`, "true");
+            setAppUpdate(null);
+          }}
+        />
+      )}
+      {qixiInvitationVisible && (
+        <QixiInvitationDialog
+          onLater={closeQixiInvitation}
+          onOpen={(dismissToday) => {
+            closeQixiInvitation(dismissToday);
+            void openQixiInvitation();
+          }}
+        />
+      )}
+    </>
+  );
 }
 
 function ExperiencePreview({
@@ -166,21 +262,6 @@ function ExperiencePreview({
   }
   if (mode === "home") {
     const image = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='700'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop stop-color='%23e8d4cd'/%3E%3Cstop offset='1' stop-color='%2393b1ac'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='900' height='700' fill='url(%23g)'/%3E%3Ccircle cx='450' cy='310' r='110' fill='%23fff' fill-opacity='.35'/%3E%3Ctext x='450' y='340' text-anchor='middle' font-size='76' fill='%23fff'%3E%E2%99%A5%3C/text%3E%3C/svg%3E";
-    const stageId = new URLSearchParams(location.search).get("treeStage");
-    const previewStage = {
-      seed: { id: "seed" as const, name: "一颗种子", message: "故事已经被轻轻种下", minimum: 0, next: 40, progress: 18 },
-      sprout: { id: "sprout" as const, name: "刚刚萌芽", message: "想念冒出了第一片叶子", minimum: 40, next: 120, progress: 46 },
-      sapling: { id: "sapling" as const, name: "慢慢长高", message: "普通日子正在长成枝桠", minimum: 120, next: 260, progress: 68 },
-      bloom: { id: "bloom" as const, name: "悄悄开花", message: "被好好记住的瞬间，开成了花", minimum: 260, next: 480, progress: 12 },
-      canopy: { id: "canopy" as const, name: "枝叶相拥", message: "共同的故事已经长成树荫", minimum: 480, next: 480, progress: 100 },
-    }[stageId || "bloom"] || {
-      id: "bloom" as const,
-      name: "悄悄开花",
-      message: "被好好记住的瞬间，开成了花",
-      minimum: 260,
-      next: 480,
-      progress: 12,
-    };
     return (
       <div className="cottage-shell preview-shell">
         <HomePanel
@@ -204,9 +285,11 @@ function ExperiencePreview({
             { ID: 1, senderSlot: 1, content: "想和你一起收藏更多普通又闪亮的日子。", CreatedAt: new Date(Date.now() - 10800000).toISOString() },
           ]}
           openNote={noop}
+          sendMissYou={async () => ({ wechatQueued: true })}
           daily={null}
           me={1}
           openDaily={noop}
+          openView={noop}
           identities={[
             { slot: 1, displayName: "小海", avatarUrl: "", statusId: 1, status: { ID: 1, label: "正在想你", emoji: "💭" } },
             { slot: 2, displayName: "小月", avatarUrl: "", statusId: 2, status: { ID: 2, label: "今天很开心", emoji: "☀️" } },
@@ -215,7 +298,7 @@ function ExperiencePreview({
           tree={{
             totalGrowth: 286,
             togetherDays: 895,
-            stage: previewStage,
+            stage: { id: "seed", name: "", message: "", minimum: 0, next: 0, progress: 0 },
             events: Array.from({ length: 6 }, (_, index) => ({
               ID: index + 1,
               eventType: (["album", "daily_reply", "note", "chat", "call", "album"] as GrowthEvent["eventType"][])[index],
@@ -223,11 +306,11 @@ function ExperiencePreview({
               slot: index % 2 + 1,
               growth: index === 0 ? 12 : 4,
               title: ["收藏了一张照片", "写下了一封回信", "留下了一句心里话", "今天也说了说话", "今天见了一面", "收藏了一张照片"][index],
-              summary: "一个普通又值得记住的小瞬间，被好好收进了共同年轮。",
+              summary: "一个普通又值得记住的小瞬间，被好好收进了这一期。",
               imageUrl: index === 0 ? image : "",
               occurredAt: new Date(Date.now() - index * 86400000).toISOString(),
             })),
-            weeklyMemories: [{ ID: 1, weekKey: "2026-W31", title: "本周的我们", summary: "这一周，你们认真回信、收藏照片，也在忙碌里记得和对方说说话。普通的小事，正悄悄长成共同的年轮。", source: "ai", generatedAt: new Date().toISOString() }],
+            weeklyMemories: [{ ID: 1, weekKey: "2026-W31", title: "本周的我们", summary: "这一周，你们认真回信、收藏照片，也在忙碌里记得和对方说说话。", source: "ai", generatedAt: new Date().toISOString() }],
           }}
         />
       </div>
@@ -371,7 +454,7 @@ function Login(
   { theme, setTheme, onLogin }: {
     theme: Theme;
     setTheme: (value: Theme) => void;
-    onLogin: (token: string) => void;
+    onLogin: (token: string, hasQixiInvitation: boolean) => void;
   },
 ) {
   const [key, setKey] = useState("");
@@ -393,7 +476,7 @@ function Login(
         throw new Error(payload.msg || "秘钥不正确");
       }
       localStorage.setItem("duo-session", payload.data.token);
-      onLogin(payload.data.token);
+      onLogin(payload.data.token, payload.data.qixiInvitation === true);
     } catch (reason) {
       setError(
         reason instanceof Error ? reason.message : "暂时无法连接，请稍后再试",

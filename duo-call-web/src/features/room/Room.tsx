@@ -25,6 +25,7 @@ import {
   type Identity,
   type LoveNote,
   type Message,
+  type MissYouSignal,
   type TreeState,
 } from "../../domain";
 import {
@@ -35,8 +36,18 @@ import {
 } from "../../lib/api";
 import { webSocketUrl } from "../../runtime";
 import {
+  CALL_VIDEO_CONSTRAINTS,
+  CALL_VIDEO_SEND_LIMITS,
+  hasOfferCollision,
+  shouldIgnoreOffer,
+} from "../../callPolicy";
+import {
   enterSystemPictureInPicture,
   listenForNativePictureInPicture,
+  setAndroidCallForeground,
+  isAndroidNativePlatform,
+  requestAndroidNotificationPermission,
+  showAndroidMessageNotification,
   type SystemPictureInPictureMode,
 } from "../../systemPictureInPicture";
 import {
@@ -62,6 +73,16 @@ import {
   MobileCallMenu,
   NoteModal,
 } from "../call/CallViews";
+
+async function constrainVideoSender(sender: RTCRtpSender) {
+  const parameters = sender.getParameters();
+  if (!parameters.encodings.length) return;
+  for (const encoding of parameters.encodings) {
+    encoding.maxBitrate = CALL_VIDEO_SEND_LIMITS.maxBitrate;
+    encoding.maxFramerate = CALL_VIDEO_SEND_LIMITS.maxFramerate;
+  }
+  await sender.setParameters(parameters);
+}
 
 export function Room(
   { token, theme, setTheme, preferences, setPreferences, leave }: {
@@ -140,6 +161,12 @@ export function Room(
   const peer = useRef<RTCPeerConnection | null>(null);
   const stream = useRef<MediaStream | null>(null);
   const pendingIce = useRef<RTCIceCandidateInit[]>([]);
+  const makingOffer = useRef(false);
+  const ignoreOffer = useRef(false);
+  const settingRemoteAnswer = useRef(false);
+  const videoSender = useRef<RTCRtpSender | null>(null);
+  const iceRestartTimer = useRef<number | null>(null);
+  const remoteVideoRecoveryAttempts = useRef(0);
   const iceServersRef = useRef<RTCIceServer[]>(iceServers);
   const meRef = useRef(0);
   const viewRef = useRef<CottageView>("home");
@@ -149,6 +176,8 @@ export function Room(
   const toneContext = useRef<AudioContext | null>(null);
   const remoteVideos = useRef(new Set<HTMLVideoElement>());
   const exitSystemFloatingWindow = useRef<(() => Promise<void>) | null>(null);
+  const systemPictureInPictureOpening = useRef(false);
+  const shownMissYou = useRef(new Set<number>());
   const messagesEnd = useRef<HTMLDivElement>(null);
   const messagesScroller = useRef<HTMLDivElement>(null);
   const shouldStickMessagesToBottom = useRef(true);
@@ -170,6 +199,35 @@ export function Room(
       confirmLabel: "知道了",
     });
   }, []);
+  const acknowledgeMissYou = (id: number) => {
+    fetch(`${api}/duoCall/miss-you/${id}/ack`, {
+      method: "POST",
+      headers,
+    }).catch(() => undefined);
+  };
+  const presentMissYou = (signal: MissYouSignal) => {
+    if (!signal?.ID || shownMissYou.current.has(signal.ID)) return;
+    shownMissYou.current.add(signal.ID);
+    showNotice("对方刚刚在偷偷想你喔", "收到一份想念");
+    acknowledgeMissYou(signal.ID);
+  };
+  const closeSystemFloatingWindow = useCallback(async () => {
+    const exit = exitSystemFloatingWindow.current;
+    if (!exit) {
+      setSystemPictureInPicture(null);
+      return;
+    }
+    try {
+      await exit();
+      exitSystemFloatingWindow.current = null;
+      setSystemPictureInPicture(null);
+    } catch (error) {
+      showNotice(
+        error instanceof Error ? error.message : "系统悬浮窗恢复失败",
+        "退出悬浮窗失败",
+      );
+    }
+  }, [showNotice]);
   const askConfirmation = useCallback((
     message: string,
     {
@@ -235,6 +293,17 @@ export function Room(
   useEffect(() => {
     meRef.current = me;
   }, [me]);
+  useEffect(() => {
+    const hasLiveLocalVideo = localMedia?.getVideoTracks().some((track) =>
+      track.readyState === "live" && track.enabled
+    );
+    const hasLiveRemoteVideo = remoteMedia?.getVideoTracks().some((track) =>
+      track.readyState === "live" && !track.muted
+    );
+    const hasLiveVideo = Boolean(hasLiveLocalVideo || hasLiveRemoteVideo);
+    void setAndroidCallForeground(calling && hasLiveVideo).catch(() => undefined);
+    return () => { void setAndroidCallForeground(false).catch(() => undefined); };
+  }, [calling, localMedia, remoteMedia]);
   useEffect(() => {
     if (!daily || daily.revealedAt || !me) return;
     const ownReply = daily.replies?.find((reply) => reply.slot === me);
@@ -324,6 +393,12 @@ export function Room(
     }
   };
   const enableSystemNotifications = async () => {
+    if (isAndroidNativePlatform()) {
+      const granted = await requestAndroidNotificationPermission();
+      setNotificationPermission(granted ? "granted" : "denied");
+      setNotificationGuideOpen(!granted);
+      return;
+    }
     if (!("Notification" in window)) {
       setNotificationPermission("unsupported");
       setNotificationGuideOpen(true);
@@ -339,15 +414,25 @@ export function Room(
     setNotificationGuideOpen(permission !== "granted");
   };
   const showSystemMessageNotification = (message: Message) => {
+    const sender = identitiesRef.current.find((identity) =>
+      identity.slot === message.senderSlot
+    )?.displayName || "TA";
+    if (isAndroidNativePlatform()) {
+      if (message.senderSlot !== meRef.current) {
+        void showAndroidMessageNotification(
+          message.ID,
+          `${sender} 发来新消息`,
+          message.kind === "image" ? "发来了一张照片" : message.content,
+        );
+      }
+      return;
+    }
     if (
       chatDeliveryRoute(partnerOnlineRef.current) !== "browser" ||
       !("Notification" in window) ||
       Notification.permission !== "granted" ||
       message.senderSlot === meRef.current
     ) return;
-    const sender = identitiesRef.current.find((identity) =>
-      identity.slot === message.senderSlot
-    )?.displayName || "TA";
     const notification = new Notification(`${sender} 发来新消息`, {
       body: message.kind === "image" ? "发来了一张照片" : message.content,
       tag: `duo-chat-${message.ID}`,
@@ -368,7 +453,7 @@ export function Room(
     shouldStickMessagesToBottom.current = false;
     try {
       const firstID = messages[0]?.ID;
-      const response = await fetch(`${api}/duoCall/messages?beforeId=${firstID}&limit=20`, { headers });
+      const response = await fetch(`${api}/duoCall/messages?beforeId=${firstID}&limit=10`, { headers });
       const payload = await readAPIPayload(response, "加载更早消息失败");
       const items = Array.isArray(payload.data) ? payload.data : payload.data?.items || [];
       const older = [...items].reverse() as Message[];
@@ -412,9 +497,19 @@ export function Room(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, token]);
   const closeCall = () => {
+    void closeSystemFloatingWindow();
+    if (iceRestartTimer.current !== null) {
+      window.clearTimeout(iceRestartTimer.current);
+      iceRestartTimer.current = null;
+    }
     peer.current?.close();
     peer.current = null;
     pendingIce.current = [];
+    makingOffer.current = false;
+    ignoreOffer.current = false;
+    settingRemoteAnswer.current = false;
+    videoSender.current = null;
+    remoteVideoRecoveryAttempts.current = 0;
     stream.current?.getTracks().forEach((track) => track.stop());
     stream.current = null;
     remoteMedia?.getTracks().forEach((track) => track.stop());
@@ -439,9 +534,27 @@ export function Room(
       if (next.connectionState === "failed" || next.connectionState === "closed") {
         setRemoteConnected(false);
       }
+      if (next.connectionState === "failed") {
+        next.restartIce();
+      }
+      if (next.connectionState === "disconnected" && iceRestartTimer.current === null) {
+        iceRestartTimer.current = window.setTimeout(() => {
+          iceRestartTimer.current = null;
+          if (next.connectionState === "disconnected") next.restartIce();
+        }, 4000);
+      } else if (
+        next.connectionState === "connected" &&
+        iceRestartTimer.current !== null
+      ) {
+        window.clearTimeout(iceRestartTimer.current);
+        iceRestartTimer.current = null;
+      }
     };
     next.onicecandidate = ({ candidate }) => {
       if (candidate) sendEvent({ type: "ice", candidate });
+    };
+    next.onnegotiationneeded = () => {
+      void negotiateCall().catch(() => undefined);
     };
     next.ontrack = ({ streams }) => {
       const incoming = streams[0] ||
@@ -452,30 +565,77 @@ export function Room(
       setCalling(true);
       setRemoteConnected(true);
     };
-    stream.current?.getTracks().forEach((track) =>
-      next.addTrack(track, stream.current!)
-    );
+    stream.current?.getTracks().forEach((track) => {
+      const sender = next.addTrack(track, stream.current!);
+      if (track.kind === "video") {
+        videoSender.current = sender;
+        void constrainVideoSender(sender).catch(() => undefined);
+      }
+    });
     return next;
   };
   const negotiateCall = async () => {
+    if (makingOffer.current) return;
     await waitForSocket();
     const next = ensurePeer();
-    const offer = await next.createOffer();
-    await next.setLocalDescription(offer);
-    sendEvent({ type: "offer", sdp: offer });
-    setCalling(true);
+    if (next.signalingState !== "stable") return;
+    makingOffer.current = true;
+    try {
+      await next.setLocalDescription();
+      if (next.localDescription?.type !== "offer") return;
+      sendEvent({ type: "offer", sdp: next.localDescription });
+      setCalling(true);
+    } finally {
+      makingOffer.current = false;
+    }
   };
   const addLocalMedia = async (constraints: MediaStreamConstraints) => {
     const acquired = await navigator.mediaDevices.getUserMedia(constraints);
     const current = stream.current || new MediaStream();
     const next = ensurePeer();
+    let negotiationNeeded = false;
     for (const track of acquired.getTracks()) {
       current.addTrack(track);
-      next.addTrack(track, current);
+      if (track.kind === "video" && videoSender.current) {
+        await videoSender.current.replaceTrack(track);
+        await constrainVideoSender(videoSender.current).catch(() => undefined);
+      } else {
+        const sender = next.addTrack(track, current);
+        negotiationNeeded = true;
+        if (track.kind === "video") {
+          videoSender.current = sender;
+          await constrainVideoSender(sender).catch(() => undefined);
+        }
+      }
     }
     stream.current = current;
     setLocalMedia(new MediaStream(current.getTracks()));
+    return negotiationNeeded;
   };
+  useEffect(() => {
+    const hasRemoteVideo = remoteMedia?.getVideoTracks().some((track) =>
+      track.readyState === "live"
+    );
+    if (!calling || !camera || hasRemoteVideo) {
+      remoteVideoRecoveryAttempts.current = 0;
+      return;
+    }
+    let timer: number | null = null;
+    const retry = () => {
+      if (remoteVideoRecoveryAttempts.current >= 6) {
+        if (timer !== null) window.clearInterval(timer);
+        timer = null;
+        return;
+      }
+      remoteVideoRecoveryAttempts.current += 1;
+      sendEvent({ type: "media-refresh" });
+    };
+    retry();
+    timer = window.setInterval(retry, 4000);
+    return () => {
+      if (timer !== null) window.clearInterval(timer);
+    };
+  }, [calling, camera, remoteMedia]);
   useEffect(() => {
     if (!localMedia || mute) {
       setMicLevel(0);
@@ -499,7 +659,6 @@ export function Room(
     );
     source.connect(analyser);
     const values = new Uint8Array(analyser.fftSize);
-    let frame = 0;
     let smooth = 0;
     const measure = () => {
       analyser.getByteTimeDomainData(values);
@@ -512,11 +671,11 @@ export function Room(
       const target = Math.min(100, Math.max(0, rms * 320));
       smooth = smooth * .72 + target * .28;
       setMicLevel(Math.round(smooth));
-      frame = requestAnimationFrame(measure);
     };
+    const timer = window.setInterval(measure, 100);
     void context.resume().then(measure);
     return () => {
-      cancelAnimationFrame(frame);
+      window.clearInterval(timer);
       source.disconnect();
       analyser.disconnect();
       void context.close();
@@ -605,7 +764,7 @@ export function Room(
         }
       },
     ).catch(() => undefined);
-    fetch(`${api}/duoCall/messages?limit=20`, { headers }).then((r) => r.json()).then((p) => {
+    fetch(`${api}/duoCall/messages?limit=10`, { headers }).then((r) => r.json()).then((p) => {
       const data = p.data;
       const items = Array.isArray(data) ? data : data?.items || [];
       setMessages([...items].reverse());
@@ -622,11 +781,16 @@ export function Room(
     }).catch(() => undefined);
     fetch(`${api}/duoCall/messages/unread`, { headers }).then((r) => r.json())
       .then((p) => setUnread(p.data?.count || 0)).catch(() => undefined);
-    const ws = new WebSocket(webSocketUrl(api, location.origin, token));
-    socket.current = ws;
-    ws.onopen = () => setSocketConnected(true);
-    ws.onclose = () => setSocketConnected(false);
-    ws.onmessage = async (event) => {
+    fetch(`${api}/duoCall/miss-you/pending`, { headers }).then((r) => r.json())
+      .then((p) => {
+        if (p.code === 0 && Array.isArray(p.data)) {
+          p.data.forEach((signal: MissYouSignal) => presentMissYou(signal));
+        }
+      }).catch(() => undefined);
+    let disposed = false;
+    let reconnectAttempt = 0;
+    let reconnectTimer: number | null = null;
+    const handleSocketMessage = async (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
         if (data.type === "presence" && Number(data.slot) !== meRef.current) {
@@ -645,6 +809,15 @@ export function Room(
         }
         if (data.type === "tree-growth") {
           await loadTree();
+        }
+        if (data.type === "miss-you" && data.data) {
+          presentMissYou(data.data as MissYouSignal);
+        }
+        if (data.type === "media-refresh") {
+          const hasLocalVideo = stream.current?.getVideoTracks().some((track) =>
+            track.readyState === "live" && track.enabled
+          );
+          if (hasLocalVideo) await negotiateCall();
         }
         if (data.type === "chat" && data.message) {
           const isReading = document.visibilityState === "visible" && viewRef.current === "call";
@@ -690,28 +863,81 @@ export function Room(
             setCamera(false);
             setMute(false);
           }
-          const next = ensurePeer();
-          await next.setRemoteDescription(data.sdp);
-          await flushPendingIce(next);
-          const answer = await next.createAnswer();
-          await next.setLocalDescription(answer);
-          sendEvent({ type: "answer", sdp: answer });
         }
-        if (data.type === "answer" && peer.current) {
-          await peer.current.setRemoteDescription(data.sdp);
-          await flushPendingIce(peer.current);
+        if (data.type === "offer" || data.type === "answer") {
+          const next = data.type === "offer" ? ensurePeer() : peer.current;
+          if (!next) return;
+          const description = data.sdp as RTCSessionDescriptionInit;
+          const collision = hasOfferCollision({
+            descriptionType: description.type,
+            makingOffer: makingOffer.current,
+            signalingState: next.signalingState,
+            settingRemoteAnswer: settingRemoteAnswer.current,
+          });
+          ignoreOffer.current = shouldIgnoreOffer(
+            meRef.current === 2,
+            collision,
+          );
+          if (ignoreOffer.current) return;
+          settingRemoteAnswer.current = description.type === "answer";
+          try {
+            await next.setRemoteDescription(description);
+          } finally {
+            settingRemoteAnswer.current = false;
+          }
+          await flushPendingIce(next);
+          if (description.type === "offer") {
+            await next.setLocalDescription();
+            if (next.localDescription?.type === "answer") {
+              sendEvent({ type: "answer", sdp: next.localDescription });
+            }
+          }
+          await Promise.allSettled(
+            next.getSenders()
+              .filter((sender) => sender.track?.kind === "video")
+              .map(constrainVideoSender),
+          );
         }
         if (data.type === "ice" && data.candidate) {
+          if (ignoreOffer.current) return;
           if (peer.current?.remoteDescription) {
             await peer.current.addIceCandidate(data.candidate);
           } else {
             pendingIce.current.push(data.candidate);
           }
         }
-      } catch { /* Ignore malformed peer messages. */ }
+      } catch (error) {
+        console.warn("实时消息处理失败", error);
+      }
     };
+    const connectSocket = () => {
+      if (disposed) return;
+      const ws = new WebSocket(webSocketUrl(api, location.origin, token));
+      socket.current = ws;
+      ws.onopen = () => {
+        reconnectAttempt = 0;
+        setSocketConnected(true);
+        if (peer.current && peer.current.connectionState !== "closed") {
+          peer.current.restartIce();
+          void negotiateCall().catch(() => undefined);
+        }
+      };
+      ws.onclose = () => {
+        if (socket.current === ws) socket.current = null;
+        setSocketConnected(false);
+        if (disposed) return;
+        const delay = Math.min(10_000, 1000 * 2 ** reconnectAttempt);
+        reconnectAttempt += 1;
+        reconnectTimer = window.setTimeout(connectSocket, delay);
+      };
+      ws.onmessage = handleSocketMessage;
+    };
+    connectSocket();
     return () => {
-      ws.close();
+      disposed = true;
+      if (reconnectTimer !== null) window.clearTimeout(reconnectTimer);
+      socket.current?.close();
+      socket.current = null;
       setSocketConnected(false);
       setPartnerOnline(false);
       toneContext.current?.close().catch(() => undefined);
@@ -726,17 +952,24 @@ export function Room(
   async function toggleCamera() {
     try {
       const videoTracks = stream.current?.getVideoTracks() || [];
-      if (videoTracks.length) {
-        const nextEnabled = !camera;
-        videoTracks.forEach((track) => {
-          track.enabled = nextEnabled;
-        });
-        setCamera(nextEnabled);
+      if (videoTracks.length && camera) {
+        await videoSender.current?.replaceTrack(null);
+        for (const track of videoTracks) {
+          track.stop();
+          stream.current?.removeTrack(track);
+        }
+        setLocalMedia(stream.current
+          ? new MediaStream(stream.current.getTracks())
+          : null);
+        setCamera(false);
         return;
       }
-      await addLocalMedia({ video: true, audio: false });
+      const negotiationNeeded = await addLocalMedia({
+        video: CALL_VIDEO_CONSTRAINTS,
+        audio: false,
+      });
       setCamera(true);
-      await negotiateCall();
+      if (negotiationNeeded) await negotiateCall();
     } catch (error) {
       showNotice(error instanceof Error && error.message.includes("信令")
         ? `${error.message}，请刷新页面后重试`
@@ -868,6 +1101,18 @@ export function Room(
       setBusy(false);
     }
   }
+  async function sendMissYou(): Promise<{ wechatQueued: boolean }> {
+    const response = await fetch(`${api}/duoCall/miss-you`, {
+      method: "POST",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    const payload = await response.json();
+    if (!response.ok || payload.code !== 0) {
+      throw new Error(payload.msg || "想念发送失败");
+    }
+    return { wechatQueued: Boolean(payload.data?.wechatQueued) };
+  }
   async function submitDailyReply(event: FormEvent) {
     event.preventDefault();
     if (!daily || !dailyDraft.trim() || daily.revealedAt) return;
@@ -910,9 +1155,9 @@ export function Room(
         setMute(nextMuted);
         return;
       }
-      await addLocalMedia({ video: false, audio: true });
+      const negotiationNeeded = await addLocalMedia({ video: false, audio: true });
       setMute(false);
-      await negotiateCall();
+      if (negotiationNeeded) await negotiateCall();
     } catch (error) {
       showNotice(error instanceof Error && error.message.includes("信令")
         ? `${error.message}，请刷新页面后重试`
@@ -937,35 +1182,34 @@ export function Room(
       results.some((result) => result.status === "rejected"),
     );
   }, []);
-  const closeSystemFloatingWindow = useCallback(async () => {
-    const exit = exitSystemFloatingWindow.current;
-    exitSystemFloatingWindow.current = null;
-    try {
-      await exit?.();
-    } finally {
-      setSystemPictureInPicture(null);
-    }
-  }, []);
   const openSystemPictureInPicture = useCallback(async () => {
-    if (systemPictureInPicture === "tauri-window") {
-      await closeSystemFloatingWindow();
-      return;
-    }
-    const video = [...remoteVideos.current].find((candidate) => {
-      const media = candidate.srcObject;
-      return media instanceof MediaStream &&
-        media.getVideoTracks().some((track) => track.readyState === "live");
-    });
-    if (!video) {
-      showNotice("收到对方视频后才能开启系统悬浮窗。", "暂时无法悬浮");
-      return;
-    }
+    if (systemPictureInPictureOpening.current) return;
+    systemPictureInPictureOpening.current = true;
     try {
-      setView("call");
-      setCallFullscreen(false);
+      if (systemPictureInPicture === "tauri-window") {
+        await closeSystemFloatingWindow();
+        return;
+      }
+      const candidates = [...remoteVideos.current].filter((candidate) => {
+        const media = candidate.srcObject;
+        return candidate.isConnected &&
+          media instanceof MediaStream &&
+          media.getVideoTracks().some((track) => track.readyState === "live");
+      });
+      const video = candidates.find((candidate) =>
+        candidate.readyState >= HTMLMediaElement.HAVE_METADATA &&
+        candidate.videoWidth > 0 &&
+        candidate.videoHeight > 0
+      ) || candidates[0];
+      if (!video) {
+        showNotice("收到对方视频后才能开启系统悬浮窗。", "暂时无法悬浮");
+        return;
+      }
       const session = await enterSystemPictureInPicture(video);
       exitSystemFloatingWindow.current = session.exit || null;
       if (session.mode !== "video") {
+        setView("call");
+        setCallFullscreen(false);
         setSystemPictureInPicture(session.mode);
       }
     } catch (error) {
@@ -974,6 +1218,8 @@ export function Room(
         error instanceof Error ? error.message : "系统视频悬浮窗开启失败",
         "悬浮窗开启失败",
       );
+    } finally {
+      systemPictureInPictureOpening.current = false;
     }
   }, [
     closeSystemFloatingWindow,
@@ -997,7 +1243,7 @@ export function Room(
     return () => {
       disposed = true;
       void listener?.remove();
-      void exitSystemFloatingWindow.current?.();
+      void exitSystemFloatingWindow.current?.().catch(() => undefined);
       exitSystemFloatingWindow.current = null;
     };
   }, []);
@@ -1104,9 +1350,11 @@ export function Room(
             anniversaries={anniversaries}
             notes={notes}
             openNote={() => setNoteOpen(true)}
+            sendMissYou={sendMissYou}
             daily={daily}
             me={me}
             openDaily={() => setView("daily")}
+            openView={setView}
             identities={identities}
             partnerOnline={partnerOnline}
             tree={tree}
@@ -1184,8 +1432,8 @@ export function Room(
             </header>
             <div className="room-grid">
               <CallStage
-                localMedia={localMedia}
-                remoteMedia={remoteMedia}
+                localMedia={callFullscreen ? null : localMedia}
+                remoteMedia={callFullscreen ? null : remoteMedia}
                 camera={camera}
                 mute={mute}
                 micLevel={micLevel}

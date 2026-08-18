@@ -14,6 +14,9 @@ import {
   messageSide,
   callVisualMode,
   chatDeliveryRoute,
+  loopRecentItems,
+  orderTreeMembers,
+  treeNodeRegion,
   treeEventLabel,
   treeLeafIcon,
 } from "./.generated/duo-preferences-test.mjs";
@@ -133,4 +136,10 @@ test("message and call visual helpers keep identity stable", () => {
   assert.equal(callVisualMode(true, false), "video");
   assert.equal(callVisualMode(false, false), "audio");
   assert.equal(callVisualMode(false, true), "idle");
+});
+
+test("home tree keeps the signed-in member left and distributes visible nodes", () => {
+  assert.deepEqual(orderTreeMembers([{ slot: 1 }, { slot: 2 }], 2).map((item) => item.slot), [2, 1]);
+  assert.deepEqual([0, 1, 2, 3, 4].map(treeNodeRegion), ["lower", "upper", "middle", "middle", "lower"]);
+  assert.deepEqual(loopRecentItems(["留言"]), ["留言", "留言", "留言"]);
 });

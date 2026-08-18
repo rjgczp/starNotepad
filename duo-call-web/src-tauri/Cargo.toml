@@ -1,6 +1,6 @@
 [package]
 name = "duo-cottage"
-version = "0.1.0"
+version = "0.2.1"
 description = "情侣小屋桌面客户端"
 authors = ["OmniProject"]
 edition = "2021"

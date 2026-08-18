@@ -70,7 +70,11 @@
 }
 
 * { box-sizing: border-box; }
-html { overflow-x: clip; background: var(--bg); }
+html {
+  overflow-x: clip;
+  background: var(--bg);
+  -webkit-tap-highlight-color: transparent;
+}
 body { min-width: 0; margin: 0; overflow-x: clip; background: var(--bg); }
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
@@ -149,7 +153,16 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--accent) 30%, transparent);
   outline-offset: 2px;
 }
+:where(button, a, [role="button"], summary):focus:not(:focus-visible) {
+  outline: none;
+}
 button:disabled { cursor: not-allowed; opacity: .55; }
+
+@media (hover: none) and (pointer: coarse) {
+  :where(button, a, [role="button"], summary):active:not(:disabled) {
+    opacity: .82;
+  }
+}
 
 /* Ambient decoration */
 .theme-decoration {

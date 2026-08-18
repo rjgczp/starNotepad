@@ -1,7 +1,7 @@
 {
   "name": "duo-call-web",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,11 +10,12 @@
     "android:sync": "npm run build:native && cap sync android",
     "android:open": "cap open android",
     "android:build:debug": "npm run android:sync && cd android && ./gradlew assembleDebug",
-    "android:build:release": "npm run android:sync && cd android && ./gradlew bundleRelease",
+    "android:build:release": "npm run android:sync && cd android && ./gradlew assembleRelease bundleRelease",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
+    "package:three-platforms": "bash scripts/package-three-platforms.sh",
     "lint": "eslint .",
-    "test": "esbuild src/preferences.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-preferences-test.mjs && esbuild src/runtime.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-runtime-test.mjs && node --test tests/*.test.mjs",
+    "test": "esbuild src/preferences.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-preferences-test.mjs && esbuild src/runtime.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-runtime-test.mjs && esbuild src/qixiInvitationPolicy.ts --bundle --platform=node --format=esm --outfile=tests/.generated/qixi-invitation-policy-test.mjs && esbuild src/appUpdate.ts --bundle --platform=node --format=esm --define:__DUO_APP_VERSION__='\"0.2.1\"' --outfile=tests/.generated/duo-app-update-test.mjs && esbuild src/callPolicy.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-call-policy-test.mjs && esbuild src/pictureInPictureVideo.ts --bundle --platform=node --format=esm --outfile=tests/.generated/duo-picture-in-picture-video-test.mjs && esbuild src/features/home/homeEditorial.ts --bundle --platform=node --format=esm --outfile=tests/.generated/home-editorial-test.mjs && node --test tests/*.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

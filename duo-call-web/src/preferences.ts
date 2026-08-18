@@ -166,6 +166,23 @@ export function chatDeliveryRoute(
   return partnerOnline ? "browser" : "wechat";
 }
 
+export function orderTreeMembers<T extends { slot: number }>(members: T[], me: number): T[] {
+  return [...members].sort((left, right) => {
+    if (left.slot === me) return -1;
+    if (right.slot === me) return 1;
+    return left.slot - right.slot;
+  });
+}
+
+export function treeNodeRegion(index: number): "upper" | "middle" | "lower" {
+  return ["lower", "upper", "middle", "middle", "lower"][index % 5] as "upper" | "middle" | "lower";
+}
+
+export function loopRecentItems<T>(items: T[], minimum = 3): T[] {
+  if (!items.length) return [];
+  return Array.from({ length: Math.max(minimum, items.length) }, (_, index) => items[index % items.length]);
+}
+
 export function callVisualMode(camera: boolean, muted: boolean): "video" | "audio" | "idle" {
   if (camera) return "video";
   return muted ? "idle" : "audio";

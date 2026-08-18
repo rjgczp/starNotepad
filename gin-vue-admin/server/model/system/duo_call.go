@@ -11,6 +11,7 @@ type DuoCallIdentity struct {
 	global.GVA_MODEL
 	Slot         uint   `json:"slot" gorm:"uniqueIndex;not null"`
 	DisplayName  string `json:"displayName" gorm:"size:64;not null"`
+	AvatarURL    string `json:"avatarUrl" gorm:"size:1024"`
 	EncryptedKey string `json:"-" gorm:"type:text;not null"`
 	Enabled      bool   `json:"enabled" gorm:"default:false;index"`
 	KeyVersion   uint   `json:"keyVersion" gorm:"default:1"`
@@ -69,3 +70,61 @@ type DuoCallNote struct {
 }
 
 func (DuoCallNote) TableName() string { return "duo_call_notes" }
+
+// DuoMissYou records a heart-button signal so an offline partner can receive
+// the same moment on their next visit, while an online partner can see it in
+// real time over the room WebSocket.
+type DuoMissYou struct {
+	global.GVA_MODEL
+	SenderSlot     uint       `json:"senderSlot" gorm:"not null;index"`
+	RecipientSlot  uint       `json:"recipientSlot" gorm:"not null;index"`
+	Message        string     `json:"message" gorm:"size:128;not null"`
+	AcknowledgedAt *time.Time `json:"acknowledgedAt,omitempty" gorm:"index"`
+}
+
+func (DuoMissYou) TableName() string { return "duo_miss_you" }
+
+// DuoAppRelease is a downloadable Love Cottage client release. Releases stay
+// private until an administrator publishes them from Gin-Vue-Admin.
+type DuoAppRelease struct {
+	global.GVA_MODEL
+	Platform     string     `json:"platform" gorm:"size:16;not null;uniqueIndex:idx_duo_app_release_platform_version"`
+	Version      string     `json:"version" gorm:"size:64;not null;uniqueIndex:idx_duo_app_release_platform_version"`
+	DownloadURL  string     `json:"downloadUrl" gorm:"size:2048"`
+	ReleaseNotes string     `json:"releaseNotes" gorm:"type:text"`
+	ForceUpdate  bool       `json:"forceUpdate" gorm:"default:false"`
+	Published    bool       `json:"published" gorm:"default:false;index"`
+	PublishedAt  *time.Time `json:"publishedAt" gorm:"index"`
+}
+
+func (DuoAppRelease) TableName() string { return "duo_app_releases" }
+
+// DuoGrowthEvent is an immutable, idempotent memory that contributes to the
+// shared tree. SourceKey identifies the original action across retries.
+type DuoGrowthEvent struct {
+	global.GVA_MODEL
+	EventType  string    `json:"eventType" gorm:"size:32;not null;index"`
+	SourceKey  string    `json:"-" gorm:"size:128;not null;uniqueIndex"`
+	SourceID   uint      `json:"sourceId" gorm:"index"`
+	Slot       uint      `json:"slot" gorm:"index"`
+	Growth     int       `json:"growth" gorm:"not null"`
+	Title      string    `json:"title" gorm:"size:128;not null"`
+	Summary    string    `json:"summary" gorm:"type:text"`
+	ImageURL   string    `json:"imageUrl" gorm:"size:1024"`
+	OccurredAt time.Time `json:"occurredAt" gorm:"not null;index"`
+}
+
+func (DuoGrowthEvent) TableName() string { return "duo_growth_events" }
+
+// DuoWeeklyMemory stores one shared retrospective per ISO week.
+type DuoWeeklyMemory struct {
+	global.GVA_MODEL
+	WeekKey     string    `json:"weekKey" gorm:"size:10;not null;uniqueIndex"`
+	Title       string    `json:"title" gorm:"size:128;not null"`
+	Summary     string    `json:"summary" gorm:"type:text;not null"`
+	Highlights  string    `json:"-" gorm:"type:text"`
+	Source      string    `json:"source" gorm:"size:16;not null"`
+	GeneratedAt time.Time `json:"generatedAt" gorm:"not null;index"`
+}
+
+func (DuoWeeklyMemory) TableName() string { return "duo_weekly_memories" }

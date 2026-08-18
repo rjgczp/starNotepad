@@ -37,6 +37,15 @@ export type LoveNote = {
   CreatedAt: string;
 };
 
+export type MissYouSignal = {
+  ID: number;
+  senderSlot: number;
+  recipientSlot: number;
+  message: string;
+  CreatedAt: string;
+  acknowledgedAt?: string;
+};
+
 export type DailyReply = {
   slot: number;
   submitted: boolean;

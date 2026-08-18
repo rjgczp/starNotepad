@@ -113,33 +113,44 @@ export function CallControls({
   return (
     <div className="call-controls">
       <button
+        type="button"
         className={`media-control ${mute ? "is-off" : "is-on"}`}
         onClick={onMute}
         title={mute ? "开启语音" : "关闭麦克风"}
+        aria-label={mute ? "开启语音" : "关闭麦克风"}
       >
         <Icon icon={mute ? "solar:microphone-3-bold" : "solar:microphone-bold"} />
-        <span>{mute ? "开启语音" : "麦克风"}</span>
+        <span className="control-label">{mute ? "开启语音" : "麦克风"}</span>
         <MicMeter level={micLevel} muted={mute || !calling} />
       </button>
       <button
+        type="button"
         className={`media-control ${camera ? "is-on" : "is-off"}`}
         onClick={onCamera}
         title={camera ? "关闭摄像头" : "打开摄像头"}
+        aria-label={camera ? "关闭摄像头" : "打开摄像头"}
       >
         <Icon icon={camera ? "solar:videocamera-bold" : "solar:videocamera-record-bold"} />
-        <span>{camera ? "摄像头" : "开启视频"}</span>
-      </button>
-      <button className="media-control" onClick={onFullscreen}>
-        <Icon icon={fullscreen ? "solar:minimize-square-3-bold" : "solar:maximize-square-3-bold"} />
-        <span>{fullscreen ? "退出全屏" : "全屏"}</span>
+        <span className="control-label">{camera ? "摄像头" : "开启视频"}</span>
       </button>
       <button
+        type="button"
+        className="media-control"
+        onClick={onFullscreen}
+        aria-label={fullscreen ? "退出全屏" : "进入全屏"}
+      >
+        <Icon icon={fullscreen ? "solar:minimize-square-3-bold" : "solar:maximize-square-3-bold"} />
+        <span className="control-label">{fullscreen ? "退出全屏" : "全屏"}</span>
+      </button>
+      <button
+        type="button"
         className="media-control"
         onClick={onPictureInPicture}
         title="打开系统视频悬浮窗"
+        aria-label="打开系统视频悬浮窗"
       >
         <Icon icon="solar:window-frame-bold-duotone" />
-        <span>悬浮窗</span>
+        <span className="control-label">悬浮窗</span>
       </button>
     </div>
   );
@@ -562,18 +573,20 @@ export function MediaVideo({
     if (!element) return;
     register?.(element, true);
     element.srcObject = stream;
-    if (stream) {
-      element.play().then(() => {
-        if (!muted) onPlaybackBlocked?.(false);
-      }).catch(() => {
-        if (!muted) onPlaybackBlocked?.(true);
-      });
-    }
     return () => {
       register?.(element, false);
       element.srcObject = null;
     };
-  }, [stream, muted, onPlaybackBlocked, register]);
+  }, [stream, register]);
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element || !stream) return;
+    element.play().then(() => {
+      if (!muted) onPlaybackBlocked?.(false);
+    }).catch(() => {
+      if (!muted) onPlaybackBlocked?.(true);
+    });
+  }, [stream, muted, onPlaybackBlocked]);
   return (
     <video
       ref={elementRef}
