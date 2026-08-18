@@ -1,0 +1,2365 @@
+/* Cottage visual storytelling: mirrored speech, living notes, rooted memories. */
+.message-row {
+  --bubble-bg: color-mix(in srgb, var(--surface) 90%, var(--accent-soft));
+  --bubble-ink: var(--ink);
+}
+.message-row.mine {
+  --bubble-bg: color-mix(in srgb, var(--accent) 82%, var(--surface));
+  --bubble-ink: #fff;
+}
+.message-row .message,
+.message-row.mine .message,
+.message-row.theirs .message {
+  position: relative;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
+  background: var(--bubble-bg);
+  color: var(--bubble-ink);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ink-strong) 8%, transparent);
+}
+.message-row.theirs .message { border-radius: 24px 24px 24px 8px; }
+.message-row.mine .message { border-radius: 24px 24px 8px 24px; }
+.message-row .message::after {
+  display: none;
+  content: none;
+}
+.message-row.theirs .message::after {
+  display: none;
+}
+.message-row.mine .message::after {
+  display: none;
+}
+.immersive-chat .message-row.theirs {
+  --bubble-bg: color-mix(in srgb, var(--accent-dark) 68%, #263a37);
+  --bubble-ink: #fff;
+}
+.immersive-chat .message-row.mine {
+  --bubble-bg: color-mix(in srgb, var(--accent) 88%, #493e44);
+  --bubble-ink: #fff;
+}
+.immersive-chat .message-row .message,
+.immersive-chat .message-row.mine .message,
+.immersive-chat .message-row.theirs .message {
+  background: var(--bubble-bg);
+  color: var(--bubble-ink);
+  border-color: rgba(255,255,255,.16);
+}
+.immersive-chat .message-row.mine .message::after,
+.immersive-chat .message-row.theirs .message::after {
+  display: none;
+}
+
+.memory-tree .tree-canvas {
+  overflow: visible;
+}
+.memory-tree .tree-canvas .tree-art {
+  overflow: visible;
+}
+.tree-shadow {
+  fill: color-mix(in srgb, var(--tree-leaf) 12%, transparent);
+  filter: blur(7px);
+}
+.tree-stage-art {
+  transform-origin: 260px 355px;
+  animation: tree-arrive .75s cubic-bezier(.2,.8,.2,1) both;
+}
+.tree-bark {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-trunk-dark) 50%, transparent);
+  stroke-linecap: round;
+  stroke-width: 4;
+  opacity: .45;
+}
+.tree-root {
+  fill: none;
+  stroke: url("#tree-trunk");
+  stroke-linecap: round;
+  stroke-width: 9;
+  opacity: .86;
+}
+.tree-canopy-shapes .canopy-shape {
+  fill: color-mix(in srgb, var(--tree-leaf-light) 55%, var(--surface));
+  stroke: color-mix(in srgb, var(--tree-leaf) 38%, var(--surface));
+  stroke-width: 2;
+}
+.tree-canopy-shapes .canopy-shape-2 { fill: color-mix(in srgb, var(--tree-leaf) 46%, var(--surface)); }
+.tree-canopy-shapes .canopy-shape-3 { fill: color-mix(in srgb, var(--tree-leaf-light) 74%, var(--surface)); }
+.tree-leaf-sprig .leaf-blade {
+  fill: url("#leaf-light");
+  stroke: color-mix(in srgb, var(--tree-leaf-deep) 54%, var(--surface));
+  stroke-linejoin: round;
+  stroke-width: 1.4;
+}
+.tree-leaf-sprig:nth-child(3n) .leaf-blade { fill: url("#leaf-deep"); }
+.tree-leaf-sprig:nth-child(4n) .leaf-blade { fill: color-mix(in srgb, var(--tree-leaf-light) 86%, var(--surface)); }
+.tree-leaf-sprig .leaf-vein {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-leaf-deep) 40%, var(--surface));
+  stroke-linecap: round;
+  stroke-width: 1.3;
+}
+.memory-tree.stage-sapling .tree-sapling {
+  animation: none;
+  transform: translateY(14px) scale(.94);
+  transform-origin: 260px 355px;
+}
+.sapling-leaves .sapling-leaf > path:first-child {
+  fill: url("#leaf-light");
+  stroke: color-mix(in srgb, var(--tree-leaf) 72%, var(--surface));
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+.sapling-leaves .sapling-leaf:nth-child(3n+2) > path:first-child {
+  fill: color-mix(in srgb, var(--tree-leaf-light) 82%, var(--surface));
+}
+.sapling-leaves .sapling-leaf:nth-child(3n) > path:first-child {
+  fill: color-mix(in srgb, var(--tree-leaf) 82%, var(--surface));
+}
+.sapling-leaves .leaf-vein {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-leaf) 45%, var(--surface));
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+.tree-sapling .tree-branch.branch-left-high,
+.tree-sapling .tree-branch.branch-right-high,
+.tree-sapling .tree-branch.branch-top { opacity: .88; }
+.tree-sapling .tree-blooms { opacity: .72; }
+.tree-canopy .tree-leaf-sprigs { filter: drop-shadow(0 16px 18px color-mix(in srgb, var(--tree-leaf) 18%, transparent)); }
+.tree-blooms > g circle {
+  fill: #fff1f3;
+  stroke: color-mix(in srgb, var(--accent) 62%, #d78391);
+  stroke-width: 1.5;
+}
+.tree-blooms > g .bloom-heart {
+  fill: #e5a56e;
+  stroke: none;
+}
+.tree-canopy .tree-blooms { opacity: .72; }
+.tree-sprout .sprout-stem {
+  fill: none;
+  stroke: url("#tree-trunk");
+  stroke-linecap: round;
+  stroke-width: 11;
+}
+.memory-tree.stage-sprout .tree-sprout {
+  animation: none;
+  transform: scale(1.2);
+  transform-origin: 260px 346px;
+}
+.tree-sprout .sprout-leaf,
+.tree-seed .seed-leaf {
+  fill: url("#leaf-light");
+  stroke: color-mix(in srgb, var(--tree-leaf) 75%, #fff);
+  stroke-width: 2;
+}
+.tree-sprout .sprout-vein {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-leaf) 56%, var(--surface));
+  stroke-linecap: round;
+  stroke-width: 2;
+  opacity: .72;
+}
+
+.memory-leaves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.memory-tree .memory-leaf {
+  width: 46px;
+  height: 46px;
+  grid-template-columns: 1fr;
+  gap: 0;
+  place-items: center;
+  padding: 0;
+  border: 2px solid color-mix(in srgb, var(--surface) 94%, transparent);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, color-mix(in srgb, #fff 26%, transparent), transparent 34%),
+    color-mix(in srgb, var(--tree-leaf-deep) 88%, var(--surface));
+  box-shadow: 0 7px 18px color-mix(in srgb, var(--tree-leaf-deep) 28%, transparent);
+  transform: none;
+  pointer-events: auto;
+}
+.memory-tree .memory-leaf::before {
+  position: absolute;
+  right: calc(100% - 4px);
+  bottom: 11px;
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tree-trunk-light) 88%, var(--tree-leaf));
+  content: "";
+  transform: rotate(-20deg);
+  transform-origin: right center;
+}
+.memory-tree .memory-leaf > i {
+  display: none;
+}
+.memory-tree .memory-leaf svg {
+  position: relative;
+  z-index: 1;
+  font-size: 18px;
+}
+.memory-tree .memory-leaf b {
+  display: none;
+}
+.memory-tree .memory-leaf span {
+  right: -3px;
+  bottom: -5px;
+  min-width: 22px;
+  height: 22px;
+  font-size: 8px;
+}
+.memory-tree .leaf-1 { top: 61%; right: auto; left: 17%; }
+.memory-tree .leaf-2 { top: 25%; right: auto; left: 41%; }
+.memory-tree .leaf-3 { top: 37%; right: 11%; left: auto; }
+.memory-tree .leaf-4 { top: 49%; right: auto; left: 44%; }
+.memory-tree .leaf-5 { top: 58%; right: 20%; left: auto; }
+.memory-tree .leaf-1::before { right: 84%; bottom: 8px; transform: rotate(-12deg); }
+.memory-tree .leaf-2::before { right: 62%; bottom: -8px; transform: rotate(78deg); }
+.memory-tree .leaf-3::before { right: 82%; bottom: 7px; transform: rotate(24deg); }
+.memory-tree .leaf-4::before { right: 87%; bottom: 8px; transform: rotate(-36deg); }
+.memory-tree .leaf-5::before { right: 82%; bottom: 8px; transform: rotate(16deg); }
+.stage-sapling .memory-leaf {
+  width: 54px;
+  height: 54px;
+  grid-template-columns: 1fr;
+  padding: 0;
+  border-width: 3px;
+  border-radius: 50%;
+  box-shadow: 0 7px 20px color-mix(in srgb, var(--tree-leaf) 25%, transparent);
+  transform: none;
+}
+.stage-sapling .memory-leaf::before {
+  right: 91%;
+  bottom: 7px;
+  width: 17px;
+  height: 2px;
+  background: color-mix(in srgb, var(--tree-trunk-light) 72%, var(--tree-leaf));
+}
+.stage-sapling .memory-leaf b { display: none; }
+.stage-sapling .memory-leaf > i { display: none; }
+.stage-sapling .memory-leaf svg { font-size: 15px; }
+.memory-tree.stage-sprout .memory-leaf.leaf-1 {
+  top: 60%;
+  right: auto;
+  bottom: auto;
+  left: 55%;
+  width: 37px;
+  height: 37px;
+  grid-template-columns: 1fr;
+  padding: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tree-leaf) 82%, var(--accent));
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--tree-leaf) 25%, transparent);
+  transform: rotate(0);
+}
+.memory-tree.stage-sprout .memory-leaf.leaf-1::before {
+  right: 88%;
+  bottom: 7px;
+  width: 16px;
+  transform: rotate(28deg);
+}
+.memory-tree.stage-sprout .memory-leaf b,
+.memory-tree.stage-sprout .memory-leaf > i {
+  display: none;
+}
+.memory-tree.stage-sprout .memory-leaf svg { font-size: 14px; }
+.memory-tree.stage-sprout .memory-leaf span {
+  right: -5px;
+  bottom: -6px;
+  min-width: 19px;
+  height: 19px;
+  font-size: 7px;
+}
+.memory-tree .tree-note-stream {
+  position: absolute;
+  z-index: 10;
+  bottom: 145px;
+  left: 8%;
+  width: min(260px, 34vw);
+  height: 72px;
+  pointer-events: none;
+}
+.memory-tree .tree-note-stream.from-right {
+  right: 8%;
+  left: auto;
+}
+.memory-tree .tree-note-stream .tree-note-bubble {
+  position: absolute;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  opacity: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 19%, var(--ring));
+  border-radius: 16px 16px 16px 5px;
+  background: color-mix(in srgb, var(--surface) 92%, var(--accent-soft));
+  box-shadow: 0 9px 28px color-mix(in srgb, var(--ink-strong) 10%, transparent);
+  animation: note-rise-in 4.8s cubic-bezier(.2,.75,.25,1) both;
+}
+.memory-tree .tree-note-stream.from-right .tree-note-bubble {
+  right: 0;
+  left: auto;
+  border-radius: 16px 16px 5px 16px;
+}
+.memory-tree .tree-note-stream .tree-note-bubble::after { display: none; }
+.memory-tree .tree-note-stream .tree-note-bubble em {
+  flex: 0 0 auto;
+  color: var(--accent-dark);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+}
+.memory-tree .tree-note-stream .tree-note-bubble span {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.45;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.memory-tree .tree-note-stream .tree-note-bubble.is-single {
+  animation: note-single-pulse 5.8s ease-in-out infinite;
+}
+@keyframes note-rise-in {
+  0% { opacity: 0; transform: translateY(12px) scale(.96); }
+  12%, 72% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-16px) scale(.98); }
+}
+@keyframes note-single-pulse {
+  0%, 10% { opacity: 0; transform: translateY(10px) scale(.97); }
+  22%, 74% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-16px) scale(.98); }
+}
+@keyframes tree-arrive {
+  from { opacity: 0; transform: translateY(12px) scale(.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.mobile-call-menu {
+  position: relative;
+  display: none;
+}
+.floating-call-placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  background:
+    radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 38%),
+    var(--surface-soft);
+  color: var(--accent-dark);
+}
+.floating-call-placeholder svg { font-size: 34px; }
+.floating-call-placeholder small { font-size: 10px; font-weight: 700; }
+.floating-call > span i { background: #c2a25e; }
+.floating-call > span i.online { background: #63d69a; }
+.room > header { justify-content: space-between; gap: 12px; }
+.notification-permission {
+  position: relative;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+}
+.notification-permission > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid var(--ring);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent-dark);
+  box-shadow: var(--shadow-soft);
+  font-size: 9px;
+  font-weight: 700;
+}
+.notification-permission.permission-denied > button {
+  border-color: color-mix(in srgb, #d1656f 38%, var(--ring));
+  color: #bd505d;
+}
+.notification-permission > p {
+  position: absolute;
+  z-index: 15;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(290px, 78vw);
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--ring);
+  border-radius: 13px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  font-size: 9px;
+  line-height: 1.55;
+}
+.message-route-label svg { color: var(--accent); font-size: 13px; }
+
+.app-dialog-backdrop {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(27, 23, 25, .5);
+  backdrop-filter: blur(9px);
+}
+.app-dialog {
+  display: grid;
+  width: min(100%, 410px);
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--ring));
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 28px 90px rgba(0,0,0,.3);
+}
+.app-dialog-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-size: 23px;
+}
+.app-dialog.tone-danger .app-dialog-icon {
+  background: color-mix(in srgb, #d85d69 14%, var(--surface));
+  color: #bd4d59;
+}
+.app-dialog h2 {
+  margin: 2px 0 7px;
+  color: var(--ink-strong);
+  font-size: 18px;
+  line-height: 1.3;
+}
+.app-dialog p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.app-dialog footer {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 7px;
+}
+.app-dialog footer button {
+  min-width: 88px;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 750;
+}
+.app-dialog footer .secondary {
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+.app-dialog footer .primary {
+  background: var(--accent);
+  color: #fff;
+}
+.app-dialog footer .danger {
+  background: #c95360;
+  color: #fff;
+}
+
+/* App update */
+.app-update-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(25, 22, 23, .54);
+  backdrop-filter: blur(10px);
+}
+.app-update-dialog {
+  width: min(100%, 460px);
+  padding: 31px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--ring));
+  border-radius: 29px;
+  background: var(--surface);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, .3);
+}
+.app-update-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-size: 27px;
+}
+.app-update-eyebrow { margin: 21px 0 7px; color: var(--accent-dark); font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.app-update-dialog h1 { margin: 0; color: var(--ink-strong); font-size: 25px; letter-spacing: -.04em; }
+.app-update-dialog > p:not(.app-update-eyebrow) { margin: 11px 0 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+.app-update-notes { margin-top: 21px; padding: 15px 16px; border: 1px solid var(--ring); border-radius: 16px; background: var(--surface-soft); }
+.app-update-notes b { color: var(--ink-strong); font-size: 12px; }
+.app-update-notes p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; white-space: pre-wrap; }
+.app-update-dialog footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
+.app-update-dialog footer button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 6px; padding: 0 15px; border: 0; border-radius: 12px; font-size: 12px; font-weight: 700; }
+.app-update-dialog footer .secondary { background: var(--surface-soft); color: var(--muted); }
+.app-update-dialog footer .primary { background: var(--accent); color: #fff; box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 28%, transparent); }
+.app-update-dialog > small { display: block; margin-top: 14px; color: var(--accent-dark); font-size: 11px; line-height: 1.6; }
+.zoomable-image { cursor: zoom-in; }
+.moment-art::after { pointer-events: none; }
+
+.cottage-shell.is-system-floating {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #111716;
+}
+.cottage-shell.is-system-floating > .cottage-nav,
+.cottage-shell.is-system-floating .room > header,
+.cottage-shell.is-system-floating .immersive-chat,
+.cottage-shell.is-system-floating .call-stage > .video-card.local,
+.cottage-shell.is-system-floating .call-stage > .audio-diagnostics,
+.cottage-shell.is-system-floating .call-stage > .call-controls {
+  display: none !important;
+}
+.cottage-shell.is-system-floating .room,
+.cottage-shell.is-system-floating .room-grid,
+.cottage-shell.is-system-floating .call-stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #111716;
+}
+.cottage-shell.is-system-floating .video-card.remote {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.cottage-shell.is-system-floating .video-card.remote > p {
+  top: auto;
+  right: auto;
+  bottom: 12px;
+  left: 12px;
+}
+.system-floating-exit {
+  position: fixed;
+  z-index: 20;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 999px;
+  background: rgba(18, 23, 22, .74);
+  color: #fff;
+  font-size: 12px;
+  backdrop-filter: blur(12px);
+}
+
+.image-viewer-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
+  background: rgba(15, 13, 14, .88);
+  backdrop-filter: blur(14px);
+}
+.image-viewer {
+  display: grid;
+  width: min(960px, 100%);
+  max-height: calc(100dvh - 36px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 24px;
+  background: rgba(25, 22, 24, .94);
+  box-shadow: 0 34px 110px rgba(0,0,0,.48);
+}
+.image-viewer header,
+.image-viewer footer {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  color: rgba(255,255,255,.9);
+}
+.image-viewer header span {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.image-viewer header button {
+  display: grid;
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  font-size: 21px;
+}
+.image-viewer-canvas {
+  display: grid;
+  min-height: 0;
+  place-items: center;
+  overflow: auto;
+  background: rgba(0,0,0,.26);
+  overscroll-behavior: contain;
+}
+.image-viewer-canvas img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 154px);
+  object-fit: contain;
+  touch-action: pinch-zoom;
+}
+.image-viewer footer small {
+  min-height: 16px;
+  color: rgba(255,255,255,.62);
+  font-size: 9px;
+}
+.image-viewer footer button {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 750;
+}
+.image-viewer footer button:disabled { opacity: .58; }
+
+@media (max-width: 760px) {
+  .memory-tree .tree-canvas { width: min(450px, 96%); }
+  .memory-tree .memory-leaf {
+    width: 44px;
+    height: 44px;
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  .memory-tree .memory-leaf b { display: none; }
+  .memory-tree .memory-leaf::before { width: 15px; }
+  .memory-tree .leaf-1 { top: 58%; right: auto; left: 16%; }
+  .memory-tree .leaf-2 { top: 24%; right: auto; left: 41%; }
+  .memory-tree .leaf-3 { top: 34%; right: 11%; left: auto; }
+  .memory-tree .leaf-4 { top: 47%; right: auto; left: 42%; }
+  .memory-tree .leaf-5 { display: none; }
+  .memory-tree .tree-note-stream {
+    bottom: 70px;
+    left: 7%;
+    width: min(238px, 62vw);
+    height: 74px;
+  }
+  .memory-tree .tree-note-stream.from-right {
+    right: 7%;
+    left: auto;
+  }
+  .memory-tree .tree-note-stream .tree-note-bubble {
+    max-width: 100%;
+  }
+
+  .cottage-shell.is-call-view {
+    --mobile-nav-offset: calc(76px + env(safe-area-inset-bottom));
+    width: 100%;
+    min-height: 100dvh;
+    padding: 0;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .cottage-shell.is-call-view .cottage-nav {
+    z-index: 30;
+    display: block;
+  }
+  .cottage-shell.is-call-view .room {
+    position: relative;
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    padding: 0;
+    overflow: hidden;
+  }
+  .cottage-shell.is-call-view .room > header {
+    position: absolute;
+    z-index: 12;
+    top: max(16px, env(safe-area-inset-top));
+    right: 14px;
+    left: 14px;
+    height: 46px;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+  .cottage-shell.is-call-view .notification-permission {
+    margin-left: auto;
+  }
+  .cottage-shell.is-call-view .notification-permission > button {
+    width: 35px;
+    height: 35px;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0;
+  }
+  .cottage-shell.is-call-view .notification-permission > button svg {
+    font-size: 17px;
+  }
+  .cottage-shell.is-call-view .brand {
+    color: var(--ink-strong);
+    text-shadow: none;
+  }
+  .cottage-shell.is-call-view .room > header .brand b {
+    color: var(--ink-strong);
+  }
+  .cottage-shell.is-call-view .brand em {
+    background: color-mix(in srgb, var(--surface) 76%, transparent);
+    color: var(--accent-dark);
+    backdrop-filter: blur(12px);
+  }
+  .cottage-shell.is-call-view .room-grid {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .cottage-shell.is-call-view .call-stage {
+    position: absolute;
+    z-index: 1;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background:
+      radial-gradient(circle at 54% 23%, color-mix(in srgb, var(--accent-soft) 70%, transparent), transparent 38%),
+      linear-gradient(160deg, var(--surface), var(--bg-deep));
+    box-shadow: none;
+    inset: 0 0 calc(var(--mobile-nav-offset) + 68px);
+  }
+  .cottage-shell.is-call-view .video-card.remote {
+    border-radius: 0;
+    background:
+      radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 37%),
+      var(--surface-soft);
+    inset: 0;
+  }
+  .cottage-shell.is-call-view .video-card .video-placeholder {
+    color: var(--muted);
+  }
+  .cottage-shell.is-call-view .video-card > p {
+    background: color-mix(in srgb, var(--surface) 72%, transparent);
+    color: var(--ink-strong);
+  }
+  .cottage-shell.is-call-view .video-card.local {
+    top: max(78px, calc(env(safe-area-inset-top) + 68px));
+    right: 14px;
+    width: min(31vw, 126px);
+    height: min(35vw, 150px);
+    border-color: color-mix(in srgb, var(--surface) 85%, var(--accent));
+    border-radius: 18px;
+    background: var(--surface-soft);
+    box-shadow: 0 14px 36px color-mix(in srgb, var(--ink-strong) 18%, transparent);
+  }
+  .cottage-shell.is-call-view .call-stage .call-controls { display: none; }
+  .cottage-shell.is-call-view .call-stage .audio-diagnostics {
+    top: max(78px, calc(env(safe-area-inset-top) + 68px));
+    left: 14px;
+    max-width: min(58%, 250px);
+  }
+  .cottage-shell.is-call-view .call-stage .audio-diagnostics span,
+  .cottage-shell.is-call-view .call-stage .audio-diagnostics button {
+    border-color: color-mix(in srgb, var(--ring) 80%, transparent);
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    color: var(--ink);
+  }
+  .cottage-shell.is-call-view .immersive-chat {
+    z-index: 6;
+    border-radius: 0;
+    inset: 0;
+  }
+  .cottage-shell.is-call-view .immersive-chat .messages {
+    top: max(184px, 31dvh);
+    right: 0;
+    bottom: calc(var(--mobile-nav-offset) + 68px);
+    left: 0;
+    height: auto;
+    padding: 70px 14px 16px;
+    background: linear-gradient(to bottom, transparent 0, rgba(20, 17, 19, .1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 58px, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 58px, #000 100%);
+    transition:
+      opacity .22s ease,
+      transform .22s ease,
+      visibility .22s;
+  }
+  .cottage-shell.is-call-view .immersive-chat.is-history-hidden .messages {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+  }
+  .cottage-shell.is-call-view .immersive-chat .message-row.theirs {
+    --bubble-bg: color-mix(in srgb, var(--surface) 84%, var(--accent-soft));
+    --bubble-ink: var(--ink);
+  }
+  .cottage-shell.is-call-view .immersive-chat .message-row.mine {
+    --bubble-bg: color-mix(in srgb, var(--accent) 82%, var(--surface));
+    --bubble-ink: #fff;
+  }
+  .cottage-shell.is-call-view .immersive-chat .message-row .profile-avatar {
+    border-color: color-mix(in srgb, var(--surface) 88%, var(--accent-soft));
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer {
+    right: 0;
+    bottom: var(--mobile-nav-offset);
+    left: 0;
+    min-height: 68px;
+    padding: 9px 10px;
+    border: 0;
+    border-top: 1px solid var(--ring);
+    border-radius: 0;
+    background: var(--surface);
+    box-shadow: none;
+    backdrop-filter: blur(20px);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer > input:not([type="file"]) {
+    background: var(--surface-soft);
+    color: var(--ink);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer > input::placeholder {
+    color: var(--muted);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer > button,
+  .cottage-shell.is-call-view .immersive-chat .emoji-control > button,
+  .cottage-shell.is-call-view .mobile-call-trigger {
+    color: var(--muted);
+  }
+  .cottage-shell.is-call-view .immersive-chat .composer .send {
+    background: var(--accent);
+    color: #fff;
+  }
+  .mobile-call-menu {
+    display: flex;
+    align-items: center;
+  }
+  .mobile-call-trigger {
+    display: grid;
+    width: 34px;
+    min-width: 34px;
+    height: 38px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    font-size: 19px;
+  }
+  .mobile-call-trigger.is-on {
+    background: var(--accent-soft);
+    color: var(--accent-dark) !important;
+  }
+  .mobile-call-popover {
+    position: absolute;
+    z-index: 14;
+    bottom: calc(100% + 12px);
+    left: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 7px;
+    padding: 7px;
+    border: 1px solid var(--ring);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+  }
+  .mobile-call-popover button {
+    position: relative;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 13px;
+    background: var(--surface-soft);
+    color: var(--ink);
+    font-size: 19px;
+  }
+  .mobile-call-popover button.is-on {
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+  }
+  .mobile-call-popover button.is-off {
+    background: color-mix(in srgb, var(--accent-soft) 64%, var(--surface));
+    color: var(--accent-dark);
+  }
+  .mobile-call-popover .mic-meter { display: none; }
+  .app-dialog-backdrop {
+    align-items: end;
+    padding: 16px 12px max(16px, env(safe-area-inset-bottom));
+  }
+  .app-dialog {
+    width: 100%;
+    padding: 21px 18px;
+    border-radius: 24px;
+  }
+  .app-dialog footer button {
+    min-height: 44px;
+    flex: 1;
+  }
+  .image-viewer-backdrop { padding-right: 0; padding-left: 0; }
+  .image-viewer {
+    width: 100%;
+    max-height: 100dvh;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+  .image-viewer-canvas img { max-height: calc(100dvh - 142px); }
+  .image-viewer footer {
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memory-tree .tree-note-stream .tree-note-bubble {
+    display: none;
+    animation: none;
+  }
+  .memory-tree .tree-note-stream .tree-note-bubble:first-child {
+    display: block;
+    opacity: 1;
+  }
+}
+
+/* WebGL memory tree: real depth, irregular canopy layers, and branch-mounted
+   interaction fruit.  Canvas is deliberately bounded so the same scene stays
+   smooth in a mobile WebView. */
+.memory-tree.layout-orbit .memory-tree-webgl {
+  position: absolute;
+  z-index: 4;
+  top: -12%;
+  right: -10%;
+  bottom: -9%;
+  left: -10%;
+  overflow: visible;
+  touch-action: manipulation;
+}
+.memory-tree.layout-orbit .memory-tree-webgl::after {
+  position: absolute;
+  inset: 8% 11% 7%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 70%, color-mix(in srgb, var(--tree-leaf-light) 18%, transparent), transparent 67%);
+  content: "";
+  pointer-events: none;
+}
+.memory-tree.layout-orbit .memory-tree-webgl canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: pointer;
+  outline: 0;
+  filter: saturate(1.07) contrast(1.02);
+}
+.memory-tree.layout-orbit .memory-tree-webgl-loading {
+  border-radius: 48% 52% 42% 58%;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--tree-leaf-light) 26%, transparent), transparent 66%);
+  animation: memory-tree-load 1.35s ease-in-out infinite alternate;
+}
+.memory-tree.layout-orbit .memory-tree-keyboard-controls {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.memory-tree.layout-orbit .tree-interaction-hint {
+  position: absolute;
+  z-index: 9;
+  top: 14%;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 168px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--ring));
+  border-radius: 14px 14px 4px 14px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--accent-dark) 15%, transparent);
+  color: var(--ink-strong);
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  animation: memory-tree-hint-arrive .2s ease-out both;
+}
+.memory-tree.layout-orbit .tree-interaction-hint > svg {
+  flex: 0 0 auto;
+  color: var(--accent-dark);
+  font-size: 20px;
+}
+.memory-tree.layout-orbit .tree-interaction-hint span { display: grid; gap: 2px; }
+.memory-tree.layout-orbit .tree-interaction-hint b { font-size: 10px; font-weight: 850; }
+.memory-tree.layout-orbit .tree-interaction-hint small { color: var(--muted); font-size: 8px; white-space: nowrap; }
+.memory-tree.layout-orbit .tree-interaction-hint em {
+  margin-left: auto;
+  color: var(--accent-dark);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 850;
+}
+@keyframes memory-tree-load {
+  from { opacity: .45; transform: scale(.94); }
+  to { opacity: .85; transform: scale(1.04); }
+}
+@keyframes memory-tree-hint-arrive {
+  from { opacity: 0; transform: translateY(5px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 760px) {
+  .memory-tree.layout-orbit .memory-tree-webgl { top: -8%; right: -7%; bottom: -7%; left: -7%; }
+  .memory-tree.layout-orbit .tree-interaction-hint { top: 10%; right: -1%; padding: 6px 8px; }
+}
+
+/* The miss-you control is a small floating heart fruit, not a card placed over
+   the trunk. Its help text stays tucked away until the user discovers it. */
+.memory-tree.layout-orbit .tree-heart-button {
+  position: absolute;
+  z-index: 8;
+  top: 36%;
+  left: 50%;
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  align-content: center;
+  gap: 0;
+  padding: 7px 5px 6px;
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 43% 57% 53% 47%;
+  background: radial-gradient(circle at 35% 27%, #fff4f5 0 8%, #f5a7b5 30%, #d86f88 76%, #b84f70 100%);
+  color: #fff;
+  box-shadow: 0 8px 17px rgba(116, 51, 71, .25), 0 0 0 4px rgba(245, 178, 191, .16), inset 0 1px 1px rgba(255, 255, 255, .72);
+  cursor: pointer;
+  transform: translate(-50%, -50%) rotate(-4deg);
+  transition: transform .24s cubic-bezier(.2,.8,.2,1), box-shadow .24s ease, filter .24s ease;
+  animation: tree-heart-float 4.2s ease-in-out infinite;
+}
+.memory-tree.layout-orbit .tree-heart-button:hover,
+.memory-tree.layout-orbit .tree-heart-button:focus-visible {
+  outline: 0;
+  filter: saturate(1.12) brightness(1.04);
+  box-shadow: 0 0 0 6px rgba(235, 134, 157, .2), 0 13px 26px rgba(116, 51, 71, .32), inset 0 1px 1px rgba(255, 255, 255, .8);
+  transform: translate(-50%, -50%) rotate(3deg) scale(1.1);
+  animation-play-state: paused;
+}
+.memory-tree.layout-orbit .tree-heart-button:active { transform: translate(-50%, -50%) scale(.92); }
+.memory-tree.layout-orbit .tree-heart-button > svg {
+  position: relative;
+  z-index: 1;
+  font-size: 23px;
+  filter: drop-shadow(0 2px 3px rgba(90, 38, 52, .24));
+}
+.memory-tree.layout-orbit .tree-heart-button strong {
+  position: relative;
+  z-index: 1;
+  max-width: 52px;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 850;
+  line-height: 1.05;
+  letter-spacing: .02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.memory-tree.layout-orbit .tree-heart-button small {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 9px);
+  left: 50%;
+  width: max-content;
+  max-width: 118px;
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--surface));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--accent-dark) 14%, transparent);
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -3px);
+  transition: opacity .2s ease, transform .2s ease;
+  white-space: nowrap;
+}
+.memory-tree.layout-orbit .tree-heart-button:hover small,
+.memory-tree.layout-orbit .tree-heart-button:focus-visible small,
+.memory-tree.layout-orbit .tree-heart-button.state-sending small,
+.memory-tree.layout-orbit .tree-heart-button.state-sent small,
+.memory-tree.layout-orbit .tree-heart-button.state-recorded small,
+.memory-tree.layout-orbit .tree-heart-button.state-error small {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.memory-tree.layout-orbit .tree-heart-button-glow {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(255, 255, 255, .4);
+  border-radius: 50%;
+  opacity: .64;
+  animation: tree-heart-glow 3.2s ease-in-out infinite;
+}
+.memory-tree.layout-orbit .tree-heart-button.state-sending { cursor: wait; animation-duration: 1.1s; }
+.memory-tree.layout-orbit .tree-heart-button.state-sent { background: radial-gradient(circle at 35% 27%, #fff5ed 0 8%, #f3b387 30%, #d67878 77%, #af5575 100%); }
+.memory-tree.layout-orbit .tree-heart-button.state-recorded { background: radial-gradient(circle at 35% 27%, #fff7e9 0 8%, #e8c47d 30%, #c89461 77%, #9a6e55 100%); }
+.memory-tree.layout-orbit .tree-heart-button.state-error { background: radial-gradient(circle at 35% 27%, #fff3f4 0 8%, #c98e9e 30%, #9b5a70 78%, #744256 100%); }
+.memory-tree.layout-orbit.stage-seed .tree-heart-button { top: 43%; transform: translate(-50%, -50%) scale(.82); }
+.memory-tree.layout-orbit.stage-sprout .tree-heart-button { top: 39%; transform: translate(-50%, -50%) scale(.9); }
+.memory-tree.layout-orbit.stage-canopy .tree-heart-button { top: 34%; }
+@keyframes tree-heart-float {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -8px; }
+}
+@keyframes tree-heart-glow {
+  0%, 100% { opacity: .36; transform: scale(.85); }
+  50% { opacity: .82; transform: scale(1.08); }
+}
+@media (max-width: 760px) {
+  .memory-tree.layout-orbit .tree-heart-button { width: 57px; height: 57px; top: 37%; }
+  .memory-tree.layout-orbit .tree-heart-button > svg { font-size: 20px; }
+  .memory-tree.layout-orbit .tree-heart-button strong { font-size: 8px; }
+  .memory-tree.layout-orbit .tree-heart-button small { font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-tree.layout-orbit .tree-heart-button,
+  .memory-tree.layout-orbit .tree-heart-button-glow { animation: none; }
+}
+
+/* The approved hand-painted growth sheet is clipped with local SVG clip paths.
+   This preserves its original brushwork in browsers and mobile WebViews without
+   a WebGL dependency. */
+.memory-tree.layout-tree .tree-glow {
+  top: 14%;
+  width: 360px;
+  height: 280px;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--tree-leaf-light) 30%, transparent), transparent 68%);
+}
+.memory-tree.layout-tree .svg-memory-tree {
+  position: absolute;
+  z-index: 4;
+  top: -9%;
+  right: -8%;
+  bottom: -10%;
+  left: -8%;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  touch-action: manipulation;
+}
+.memory-tree.layout-tree .svg-memory-tree > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: svg-tree-sprite-settle 6.8s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .svg-tree-sprite {
+  overflow: hidden;
+  image-rendering: auto;
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
+.memory-tree.layout-tree .svg-tree-crown,
+.memory-tree.layout-tree .svg-tree-trunk,
+.memory-tree.layout-tree .svg-tree-seedling {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: svg-tree-layer-sway 5.8s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .svg-tree-crown.sprite-delay-1,
+.memory-tree.layout-tree .svg-tree-trunk.sprite-delay-1 { animation-delay: -1.8s; }
+.memory-tree.layout-tree .svg-tree-crown.sprite-delay-2,
+.memory-tree.layout-tree .svg-tree-trunk.sprite-delay-2 { animation-delay: -3.4s; }
+.memory-tree.layout-tree .svg-memory-tree-loading {
+  border-radius: 50%;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--tree-leaf-light) 28%, transparent), transparent 66%);
+  animation: svg-tree-load 1.2s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .svg-memory-tree-keyboard-controls {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.memory-tree.layout-tree .svg-tree-leaf {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: svg-tree-leaf-sway 4.8s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .svg-tree-heart-leaf { animation: svg-tree-heart-shine 3.6s ease-in-out infinite alternate; }
+.memory-tree.layout-tree .svg-tree-flower { animation: svg-tree-flower-breathe 3.2s ease-in-out infinite alternate; }
+.memory-tree.layout-tree .svg-memory-fruit { cursor: pointer; outline: none; }
+.memory-tree.layout-tree .svg-memory-fruit:hover .svg-tree-heart,
+.memory-tree.layout-tree .svg-memory-fruit:focus .svg-tree-heart,
+.memory-tree.layout-tree .svg-memory-fruit.is-active .svg-tree-heart {
+  filter: drop-shadow(0 3px 5px rgba(164, 67, 91, .32));
+}
+.memory-tree.layout-tree .svg-memory-fruit-halo { animation: svg-tree-fruit-pulse 2.6s ease-in-out infinite; }
+.memory-tree.layout-tree .svg-memory-fruit.is-active .svg-memory-fruit-halo { animation-duration: 1.1s; }
+.memory-tree.layout-tree .tree-interaction-hint {
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 168px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--ring));
+  border-radius: 14px 14px 4px 14px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--accent-dark) 15%, transparent);
+  color: var(--ink-strong);
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  animation: svg-tree-hint-arrive .2s ease-out both;
+  transition: left .2s ease, top .2s ease, transform .2s ease;
+}
+.memory-tree.layout-tree .tree-interaction-hint::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  background: color-mix(in srgb, var(--surface) 92%, var(--accent-soft));
+  transform: translateY(-50%) rotate(45deg);
+}
+.memory-tree.layout-tree .tree-interaction-hint.is-right::before { left: -5px; }
+.memory-tree.layout-tree .tree-interaction-hint.is-left::before { right: -5px; }
+.memory-tree.layout-tree .tree-interaction-hint.is-left { border-radius: 14px 14px 4px 14px; }
+.memory-tree.layout-tree .tree-interaction-hint.is-right { border-radius: 14px 14px 14px 4px; }
+.memory-tree.layout-tree .tree-interaction-hint > svg { flex: 0 0 auto; color: var(--accent-dark); font-size: 20px; }
+.memory-tree.layout-tree .tree-interaction-hint span { display: grid; gap: 2px; }
+.memory-tree.layout-tree .tree-interaction-hint b { font-size: 10px; font-weight: 850; }
+.memory-tree.layout-tree .tree-interaction-hint small { color: var(--muted); font-size: 8px; white-space: nowrap; }
+.memory-tree.layout-tree .tree-interaction-hint em { margin-left: auto; color: var(--accent-dark); font-size: 9px; font-style: normal; font-weight: 850; }
+.memory-tree.layout-tree .tree-heart-button {
+  position: absolute;
+  z-index: 8;
+  top: 35%;
+  left: 50%;
+  display: grid;
+  width: 62px;
+  height: 62px;
+  place-items: center;
+  align-content: center;
+  gap: 0;
+  padding: 7px 5px 6px;
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 43% 57% 53% 47%;
+  background: radial-gradient(circle at 35% 27%, #fff4f5 0 8%, #f5a7b5 30%, #d86f88 76%, #b84f70 100%);
+  color: #fff;
+  box-shadow: 0 8px 17px rgba(116, 51, 71, .25), 0 0 0 4px rgba(245, 178, 191, .16), inset 0 1px 1px rgba(255, 255, 255, .72);
+  cursor: pointer;
+  transform: translate(-50%, -50%) rotate(-4deg);
+  transition: transform .24s cubic-bezier(.2,.8,.2,1), box-shadow .24s ease, filter .24s ease;
+  animation: tree-heart-float 4.2s ease-in-out infinite;
+}
+.memory-tree.layout-tree .tree-heart-button:hover,
+.memory-tree.layout-tree .tree-heart-button:focus-visible {
+  outline: 0;
+  filter: saturate(1.12) brightness(1.04);
+  box-shadow: 0 0 0 6px rgba(235, 134, 157, .2), 0 13px 26px rgba(116, 51, 71, .32), inset 0 1px 1px rgba(255, 255, 255, .8);
+  transform: translate(-50%, -50%) rotate(3deg) scale(1.1);
+  animation-play-state: paused;
+}
+.memory-tree.layout-tree .tree-heart-button:active { transform: translate(-50%, -50%) scale(.92); }
+.memory-tree.layout-tree .tree-heart-button > svg { position: relative; z-index: 1; font-size: 22px; filter: drop-shadow(0 2px 3px rgba(90, 38, 52, .24)); }
+.memory-tree.layout-tree .tree-heart-button strong { position: relative; z-index: 1; max-width: 52px; overflow: hidden; font-size: 9px; font-weight: 850; line-height: 1.05; letter-spacing: .02em; text-overflow: ellipsis; white-space: nowrap; }
+.memory-tree.layout-tree .tree-heart-button small {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 9px);
+  left: 50%;
+  width: max-content;
+  max-width: 118px;
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--surface));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--accent-dark) 14%, transparent);
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -3px);
+  transition: opacity .2s ease, transform .2s ease;
+  white-space: nowrap;
+}
+.memory-tree.layout-tree .tree-heart-button:hover small,
+.memory-tree.layout-tree .tree-heart-button:focus-visible small,
+.memory-tree.layout-tree .tree-heart-button.state-sending small,
+.memory-tree.layout-tree .tree-heart-button.state-sent small,
+.memory-tree.layout-tree .tree-heart-button.state-recorded small,
+.memory-tree.layout-tree .tree-heart-button.state-error small { opacity: 1; transform: translate(-50%, 0); }
+.memory-tree.layout-tree .tree-heart-button-glow { position: absolute; inset: 7px; border: 1px solid rgba(255, 255, 255, .4); border-radius: 50%; opacity: .64; animation: tree-heart-glow 3.2s ease-in-out infinite; }
+.memory-tree.layout-tree .tree-heart-button.state-sending { cursor: wait; animation-duration: 1.1s; }
+.memory-tree.layout-tree .tree-heart-button.state-sent { background: radial-gradient(circle at 35% 27%, #fff5ed 0 8%, #f3b387 30%, #d67878 77%, #af5575 100%); }
+.memory-tree.layout-tree .tree-heart-button.state-recorded { background: radial-gradient(circle at 35% 27%, #fff7e9 0 8%, #e8c47d 30%, #c89461 77%, #9a6e55 100%); }
+.memory-tree.layout-tree .tree-heart-button.state-error { background: radial-gradient(circle at 35% 27%, #fff3f4 0 8%, #c98e9e 30%, #9b5a70 78%, #744256 100%); }
+.memory-tree.layout-tree.stage-seed .tree-heart-button { top: 43%; transform: translate(-50%, -50%) scale(.82); }
+.memory-tree.layout-tree.stage-sprout .tree-heart-button { top: 39%; transform: translate(-50%, -50%) scale(.9); }
+.memory-tree.layout-tree.stage-canopy .tree-heart-button { top: 33%; }
+@keyframes svg-tree-load { from { opacity: .45; transform: scale(.94); } to { opacity: .84; transform: scale(1.04); } }
+@keyframes svg-tree-sprite-settle { from { filter: saturate(.98) brightness(.99); transform: translateY(1px) scale(.997); } to { filter: saturate(1.04) brightness(1.01); transform: translateY(-2px) scale(1.003); } }
+@keyframes svg-tree-layer-sway { from { transform: rotate(-1.3deg) translateY(1px); } to { transform: rotate(1.3deg) translateY(-2px); } }
+@keyframes svg-tree-leaf-sway { from { transform: rotate(-2deg) translateY(0); } to { transform: rotate(2deg) translateY(-2px); } }
+@keyframes svg-tree-heart-shine { from { opacity: .75; } to { opacity: 1; } }
+@keyframes svg-tree-flower-breathe { from { opacity: .72; } to { opacity: 1; } }
+@keyframes svg-tree-fruit-pulse { 0%, 100% { opacity: .08; } 50% { opacity: .32; } }
+@keyframes svg-tree-hint-arrive { from { opacity: 0; transform: translateY(5px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@media (max-width: 760px) {
+  .memory-tree.layout-tree .svg-memory-tree { top: -5%; right: -3%; bottom: -6%; left: -3%; }
+  .memory-tree.layout-tree .tree-interaction-hint { top: 10%; right: -1%; padding: 6px 8px; }
+  .memory-tree.layout-tree .tree-heart-button { width: 56px; height: 56px; top: 36%; }
+  .memory-tree.layout-tree .tree-heart-button > svg { font-size: 19px; }
+  .memory-tree.layout-tree .tree-heart-button strong { font-size: 8px; }
+  .memory-tree.layout-tree .tree-heart-button small { font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-tree.layout-tree .svg-memory-tree > svg,
+  .memory-tree.layout-tree .svg-tree-crown,
+  .memory-tree.layout-tree .svg-tree-trunk,
+  .memory-tree.layout-tree .svg-tree-seedling,
+  .memory-tree.layout-tree .svg-tree-leaf,
+  .memory-tree.layout-tree .svg-tree-heart-leaf,
+  .memory-tree.layout-tree .svg-tree-flower,
+  .memory-tree.layout-tree .svg-memory-fruit-halo,
+  .memory-tree.layout-tree .tree-heart-button,
+  .memory-tree.layout-tree .tree-heart-button-glow { animation: none; }
+}
+
+/* Five independent recent-interaction tracks. Each orbit has its own radius,
+   color, phase, and speed so one hovered entry can slow without disturbing the
+   other recent moments. */
+.memory-tree.layout-orbit .orbit-webgl {
+  position: absolute;
+  z-index: 4;
+  top: -9%;
+  right: -12%;
+  bottom: -12%;
+  left: -12%;
+  overflow: visible;
+  touch-action: manipulation;
+}
+.memory-tree.layout-orbit .orbit-webgl canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: crosshair;
+  outline: 0;
+}
+.memory-tree.layout-orbit .orbit-keyboard-controls {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.memory-tree.layout-orbit .orbit-interaction-hint {
+  position: absolute;
+  z-index: 9;
+  top: 15%;
+  right: -1%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 160px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--ring));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--accent-dark) 14%, transparent);
+  color: var(--ink-strong);
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  animation: orbit-hint-arrive .2s ease-out both;
+}
+.memory-tree.layout-orbit .orbit-interaction-hint > svg {
+  flex: 0 0 auto;
+  color: var(--accent-dark);
+  font-size: 20px;
+}
+.memory-tree.layout-orbit .orbit-interaction-hint span {
+  display: grid;
+  gap: 2px;
+}
+.memory-tree.layout-orbit .orbit-interaction-hint b { font-size: 10px; font-weight: 850; }
+.memory-tree.layout-orbit .orbit-interaction-hint small { color: var(--muted); font-size: 8px; white-space: nowrap; }
+.memory-tree.layout-orbit .orbit-interaction-hint em {
+  margin-left: auto;
+  color: var(--accent-dark);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 850;
+}
+@keyframes orbit-hint-arrive {
+  from { opacity: 0; transform: translateY(5px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.memory-tree.layout-orbit .interaction-orbits {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+  pointer-events: none;
+}
+.memory-tree.layout-orbit .interaction-orbit {
+  --orbit-width: 52%;
+  --orbit-height: 30%;
+  --orbit-radius-y: 15%;
+  --orbit-duration: 34s;
+  --orbit-start: 0deg;
+  --orbit-color: #e4889c;
+  --orbit-tilt: 22deg;
+  --orbit-yaw: -16deg;
+  --orbit-depth: 0px;
+  --orbit-wobble: 10s;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  animation: interaction-orbit-turn var(--orbit-duration) linear infinite;
+}
+.memory-tree.layout-orbit .interaction-orbit-plane {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: interaction-orbit-wobble var(--orbit-wobble) ease-in-out infinite alternate;
+}
+.memory-tree.layout-orbit .interaction-orbit-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--orbit-width);
+  height: var(--orbit-height);
+  border: 2px dashed color-mix(in srgb, var(--orbit-color) 82%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--orbit-color) 20%, transparent);
+  content: "";
+  opacity: .88;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.memory-tree.layout-orbit .interaction-orbit-node {
+  position: absolute;
+  top: calc(50% - var(--orbit-radius-y));
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  animation: interaction-orbit-counter var(--orbit-duration) linear infinite;
+}
+.memory-tree.layout-orbit .interaction-orbit-trigger {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  padding: 0;
+  border: 2px solid color-mix(in srgb, var(--orbit-color) 82%, white);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--orbit-color) 92%, var(--surface));
+  color: #fff;
+  box-shadow: 0 7px 18px color-mix(in srgb, var(--orbit-color) 30%, transparent), 0 0 0 4px color-mix(in srgb, var(--orbit-color) 12%, transparent);
+  cursor: pointer;
+  transform: rotateX(calc(-1 * var(--orbit-tilt))) rotateY(calc(-1 * var(--orbit-yaw)));
+  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+}
+.memory-tree.layout-orbit .interaction-orbit-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #fff 0 22%, color-mix(in srgb, var(--orbit-color) 72%, white) 42%, var(--orbit-color) 100%);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--orbit-color) 30%, transparent), 0 0 11px color-mix(in srgb, var(--orbit-color) 74%, transparent);
+}
+.memory-tree.layout-orbit .interaction-orbit-node::before {
+  position: absolute;
+  inset: -8px;
+  border: 1px solid color-mix(in srgb, var(--orbit-color) 72%, transparent);
+  border-radius: 50%;
+  content: "";
+  opacity: .7;
+  animation: interaction-orbit-point-pulse 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.memory-tree.layout-orbit .interaction-orbit-node::after {
+  position: absolute;
+  top: 50%;
+  left: -15px;
+  width: 18px;
+  height: 2px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--orbit-color) 64%, transparent));
+  content: "";
+  opacity: .68;
+  transform: translateY(-50%) rotate(-16deg);
+  transform-origin: right center;
+  pointer-events: none;
+}
+.memory-tree.layout-orbit .interaction-orbit-trigger:hover,
+.memory-tree.layout-orbit .interaction-orbit-trigger:focus-visible,
+.memory-tree.layout-orbit .interaction-orbit.is-selected .interaction-orbit-trigger {
+  outline: 0;
+  filter: saturate(1.16) brightness(1.05);
+  transform: rotateX(calc(-1 * var(--orbit-tilt))) rotateY(calc(-1 * var(--orbit-yaw))) scale(1.22);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--orbit-color) 18%, transparent), 0 10px 26px color-mix(in srgb, var(--orbit-color) 38%, transparent);
+}
+.memory-tree.layout-orbit .interaction-orbit-tooltip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 12px);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: max-content;
+  padding: 6px 8px;
+  border: 1px solid color-mix(in srgb, var(--orbit-color) 36%, var(--ring));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  color: var(--ink-strong);
+  box-shadow: 0 7px 18px rgba(54, 44, 46, .12);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(-4px);
+  transition: opacity .2s ease, transform .2s ease;
+  white-space: nowrap;
+}
+.memory-tree.layout-orbit .interaction-orbit-tooltip svg {
+  width: 14px;
+  height: 14px;
+  color: var(--orbit-color);
+}
+.memory-tree.layout-orbit .interaction-orbit-tooltip b {
+  font-size: 10px;
+  font-weight: 800;
+}
+.memory-tree.layout-orbit .interaction-orbit-tooltip small {
+  color: var(--orbit-color);
+  font-size: 9px;
+  font-weight: 800;
+}
+.memory-tree.layout-orbit .interaction-orbit.is-hovered .interaction-orbit-tooltip,
+.memory-tree.layout-orbit .interaction-orbit.is-selected .interaction-orbit-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+.memory-tree.layout-orbit .interaction-orbit.is-hovered {
+  animation-duration: calc(var(--orbit-duration) * 2);
+}
+.memory-tree.layout-orbit .interaction-orbit.is-hovered .interaction-orbit-node {
+  animation-duration: calc(var(--orbit-duration) * 2);
+}
+.memory-tree.layout-orbit .interaction-orbit.is-hovered .interaction-orbit-plane {
+  animation-duration: calc(var(--orbit-wobble) * 2);
+}
+.memory-tree.layout-orbit .interaction-orbit-1 { --orbit-width: 52%; --orbit-height: 30%; --orbit-radius-y: 15%; --orbit-duration: 34s; --orbit-color: #e4889c; --orbit-tilt: 22deg; --orbit-yaw: -16deg; --orbit-depth: 0px; --orbit-wobble: 10s; }
+.memory-tree.layout-orbit .interaction-orbit-2 { --orbit-width: 60%; --orbit-height: 38%; --orbit-radius-y: 19%; --orbit-duration: 42s; --orbit-color: #77aaa2; --orbit-tilt: 34deg; --orbit-yaw: 28deg; --orbit-depth: -12px; --orbit-wobble: 12s; }
+.memory-tree.layout-orbit .interaction-orbit-3 { --orbit-width: 68%; --orbit-height: 46%; --orbit-radius-y: 23%; --orbit-duration: 51s; --orbit-color: #ddae68; --orbit-tilt: 16deg; --orbit-yaw: 12deg; --orbit-depth: 14px; --orbit-wobble: 14s; }
+.memory-tree.layout-orbit .interaction-orbit-4 { --orbit-width: 76%; --orbit-height: 54%; --orbit-radius-y: 27%; --orbit-duration: 38s; --orbit-color: #849bd1; --orbit-tilt: 29deg; --orbit-yaw: -24deg; --orbit-depth: -8px; --orbit-wobble: 16s; }
+.memory-tree.layout-orbit .interaction-orbit-5 { --orbit-width: 84%; --orbit-height: 62%; --orbit-radius-y: 31%; --orbit-duration: 47s; --orbit-color: #ad8fc8; --orbit-tilt: 40deg; --orbit-yaw: 26deg; --orbit-depth: 8px; --orbit-wobble: 18s; }
+@keyframes interaction-orbit-turn {
+  from { transform: rotate(var(--orbit-start)); }
+  to { transform: rotate(calc(var(--orbit-start) + 360deg)); }
+}
+@keyframes interaction-orbit-wobble {
+  0%, 100% { transform: rotateX(var(--orbit-tilt)) rotateY(var(--orbit-yaw)) translateZ(var(--orbit-depth)); }
+  50% { transform: rotateX(calc(var(--orbit-tilt) + 4deg)) rotateY(calc(var(--orbit-yaw) - 5deg)) translateZ(var(--orbit-depth)); }
+}
+@keyframes interaction-orbit-counter {
+  from { rotate: calc(-1 * var(--orbit-start)); }
+  to { rotate: calc(-1 * var(--orbit-start) - 360deg); }
+}
+@keyframes interaction-orbit-point-pulse {
+  0%, 100% { opacity: .28; transform: scale(.72); }
+  50% { opacity: .9; transform: scale(1.24); }
+}
+@media (max-width: 760px) {
+  .memory-tree.layout-orbit .orbit-webgl { top: -7%; right: -6%; bottom: -8%; left: -6%; }
+  .memory-tree.layout-orbit .orbit-interaction-hint { top: 12%; right: 0; padding: 6px 8px; }
+  .memory-tree.layout-orbit .interaction-orbit-1 { --orbit-width: 48%; --orbit-height: 25%; --orbit-radius-y: 12.5%; }
+  .memory-tree.layout-orbit .interaction-orbit-2 { --orbit-width: 58%; --orbit-height: 33%; --orbit-radius-y: 16.5%; }
+  .memory-tree.layout-orbit .interaction-orbit-3 { --orbit-width: 68%; --orbit-height: 41%; --orbit-radius-y: 20.5%; }
+  .memory-tree.layout-orbit .interaction-orbit-4 { --orbit-width: 78%; --orbit-height: 49%; --orbit-radius-y: 24.5%; }
+  .memory-tree.layout-orbit .interaction-orbit-5 { --orbit-width: 88%; --orbit-height: 57%; --orbit-radius-y: 28.5%; }
+  .memory-tree.layout-orbit .interaction-orbit-node { width: 32px; height: 32px; }
+  .memory-tree.layout-orbit .interaction-orbit-tooltip { gap: 3px; padding: 5px 6px; }
+  .memory-tree.layout-orbit .interaction-orbit-tooltip b { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-tree.layout-orbit .interaction-orbit,
+  .memory-tree.layout-orbit .interaction-orbit-plane,
+  .memory-tree.layout-orbit .interaction-orbit-node,
+  .memory-tree.layout-orbit .interaction-orbit-node::before { animation: none; }
+}
+
+/* Option 3: a quiet double orbit for shared memories. */
+.memory-tree.layout-orbit .tree-shadow,
+.memory-tree.layout-orbit .tree-ground { display: none; }
+.memory-tree.layout-orbit .tree-glow {
+  top: 15%;
+  width: 340px;
+  height: 260px;
+  background: color-mix(in srgb, var(--accent-soft) 30%, transparent);
+}
+.memory-tree.layout-orbit .orbit-art { transform-origin: 260px 190px; }
+.memory-tree.layout-orbit .tree-art { overflow: visible; }
+.memory-tree.layout-orbit .memory-leaves {
+  transform-origin: 50% 50%;
+  z-index: 4;
+  animation: orbit-node-revolve 46s linear infinite;
+}
+.memory-tree.layout-orbit .orbit-node {
+  display: contents;
+}
+.memory-tree.layout-orbit .orbit-node .memory-leaf {
+  rotate: 0deg;
+  animation-name: orbit-node-counter, orbit-node-float;
+  animation-duration: 46s, 5.2s;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+.memory-tree.layout-orbit.is-orbit-slow .memory-leaves {
+  animation-duration: 84s;
+}
+.memory-tree.layout-orbit.is-orbit-slow .orbit-track,
+.memory-tree.layout-orbit.is-orbit-slow .orbit-swoop {
+  animation-duration: 48s;
+}
+.memory-tree.layout-orbit .orbit-track {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent) 34%, var(--ring));
+  stroke-width: 2;
+  stroke-dasharray: 2 9;
+  vector-effect: non-scaling-stroke;
+  animation: orbit-track-flow 22s linear infinite;
+}
+.memory-tree.layout-orbit .orbit-track-outer { opacity: .72; }
+.memory-tree.layout-orbit .orbit-track-inner {
+  stroke: color-mix(in srgb, var(--accent-dark) 36%, var(--ring));
+  stroke-dasharray: 1 7;
+  opacity: .62;
+  animation-direction: reverse;
+  animation-duration: 16s;
+}
+.memory-tree.layout-orbit .orbit-swoop {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent) 28%, var(--surface));
+  stroke-linecap: round;
+  stroke-width: 3;
+  opacity: .72;
+  stroke-dasharray: 7 16;
+  animation: orbit-swoop-flow 8s ease-in-out infinite;
+}
+.memory-tree.layout-orbit .orbit-swoop-second {
+  stroke: color-mix(in srgb, var(--accent-dark) 22%, var(--surface));
+  stroke-width: 2;
+  opacity: .58;
+  animation-delay: -3.2s;
+  animation-duration: 11s;
+}
+.memory-tree.layout-orbit .orbit-star {
+  fill: color-mix(in srgb, var(--accent) 70%, #fff);
+  opacity: .72;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit-star-breathe 3.6s ease-in-out infinite alternate;
+}
+.memory-tree.layout-orbit .orbit-star:nth-child(2n) { fill: var(--accent-dark); animation-delay: -1.2s; }
+.memory-tree.layout-orbit .orbit-star:nth-child(3n) { opacity: .45; animation-delay: -2.4s; }
+.memory-tree.layout-orbit .orbit-core-halo {
+  fill: color-mix(in srgb, var(--accent-soft) 52%, transparent);
+  stroke: color-mix(in srgb, var(--accent) 18%, transparent);
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit-core-pulse 3.8s ease-in-out infinite;
+}
+.memory-tree.layout-orbit .orbit-core-dot {
+  fill: color-mix(in srgb, var(--surface) 74%, var(--accent-soft));
+  stroke: color-mix(in srgb, var(--accent) 30%, var(--surface));
+  stroke-width: 2;
+  filter: drop-shadow(0 8px 14px color-mix(in srgb, var(--accent) 20%, transparent));
+}
+.memory-tree.layout-orbit .orbit-heart-button {
+  position: absolute;
+  z-index: 8;
+  top: 49%;
+  left: 50%;
+  display: grid;
+  width: 92px;
+  height: 92px;
+  place-items: center;
+  align-content: center;
+  gap: 1px;
+  padding: 16px 10px 11px;
+  overflow: visible;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--surface));
+  border-radius: 38% 62% 56% 44%;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 82%, var(--accent-soft)), color-mix(in srgb, var(--accent) 76%, var(--surface)));
+  color: #fff;
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--accent-dark) 26%, transparent), inset 0 1px 0 rgba(255,255,255,.56);
+  cursor: pointer;
+  transform: translate(-50%, -50%) rotate(-4deg);
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, filter .28s ease;
+}
+.memory-tree.layout-orbit .orbit-heart-button:hover,
+.memory-tree.layout-orbit .orbit-heart-button:focus-visible {
+  outline: 0;
+  filter: saturate(1.12);
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 16%, transparent), 0 18px 42px color-mix(in srgb, var(--accent-dark) 34%, transparent), inset 0 1px 0 rgba(255,255,255,.7);
+  transform: translate(-50%, -50%) rotate(3deg) scale(1.08);
+}
+.memory-tree.layout-orbit .orbit-heart-button:active {
+  transform: translate(-50%, -50%) rotate(0) scale(.94);
+}
+.memory-tree.layout-orbit .orbit-heart-button > svg {
+  position: relative;
+  z-index: 1;
+  font-size: 30px;
+  filter: drop-shadow(0 4px 7px rgba(80, 35, 45, .2));
+  animation: orbit-heartbeat 2.6s ease-in-out infinite;
+}
+.memory-tree.layout-orbit .orbit-heart-button strong,
+.memory-tree.layout-orbit .orbit-heart-button small {
+  position: relative;
+  z-index: 1;
+  line-height: 1;
+}
+.memory-tree.layout-orbit .orbit-heart-button strong { font-size: 11px; letter-spacing: .04em; }
+.memory-tree.layout-orbit .orbit-heart-button small { margin-top: 3px; font-size: 7px; opacity: .84; white-space: nowrap; }
+.memory-tree.layout-orbit .orbit-heart-button-glow {
+  position: absolute;
+  inset: 9px;
+  border: 1px solid rgba(255,255,255,.38);
+  border-radius: 50%;
+  opacity: .7;
+  animation: orbit-heart-glow 3.5s ease-in-out infinite;
+}
+.memory-tree.layout-orbit .orbit-heart-button.state-sending { cursor: wait; }
+.memory-tree.layout-orbit .orbit-heart-button.state-sending > svg { animation-duration: .8s; }
+.memory-tree.layout-orbit .orbit-heart-button.state-sent { background: linear-gradient(145deg, #efb1bd, #c76c87); }
+.memory-tree.layout-orbit .orbit-heart-button.state-recorded { background: linear-gradient(145deg, #e7bc89, #c9895a); }
+.memory-tree.layout-orbit .orbit-heart-button.state-error { background: linear-gradient(145deg, #bf8f99, #8c5969); }
+.memory-tree.layout-orbit.stage-seed .orbit-track { opacity: .32; animation-duration: 34s; }
+.memory-tree.layout-orbit.stage-seed .orbit-track-inner { opacity: .2; }
+.memory-tree.layout-orbit.stage-seed .orbit-heart-button { transform: translate(-50%, -50%) rotate(-4deg) scale(.84); }
+.memory-tree.layout-orbit.stage-sprout .orbit-track { opacity: .52; animation-duration: 29s; }
+.memory-tree.layout-orbit.stage-sprout .orbit-heart-button { transform: translate(-50%, -50%) rotate(-4deg) scale(.9); }
+.memory-tree.layout-orbit.stage-bloom .orbit-track { stroke: color-mix(in srgb, var(--accent) 58%, #d9849b); filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 24%, transparent)); }
+.memory-tree.layout-orbit.stage-canopy .orbit-track { stroke: color-mix(in srgb, var(--accent-dark) 62%, #8cb9a6); stroke-width: 2.7; filter: drop-shadow(0 0 7px color-mix(in srgb, var(--accent) 28%, transparent)); }
+.memory-tree.layout-orbit.stage-canopy .orbit-heart-button { width: 98px; height: 98px; border-radius: 47% 53% 62% 38%; }
+.memory-tree.layout-orbit .orbit-bloom-petals { transform-origin: 260px 190px; animation: orbit-petal-turn 14s linear infinite; }
+.memory-tree.layout-orbit .orbit-petal { fill: color-mix(in srgb, var(--accent) 56%, #f5b1b8); stroke: rgba(255,255,255,.58); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: orbit-petal-bloom 2.8s ease-in-out infinite alternate; }
+.memory-tree.layout-orbit .orbit-petal:nth-child(2n) { animation-delay: -.9s; }
+.memory-tree.layout-orbit .orbit-canopy-rays { fill: none; stroke: color-mix(in srgb, var(--accent-dark) 52%, #b4d6b4); stroke-linecap: round; stroke-width: 3; opacity: .72; transform-origin: 260px 190px; animation: orbit-ray-shimmer 4.2s ease-in-out infinite; }
+.memory-tree.layout-orbit .memory-leaf {
+  width: 44px;
+  height: 44px;
+  border-color: color-mix(in srgb, var(--surface) 94%, transparent);
+  background: color-mix(in srgb, var(--accent-dark) 82%, var(--surface));
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--accent-dark) 24%, transparent);
+  cursor: pointer;
+  animation: orbit-node-float 5.2s ease-in-out infinite;
+}
+.memory-tree.layout-orbit .memory-leaf:hover,
+.memory-tree.layout-orbit .memory-leaf:focus-visible,
+.memory-tree.layout-orbit .memory-leaf.is-selected {
+  z-index: 7;
+  outline: 0;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 18%, transparent), 0 12px 30px color-mix(in srgb, var(--accent-dark) 32%, transparent);
+  transform: scale(1.18);
+  animation-play-state: paused;
+}
+.memory-tree.layout-orbit .memory-leaf::after {
+  position: absolute;
+  inset: -7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, transparent);
+  border-radius: 50%;
+  content: "";
+  opacity: 0;
+  transform: scale(.72);
+}
+.memory-tree.layout-orbit .memory-leaf:hover::after,
+.memory-tree.layout-orbit .memory-leaf:focus-visible::after,
+.memory-tree.layout-orbit .memory-leaf.is-selected::after {
+  opacity: 1;
+  animation: orbit-node-ring 1.4s ease-out infinite;
+}
+.memory-tree.layout-orbit .memory-leaf b {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  display: block;
+  width: max-content;
+  max-width: 150px;
+  padding: 5px 8px;
+  border: 1px solid var(--ring);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
+  color: var(--ink-strong);
+  font-size: 9px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-3px);
+  transition: opacity .2s ease, transform .2s ease;
+  white-space: nowrap;
+}
+.memory-tree.layout-orbit .memory-leaf:hover b,
+.memory-tree.layout-orbit .memory-leaf:focus-visible b,
+.memory-tree.layout-orbit .memory-leaf.is-selected b {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.memory-tree.layout-orbit .leaf-1 { animation-delay: -.8s; }
+.memory-tree.layout-orbit .leaf-2 { animation-delay: -2.1s; }
+.memory-tree.layout-orbit .leaf-3 { animation-delay: -3.5s; }
+.memory-tree.layout-orbit .leaf-4 { animation-delay: -1.5s; }
+.memory-tree.layout-orbit .leaf-5 { animation-delay: -4s; }
+.memory-tree.layout-orbit .memory-leaf::before {
+  width: 22px;
+  height: 2px;
+  background: color-mix(in srgb, var(--accent) 70%, var(--surface));
+  opacity: .75;
+}
+.memory-tree.layout-orbit .leaf-1 { top: 52%; right: auto; left: 8%; }
+.memory-tree.layout-orbit .leaf-2 { top: 8%; right: auto; left: 42%; }
+.memory-tree.layout-orbit .leaf-3 { top: 22%; right: 5%; left: auto; }
+.memory-tree.layout-orbit .leaf-4 { top: 48%; right: auto; left: 43%; }
+.memory-tree.layout-orbit .leaf-5 { top: 57%; right: 15%; left: auto; }
+.memory-tree.layout-orbit .leaf-5 { display: grid; }
+.memory-tree.layout-orbit .leaf-1::before { right: 87%; bottom: 7px; transform: rotate(-16deg); }
+.memory-tree.layout-orbit .leaf-2::before { right: 62%; bottom: -8px; transform: rotate(78deg); }
+.memory-tree.layout-orbit .leaf-3::before { right: 82%; bottom: 7px; transform: rotate(24deg); }
+.memory-tree.layout-orbit .leaf-4::before { right: 88%; bottom: 8px; transform: rotate(-34deg); }
+.memory-tree.layout-orbit .leaf-5::before { right: 84%; bottom: 8px; transform: rotate(18deg); }
+.memory-tree.layout-orbit .orbit-node .memory-leaf {
+  rotate: 0deg;
+  animation-name: orbit-node-counter, orbit-node-float;
+  animation-duration: 46s, 5.2s;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+@keyframes orbit-star-breathe {
+  from { opacity: .45; transform: scale(.82); }
+  to { opacity: .92; transform: scale(1.12); }
+}
+@keyframes orbit-track-flow {
+  to { stroke-dashoffset: -220; }
+}
+@keyframes orbit-swoop-flow {
+  0%, 100% { stroke-dashoffset: 0; opacity: .42; }
+  50% { stroke-dashoffset: -55; opacity: .9; }
+}
+@keyframes orbit-core-pulse {
+  0%, 100% { opacity: .42; transform: scale(.92); }
+  50% { opacity: .82; transform: scale(1.08); }
+}
+@keyframes orbit-heartbeat {
+  0%, 25%, 45%, 100% { transform: scale(1); }
+  35% { transform: scale(1.16); }
+  40% { transform: scale(.98); }
+}
+@keyframes orbit-heart-glow {
+  0%, 100% { opacity: .35; transform: scale(.88); }
+  50% { opacity: .88; transform: scale(1.08); }
+}
+@keyframes orbit-node-revolve {
+  to { transform: rotate(360deg); }
+}
+@keyframes orbit-node-counter {
+  to { rotate: -360deg; }
+}
+@keyframes orbit-node-float {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -4px; }
+}
+@keyframes orbit-petal-turn {
+  to { transform: rotate(360deg); }
+}
+@keyframes orbit-petal-bloom {
+  from { opacity: .5; transform: scale(.78); }
+  to { opacity: 1; transform: scale(1.18); }
+}
+@keyframes orbit-ray-shimmer {
+  0%, 100% { opacity: .4; transform: scale(.94) rotate(-2deg); }
+  50% { opacity: .95; transform: scale(1.08) rotate(2deg); }
+}
+@keyframes orbit-node-ring {
+  0% { opacity: .72; transform: scale(.72); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+@media (max-width: 760px) {
+  .memory-tree.layout-orbit .orbit-art { transform: scale(.96); transform-origin: 260px 190px; }
+  .memory-tree.layout-orbit .leaf-1 { top: 48%; left: 7%; }
+  .memory-tree.layout-orbit .leaf-2 { top: 10%; left: 40%; }
+  .memory-tree.layout-orbit .leaf-3 { top: 24%; right: 3%; }
+  .memory-tree.layout-orbit .leaf-4 { top: 48%; left: 42%; }
+  .memory-tree.layout-orbit .leaf-5 { top: 55%; right: 10%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-tree.layout-orbit .orbit-track,
+  .memory-tree.layout-orbit .orbit-swoop,
+  .memory-tree.layout-orbit .orbit-star,
+  .memory-tree.layout-orbit .orbit-core-halo,
+  .memory-tree.layout-orbit .orbit-bloom-petals,
+  .memory-tree.layout-orbit .orbit-canopy-rays,
+  .memory-tree.layout-orbit .orbit-heart-button-glow,
+  .memory-tree.layout-orbit .orbit-heart-button > svg,
+  .memory-tree.layout-orbit .memory-leaves,
+  .memory-tree.layout-orbit .orbit-node .memory-leaf,
+  .memory-tree.layout-orbit .memory-leaf {
+    animation: none;
+  }
+}
+
+/* Final tree direction: a hand-painted, material-led tree with a quiet root
+   and a few tactile memory fruits. This is intentionally last so the older
+   tree/orbit experiments above cannot compete with the current scene. */
+.memory-tree.layout-tree {
+  --tree-leaf: color-mix(in srgb, var(--accent) 70%, #5f9f6c);
+  --tree-leaf-light: color-mix(in srgb, var(--accent-soft) 72%, #c2dfaa);
+  --tree-trunk-dark: #684733;
+  padding: 26px clamp(18px, 3.2vw, 36px) 22px;
+  border-color: color-mix(in srgb, var(--accent) 20%, var(--ring));
+  background:
+    radial-gradient(ellipse at 50% 43%, color-mix(in srgb, var(--tree-leaf-light) 62%, transparent), transparent 41%),
+    linear-gradient(158deg, color-mix(in srgb, var(--surface) 96%, var(--accent-soft)), var(--surface));
+}
+.memory-tree.layout-tree::before {
+  opacity: .22;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--accent) 28%, transparent) 1px, transparent 1px);
+  background-size: 31px 31px;
+  mask-image: radial-gradient(ellipse at 50% 35%, #000 0 37%, transparent 76%);
+}
+.memory-tree.layout-tree .tree-heading { align-items: center; }
+.memory-tree.layout-tree .tree-heading h2 { font-size: clamp(28px, 3.3vw, 38px); letter-spacing: -.055em; }
+.memory-tree.layout-tree .tree-heading span { max-width: 390px; line-height: 1.55; }
+.memory-tree.layout-tree .tree-level {
+  min-width: 104px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent-dark) 8%, transparent);
+}
+.memory-tree.layout-tree .tree-scene {
+  width: min(100%, 1040px);
+  height: 515px;
+  margin: 0 auto;
+  overflow: visible;
+}
+.memory-tree.layout-tree .tree-canvas {
+  top: 0;
+  right: auto;
+  bottom: 34px;
+  left: 50%;
+  width: min(680px, 78%);
+  height: auto;
+  overflow: visible;
+  transform: translateX(-50%);
+}
+.memory-tree.layout-tree .tree-glow {
+  top: 15%;
+  width: 430px;
+  height: 340px;
+  opacity: .82;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--tree-leaf-light) 35%, transparent), transparent 69%);
+  filter: blur(22px);
+}
+.memory-tree.layout-tree .svg-memory-tree {
+  top: -1%;
+  right: -4%;
+  bottom: -8%;
+  left: -4%;
+  z-index: 4;
+}
+.memory-tree.layout-tree .svg-memory-tree > svg {
+  overflow: visible;
+  animation: memory-tree-hero-breathe 7s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .svg-tree-sprite {
+  overflow: hidden;
+  mix-blend-mode: normal;
+  filter: saturate(1.04) contrast(1.02) drop-shadow(0 15px 18px color-mix(in srgb, var(--tree-trunk-dark) 10%, transparent));
+}
+.memory-tree.layout-tree .svg-tree-complete,
+.memory-tree.layout-tree .svg-tree-seedling { transform-box: fill-box; transform-origin: center bottom; }
+.memory-tree.layout-tree .svg-tree-ground-shadow {
+  fill: color-mix(in srgb, var(--tree-leaf-deep) 16%, transparent);
+  filter: blur(7px);
+}
+.memory-tree.layout-tree .svg-tree-asset {
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.memory-tree.layout-tree .svg-tree-crown-layer {
+  filter: drop-shadow(0 16px 20px color-mix(in srgb, var(--tree-leaf-deep) 16%, transparent));
+}
+.memory-tree.layout-tree .svg-tree-crown-layer .crown-piece {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: memory-crown-sway 6.5s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .tree-stage-illustration {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: memory-crown-sway 7.5s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .tree-stage-illustration.tree-theme-spring { filter: saturate(1.04) brightness(1.02); }
+.memory-tree.layout-tree .tree-stage-illustration.tree-theme-summer { filter: saturate(1.14) brightness(1.04); }
+.memory-tree.layout-tree .tree-stage-illustration.tree-theme-autumn { filter: saturate(1.08) sepia(.14) hue-rotate(-8deg); }
+.memory-tree.layout-tree .tree-stage-illustration.tree-theme-winter { filter: saturate(.78) brightness(1.08) hue-rotate(8deg); }
+.memory-tree.layout-tree .tree-stage-illustration.tree-theme-festival { filter: saturate(1.1) brightness(1.04); }
+.memory-tree.layout-tree .tree-seasonal-decor {
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tree-seasonal-float 6.4s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .tree-seasonal-spring circle { stroke: #fff7f4; stroke-width: 1.2; }
+.memory-tree.layout-tree .tree-seasonal-summer circle { fill: #f7e68f; filter: drop-shadow(0 0 5px #f7e68f); }
+.memory-tree.layout-tree .tree-seasonal-autumn path { fill: #d78345; stroke: #a75e3c; stroke-width: 1.2; }
+.memory-tree.layout-tree .tree-seasonal-winter circle { fill: #f6fbff; filter: drop-shadow(0 0 4px rgba(255,255,255,.8)); }
+.memory-tree.layout-tree .tree-seasonal-festival .tree-festival-ribbon { fill: none; stroke: #dfaa55; stroke-width: 3; stroke-linecap: round; }
+.memory-tree.layout-tree .tree-seasonal-festival path:not(.tree-festival-ribbon) { fill: #e85f7d; stroke: #fff4de; stroke-width: 1.2; }
+.memory-tree.layout-tree .tree-seasonal-festival.occasion-qixi path:not(.tree-festival-ribbon) { fill: #e9bd68; }
+.memory-tree.layout-tree .svg-tree-crown-layer .crown-top { animation-delay: -2.1s; }
+.memory-tree.layout-tree .svg-tree-crown-layer .crown-right { animation-delay: -4.2s; }
+.memory-tree.layout-tree .svg-tree-crown-layer .crown-front { animation-delay: -1.1s; }
+.memory-tree.layout-tree .svg-tree-trunk {
+  filter: drop-shadow(0 12px 12px color-mix(in srgb, var(--tree-trunk-dark) 16%, transparent));
+  animation: memory-trunk-sway 7s ease-in-out infinite alternate;
+}
+.memory-tree.layout-tree .svg-tree-grass { filter: drop-shadow(0 8px 10px color-mix(in srgb, var(--tree-leaf-deep) 12%, transparent)); }
+.memory-tree.layout-tree .svg-tree-seedling,
+.memory-tree.layout-tree .svg-tree-sprout-base { animation: memory-seedling-breathe 4.6s ease-in-out infinite alternate; }
+.memory-tree.layout-tree .svg-tree-leaf { filter: drop-shadow(0 4px 5px color-mix(in srgb, var(--tree-leaf-deep) 14%, transparent)); }
+.memory-tree.layout-tree .svg-tree-pink-heart { animation: memory-ornament-shine 3.8s ease-in-out infinite alternate; }
+.memory-tree.layout-tree .svg-tree-hanging-heart { transform-origin: center top; animation: memory-hanging-sway 4.8s ease-in-out infinite alternate; }
+.memory-tree.layout-tree .svg-tree-hanging-heart.hanging-delay { animation-delay: -2.2s; }
+.memory-tree.layout-tree .svg-memory-fruit-stem {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tree-trunk-dark) 82%, var(--tree-leaf));
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+.memory-tree.layout-tree .svg-memory-fruit-halo {
+  fill: color-mix(in srgb, var(--accent) 72%, #e57b86);
+  opacity: .13;
+  filter: blur(4px);
+  transition: opacity .2s ease, r .2s ease;
+}
+.memory-tree.layout-tree .svg-tree-memory-heart {
+  overflow: hidden;
+  mix-blend-mode: normal;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  filter: drop-shadow(0 5px 7px rgba(150, 67, 77, .22));
+  transition: transform .2s ease, filter .2s ease;
+}
+.memory-tree.layout-tree .svg-memory-fruit-hit { fill: transparent; stroke: none; }
+.memory-tree.layout-tree .svg-memory-fruit:hover .svg-tree-memory-heart,
+.memory-tree.layout-tree .svg-memory-fruit:focus .svg-tree-memory-heart,
+.memory-tree.layout-tree .svg-memory-fruit.is-active .svg-tree-memory-heart {
+  filter: drop-shadow(0 7px 10px rgba(150, 67, 77, .35));
+  transform: scale(1.12) rotate(-4deg);
+}
+.memory-tree.layout-tree .svg-memory-fruit:hover .svg-memory-fruit-halo,
+.memory-tree.layout-tree .svg-memory-fruit:focus .svg-memory-fruit-halo,
+.memory-tree.layout-tree .svg-memory-fruit.is-active .svg-memory-fruit-halo { opacity: .3; }
+.memory-tree.layout-tree .tree-heart-button {
+  top: 82%;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #fff8eb 0 8%, #efb488 31%, #c96d72 78%, #a94b68 100%);
+  box-shadow: 0 7px 16px rgba(116, 51, 71, .18), 0 0 0 4px color-mix(in srgb, var(--tree-leaf-light) 46%, transparent), inset 0 1px 1px rgba(255, 255, 255, .72);
+  transform: translate(-50%, -50%);
+  animation: memory-root-heart 4.2s ease-in-out infinite;
+}
+.memory-tree.layout-tree .tree-heart-button::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -10px;
+  left: 50%;
+  width: 2px;
+  height: 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tree-trunk-dark) 80%, var(--tree-leaf));
+  transform: translateX(-50%);
+}
+.memory-tree.layout-tree .tree-heart-button::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -10px;
+  left: 51%;
+  width: 10px;
+  height: 7px;
+  border-radius: 100% 0 100% 0;
+  background: var(--tree-leaf);
+  transform: rotate(-22deg);
+}
+.memory-tree.layout-tree .tree-heart-button:hover,
+.memory-tree.layout-tree .tree-heart-button:focus-visible {
+  transform: translate(-50%, -50%) scale(1.12);
+}
+.memory-tree.layout-tree .tree-heart-button > svg { font-size: 19px; }
+.memory-tree.layout-tree .tree-heart-button strong {
+  position: absolute;
+  top: calc(100% + 7px);
+  max-width: 100px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  color: var(--accent-dark);
+  font-size: 8px;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.memory-tree.layout-tree .tree-heart-button:hover strong,
+.memory-tree.layout-tree .tree-heart-button:focus-visible strong,
+.memory-tree.layout-tree .tree-heart-button.state-sending strong,
+.memory-tree.layout-tree .tree-heart-button.state-sent strong,
+.memory-tree.layout-tree .tree-heart-button.state-recorded strong,
+.memory-tree.layout-tree .tree-heart-button.state-error strong { opacity: 1; transform: translateY(0); }
+.memory-tree.layout-tree .tree-heart-button small { display: none; }
+.memory-tree.layout-tree .tree-members { inset: auto 0 0; height: 102px; }
+.memory-tree.layout-tree .tree-member {
+  top: auto;
+  bottom: 0;
+  width: 138px;
+  transform: none;
+}
+.memory-tree.layout-tree .tree-member.member-left { left: max(1%, calc(50% - 370px)); }
+.memory-tree.layout-tree .tree-member.member-right { right: max(1%, calc(50% - 370px)); }
+.memory-tree.layout-tree .tree-member .profile-avatar { width: 52px; height: 52px; border-width: 3px; }
+.memory-tree.layout-tree .tree-member-avatar > i { right: -2px; bottom: -2px; padding: 2px 5px; font-size: 7px; }
+.memory-tree.layout-tree .tree-member-copy { margin-top: 7px; }
+.memory-tree.layout-tree .tree-member-copy strong { font-size: 11px; }
+.memory-tree.layout-tree .tree-member-actions { position: absolute; top: 16px; }
+.memory-tree.layout-tree .tree-member.member-left .tree-member-actions { right: -2px; }
+.memory-tree.layout-tree .tree-member.member-right .tree-member-actions { left: -2px; }
+.memory-tree.layout-tree .tree-member-actions button { width: 27px; height: 27px; border-radius: 50%; }
+.memory-tree.layout-tree .tree-together {
+  top: auto;
+  bottom: 9px;
+  min-width: 132px;
+  padding: 7px 15px 6px;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--ring));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  box-shadow: 0 7px 22px color-mix(in srgb, var(--accent-dark) 10%, transparent);
+}
+.memory-tree.layout-tree .tree-together > svg { position: static; margin-right: 4px; color: var(--accent); font-size: 13px; }
+.memory-tree.layout-tree .tree-together strong { font-size: 19px; }
+.memory-tree.layout-tree .tree-together span { margin-top: 0; font-size: 8px; letter-spacing: .03em; }
+.memory-tree.layout-tree .tree-note-stream { top: 38%; bottom: auto; left: -4%; width: min(220px, 27vw); }
+.memory-tree.layout-tree .tree-note-stream.from-right { top: 46%; right: -4%; left: auto; }
+.memory-tree.layout-tree .tree-progress { width: min(100%, 560px); margin-top: 1px; }
+.memory-tree.layout-tree .tree-progress > span { height: 8px; background: color-mix(in srgb, var(--accent) 10%, var(--surface-soft)); }
+.memory-tree.layout-tree .tree-progress small { margin-top: 8px; font-size: 9px; }
+@keyframes memory-tree-hero-breathe { from { transform: translateY(1px) scale(.997); } to { transform: translateY(-3px) scale(1.006); } }
+@keyframes memory-fruit-float { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-5px) rotate(1deg); } }
+@keyframes memory-root-heart { 0%, 100% { margin-top: 0; } 50% { margin-top: -4px; } }
+@keyframes memory-crown-sway { from { transform: rotate(-.9deg) translateY(1px); } to { transform: rotate(1.1deg) translateY(-2px); } }
+@keyframes memory-trunk-sway { from { transform: rotate(-.35deg); } to { transform: rotate(.45deg); } }
+@keyframes memory-seedling-breathe { from { transform: translateY(1px) scale(.985); } to { transform: translateY(-2px) scale(1.015); } }
+@keyframes memory-ornament-shine { from { opacity: .75; transform: scale(.94); } to { opacity: 1; transform: scale(1.05); } }
+@keyframes memory-hanging-sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+@keyframes tree-seasonal-float { from { transform: translateY(1px); } to { transform: translateY(-4px); } }
+@media (max-width: 760px) {
+  .memory-tree.layout-tree { padding: 21px 14px 17px; border-radius: 25px; }
+  .memory-tree.layout-tree .tree-heading h2 { font-size: 27px; }
+  .memory-tree.layout-tree .tree-heading span { max-width: 220px; font-size: 10px; }
+  .memory-tree.layout-tree .tree-level { min-width: 88px; padding: 7px 9px; }
+  .memory-tree.layout-tree .tree-level small { max-width: 74px; text-align: right; }
+  .memory-tree.layout-tree .tree-scene { height: 405px; }
+  .memory-tree.layout-tree .tree-canvas { width: min(610px, 112%); bottom: 32px; }
+  .memory-tree.layout-tree .tree-glow { width: 330px; height: 260px; }
+  .memory-tree.layout-tree .tree-note-stream { top: 43%; left: -2%; width: min(166px, 45vw); }
+  .memory-tree.layout-tree .tree-note-stream.from-right { top: 50%; right: -2%; }
+  .memory-tree.layout-tree .tree-member { width: 94px; }
+  .memory-tree.layout-tree .tree-member.member-left { left: 0; }
+  .memory-tree.layout-tree .tree-member.member-right { right: 0; }
+  .memory-tree.layout-tree .tree-member .profile-avatar { width: 44px; height: 44px; }
+  .memory-tree.layout-tree .tree-member-copy strong { font-size: 9px; }
+  .memory-tree.layout-tree .tree-member-actions { top: 10px; }
+  .memory-tree.layout-tree .tree-member-actions button { width: 24px; height: 24px; }
+  .memory-tree.layout-tree .tree-together { bottom: 6px; min-width: 112px; padding: 6px 11px 5px; }
+  .memory-tree.layout-tree .tree-together strong { font-size: 16px; }
+  .memory-tree.layout-tree .tree-together span { font-size: 7px; }
+  .memory-tree.layout-tree .tree-heart-button { top: 87%; width: 43px; height: 43px; }
+  .memory-tree.layout-tree .tree-heart-button > svg { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-tree.layout-tree .svg-memory-tree > svg,
+  .memory-tree.layout-tree .svg-memory-fruit,
+  .memory-tree.layout-tree .svg-tree-crown-layer .crown-piece,
+  .memory-tree.layout-tree .tree-stage-illustration,
+  .memory-tree.layout-tree .tree-seasonal-decor,
+  .memory-tree.layout-tree .svg-tree-trunk,
+  .memory-tree.layout-tree .svg-tree-seedling,
+  .memory-tree.layout-tree .svg-tree-sprout-base,
+  .memory-tree.layout-tree .svg-tree-pink-heart,
+  .memory-tree.layout-tree .svg-tree-hanging-heart,
+  .memory-tree.layout-tree .tree-heart-button { animation: none; }
+}
+
+/* Keep call actions readable: when the video surface cannot fit every label
+   on one line, preserve the actions and collapse only their supporting text. */
+@container call-surface (max-width: 440px) {
+  .call-controls {
+    gap: 5px;
+    padding: 5px;
+  }
+  .call-controls .media-control {
+    width: 44px;
+    min-width: 44px;
+    height: 42px;
+    padding: 0;
+    border-radius: 14px;
+  }
+  .call-controls .media-control .control-label,
+  .call-controls .media-control .mic-meter {
+    display: none;
+  }
+}
+
+/* Android places the complete Activity in system PiP. This native class is
+   applied before the transition so the first PiP frame is already video-only. */
+html.android-system-pip,
+html.android-system-pip body,
+html.android-system-pip #root {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #111716;
+}
+html.android-system-pip .cottage-shell {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #111716;
+}
+html.android-system-pip .cottage-shell > :not(.room),
+html.android-system-pip .room > header,
+html.android-system-pip .immersive-chat,
+html.android-system-pip .call-stage > :not(.video-card.remote),
+html.android-system-pip .video-card.remote > p {
+  display: none !important;
+}
+html.android-system-pip .room,
+html.android-system-pip .room-grid,
+html.android-system-pip .call-stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #111716;
+}
+html.android-system-pip .video-card.remote {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: default;
+  pointer-events: none;
+}

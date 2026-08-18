@@ -1,0 +1,48 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "情侣小屋",
+  "version": "0.2.1",
+  "identifier": "ski.xiaoyu.duo",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:3002",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build:native"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "情侣小屋",
+        "width": 1180,
+        "height": 780,
+        "minWidth": 390,
+        "minHeight": 600,
+        "center": true,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' ipc: http://ipc.localhost https://ai.xiaoyu.ski wss://ai.xiaoyu.ski https://api.iconify.design https://api.simplesvg.com https://api.unisvg.com; img-src 'self' asset: http://asset.localhost https://ai.xiaoyu.ski data: blob:; media-src 'self' blob: mediastream:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "macOS": {
+      "entitlements": "Entitlements.plist",
+      "infoPlist": "Info.plist",
+      "minimumSystemVersion": "11.0"
+    },
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    }
+  }
+}

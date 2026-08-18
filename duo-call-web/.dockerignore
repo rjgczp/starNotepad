@@ -1,0 +1,16 @@
+.git
+.github
+.idea
+.vscode
+.env
+.env.*
+!.env.example
+!.env.native.example
+node_modules
+tests/.generated
+coverage
+android
+assets/brand
+src-tauri
+*.log
+.DS_Store
